@@ -2,7 +2,9 @@
 
 ## Introduction
 
-***BEN LOW GIVE US AD PLS*** is a productivity app!
+Introducing our productivity app, '***Producti-vibe***' designed to help users stay organized and productive in an enjoyable way. Not only does the app adapts to your current mood, but you can also embark on a productivity journey with your friends, earning reward points along the way and track your progress on the leaderboard. With its combination of technology and social features, this app is the ultimate productivity solution to elevate your workflow and achieve your goals. 
+
+So why settle for mediocrity when you achieve greatness with this powerful productivity app? 
 
 ##  Features!!! 🐔
 
@@ -15,9 +17,11 @@
 | Videos to watch to destress |  For a peroid of time after studying for X time e.g. lock them out of this feature | - |
 | Background Music | Can opt in or out of such music | - |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | - |
+| CRED Tasks | Creating, Reading, Editing, Deleting of one-time/recurring tasks | - |x
 | Calendar View | Displaying tasks in another format | - |
 | Task Sorting | Sort them into user-defined categories | - |
 | Push Notifications | Send notifications when nearing the tasks' deadline | - |
+| You're not alone! | Study with cartoon characters / videos of celebrities | - |
 
 
 
@@ -34,3 +38,4 @@
 | User login | Login and sign up with Remember me function | - |
 | Statistics | Displays charts (mood/study hours) | - |
 | Reward System | Points earned based on productiveness and reflected on a leaderboard | - |
+| Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
