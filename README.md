@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**BEN LOW GIVE US AD PLS ** is a productivity app!
+***BEN LOW GIVE US AD PLS*** is a productivity app!
 
 ##  Features!!! 🐔
 
@@ -16,6 +16,7 @@
 | Background Music | Can opt in or out of such music | - |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | - |
 | Calendar View | Displaying tasks in another format | - |
+| Push Notifications | Send notifications when nearing the tasks' deadline | - |
 
 
 
