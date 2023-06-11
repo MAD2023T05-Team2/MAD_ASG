@@ -69,6 +69,23 @@
             android:textSize="14sp"
             android:padding="8dp" />
 
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:onClick="onEditButtonClick"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:onClick="onDeleteButtonClick"
+            android:layout_marginTop="8dp"/>
+
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

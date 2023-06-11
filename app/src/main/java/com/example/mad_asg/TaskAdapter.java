@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +16,23 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
     private Context context;
+    private TaskAdapterListener listener;
 
-    public TaskAdapter(List<Task> taskList, Context context) {
+    public interface TaskAdapterListener {
+        void onTaskEdit(Task task);
+        void onTaskDelete(Task task);
+    }
+
+    public TaskAdapter(List<Task> taskList, Context context, TaskAdapterListener listener) {
         this.taskList = taskList;
         this.context = context;
+        this.listener = listener;
+    }
+
+
+    public interface OnItemClickListener {
+        void onEditClick(int position);
+        void onDeleteClick(int position);
     }
 
     @NonNull
@@ -42,6 +56,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskAlertDateTimeTextView.setText("Alert Date & Time: " + task.getAlertDateTime());
         holder.taskRepeatTextView.setText("Repeat: " + task.getRepeat());
         holder.taskRecurringDurationTextView.setText("Recurring Frequency: " + task.getRecurringDuration());
+
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onTaskEdit(task);
+            }
+        });
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onTaskDelete(task);
+            }
+        });
     }
 
     @Override
@@ -59,6 +87,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView taskRepeatTextView;
 
         TextView taskRecurringDurationTextView;
+        Button editButton;
+        Button deleteButton;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,6 +100,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskAlertDateTimeTextView = itemView.findViewById(R.id.taskAlertDateTimeTextView);
             taskRepeatTextView = itemView.findViewById(R.id.taskRepeatTextView);
             taskRecurringDurationTextView = itemView.findViewById(R.id.taskRecurringDurationTextView);
+            editButton = itemView.findViewById(R.id.editButton);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
         }
+
+
     }
 }
