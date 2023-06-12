@@ -1,80 +1,61 @@
 package com.example.mad_asg;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
-    private Context context;
-    private TaskAdapterListener listener;
-
-    public interface TaskAdapterListener {
-        void onTaskEdit(Task task);
-        void onTaskDelete(Task task);
-    }
-
-    public TaskAdapter(List<Task> taskList, Context context, TaskAdapterListener listener) {
-        this.taskList = taskList;
-        this.context = context;
-        this.listener = listener;
-    }
-
-    public void setTaskList(List<Task> taskList) {
-        this.taskList = taskList;
-        notifyDataSetChanged();
-    }
-
+    private OnItemClickListener listener;
+    private int selectedPosition = RecyclerView.NO_POSITION;
 
     public interface OnItemClickListener {
-        void onEditClick(int position);
-        void onDeleteClick(int position);
+        void onItemClick(int position);
+    }
+
+    public TaskAdapter(List<Task> taskList, OnItemClickListener listener) {
+        this.taskList = taskList;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_item, parent, false);
-        TaskViewHolder viewHolder = new TaskViewHolder(itemView);
-        return viewHolder;
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.task_item, parent, false);
+        return new TaskViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
-        holder.taskNameTextView.setText("Task Name: " + task.getTaskName()+ " (" + task.getStatus() + ")");
-        holder.taskDescTextView.setText("Description: " + task.getTaskDesc());
-        holder.taskDateTextView.setText("Task Date: " + task.getTaskDate());
-        String startTime = "Start Time: " + task.getTaskStartTime();
-        String endTime = "End Time: " + task.getTaskEndTime();
-        holder.taskTimeTextView.setText(startTime + " - " + endTime);
-        holder.taskAlertTextView.setText("Alert: " + task.getAlert());
-        holder.taskAlertDateTimeTextView.setText("Alert Date & Time: " + task.getAlertDateTime());
-        holder.taskRepeatTextView.setText("Repeat: " + task.getRepeat());
-        holder.taskRecurringDurationTextView.setText("Recurring Frequency: " + task.getRecurringDuration());
+        holder.taskNameTextView.setText(task.getTaskName());
+        holder.taskDescriptionTextView.setText(task.getTaskDesc());
+        holder.taskStatusTextView.setText(task.getStatus());
+        holder.taskStartTimeTextView.setText(task.getTaskStartTime());
+        holder.taskEndTimeTextView.setText(task.getTaskEndTime());
+        holder.taskDurationTextView.setText(String.valueOf(task.getTaskDuration()));
 
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onTaskEdit(task);
+                listener.onItemClick(position);
             }
         });
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onTaskDelete(task);
-            }
-        });
+        if (selectedPosition == position) {
+            // Apply your desired styling or visual indication for the selected item
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getColor(R.color.selected_item_background));
+        } else {
+            // Reset the styling for other items
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getColor(android.R.color.transparent));
+        }
     }
 
     @Override
@@ -82,35 +63,39 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.size();
     }
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView taskNameTextView;
-        TextView taskDescTextView;
-        TextView taskDateTextView;
-        TextView taskTimeTextView;
-        TextView taskAlertTextView;
-        TextView taskAlertDateTimeTextView;
-        TextView taskRepeatTextView;
+    public void setSelectedPosition(int position) {
+        int previousPosition = selectedPosition;
+        selectedPosition = position;
 
-        TextView taskRecurringDurationTextView;
-        Button editButton;
-        Button deleteButton;
-
-        public TaskViewHolder(@NonNull View itemView) {
-            super(itemView);
-            taskNameTextView = itemView.findViewById(R.id.taskNameTextView);
-            taskDescTextView = itemView.findViewById(R.id.taskDescTextView);
-            taskDateTextView = itemView.findViewById(R.id.taskDateTextView);
-            taskTimeTextView = itemView.findViewById(R.id.taskTimeTextView);
-            taskAlertTextView = itemView.findViewById(R.id.taskAlertTextView);
-            taskAlertDateTimeTextView = itemView.findViewById(R.id.taskAlertDateTimeTextView);
-            taskRepeatTextView = itemView.findViewById(R.id.taskRepeatTextView);
-            taskRecurringDurationTextView = itemView.findViewById(R.id.taskRecurringDurationTextView);
-            editButton = itemView.findViewById(R.id.editButton);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
+        // Notify the adapter about item changes to update the UI
+        if (previousPosition != RecyclerView.NO_POSITION) {
+            notifyItemChanged(previousPosition);
         }
+        if (selectedPosition != RecyclerView.NO_POSITION) {
+            notifyItemChanged(selectedPosition);
+        }
+    }
 
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
 
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+        public TextView taskNameTextView;
+        public TextView taskDescriptionTextView;
+        public TextView taskStatusTextView;
+        public TextView taskStartTimeTextView;
+        public TextView taskEndTimeTextView;
+        public TextView taskDurationTextView;
 
-
+        public TaskViewHolder(View view) {
+            super(view);
+            taskNameTextView = view.findViewById(R.id.taskNameTextView);
+            taskDescriptionTextView = view.findViewById(R.id.taskDescriptionTextView);
+            taskStatusTextView = view.findViewById(R.id.taskStatusTextView);
+            taskStartTimeTextView = view.findViewById(R.id.taskStartTimeTextView);
+            taskEndTimeTextView = view.findViewById(R.id.taskEndTimeTextView);
+            taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
+        }
     }
 }
