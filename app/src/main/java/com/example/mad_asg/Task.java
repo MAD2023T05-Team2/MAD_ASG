@@ -1,8 +1,9 @@
 package com.example.mad_asg;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Task { private String TAG = "Task Class";
+public class Task implements Serializable { private String TAG = "Task Class";
 
     private int Id;
     private String status;

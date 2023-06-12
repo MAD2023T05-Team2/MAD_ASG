@@ -9,6 +9,10 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class EditTaskActivity extends AppCompatActivity {
 
@@ -26,7 +30,8 @@ public class EditTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_task);
 
         // Retrieve the task object passed from the previous activity
-        task = getIntent().getParcelableExtra("task");
+        Task task = (Task) getIntent().getSerializableExtra("task");
+
 
         // Initialize EditText fields
         titleEditText = findViewById(R.id.edit_title);
@@ -39,9 +44,14 @@ public class EditTaskActivity extends AppCompatActivity {
         // Set the initial values of the task in the UI
         titleEditText.setText(task.getTaskName());
         descriptionEditText.setText(task.getTaskDesc());
-        dateEditText.setText(task.getTaskDate());
+        //dateEditText.setText(task.getTaskDate());
         startTimeEditText.setText(task.getTaskStartTime());
         endTimeEditText.setText(task.getTaskEndTime());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = dateFormat.format(task.getTaskDate());
+        dateEditText.setText(formattedDate);
+
         // Set other initial values for the task properties
 
         // Handle the save button click
@@ -52,9 +62,25 @@ public class EditTaskActivity extends AppCompatActivity {
                 // Update the task with the new values
                 String newTitle = titleEditText.getText().toString();
                 String newDescription = descriptionEditText.getText().toString();
-                String newDate = dateEditText.getText().toString();
+                //Date newDate = dateEditText.getText().toString();
                 String newStartTime = startTimeEditText.getText().toString();
                 String newEndTime = endTimeEditText.getText().toString();
+
+                String dateString = dateEditText.getText().toString();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date newDate = null;
+
+                try {
+                    newDate = dateFormat.parse(dateString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (newDate != null) {
+                    // Date parsing successful, continue with your logic
+                } else {
+                    // Date parsing failed, handle the error
+                }
                 // Update other task properties
 
                 task.setTaskName(newTitle);

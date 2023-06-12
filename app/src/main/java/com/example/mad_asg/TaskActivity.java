@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TaskActivity extends AppCompatActivity implements TaskAdapter.TaskAdapterListener{
     private RecyclerView taskRecyclerView;
@@ -52,28 +57,56 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.TaskA
     }
 
     private void populateTaskRecyclerView() {
+        taskList = getTasksFromDatabase(); // Replace this with your database or data source logic
+
+        if (taskList.isEmpty()) {
+            // No tasks, display a message
+            Toast.makeText(this, "No tasks today!", Toast.LENGTH_SHORT).show();
+        }
+
+        taskAdapter.setTaskList(taskList);
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    private List<Task> getTasksFromDatabase() {
         List<Task> taskList = new ArrayList<>();
 
         // Create some sample tasks
-        Task task1 = new Task(1, "Not Done", "Task 1", "Description 1", "2023-06-10",
-                "09:00 AM", "10:00 AM", 60, "Yes",
-                "2023-06-10 08:45 AM", "Type 1", "Yes", 0,
-                "Every 2 days", 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        Task task2 = new Task(2, "Not Done", "Task 2", "Description 2", "2023-06-11",
-                "02:00 PM", "04:00 PM", 120, "Yes",
-                "2023-06-11 01:45 PM", "Type 2", "Yes", 0,
-                "Every Week", 1);
+        try {
+            // Parse the date string to a Date object
+            Date task1Date = dateFormat.parse("2023-06-10");
 
-        taskList.add(task1);
-        taskList.add(task2);
+            // Create a sample task using the Date object
+            Task task1 = new Task(1, "Not Done", "Task 1", "Description 1", task1Date,
+                    "09:00 AM", "10:00 AM", 60, "Yes",
+                    "2023-06-10 08:45 AM", "Type 1", "Yes", 0,
+                    "Every 2 days", 1);
 
-        taskAdapter = new TaskAdapter(taskList, this,this);
-        taskRecyclerView.setAdapter(taskAdapter);
+            taskList.add(task1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        Log.d(TAG, "Task List: " + taskList);
-        Log.d(TAG, "Task Adapter: " + taskAdapter.toString());
+        try {
+            // Parse the date string to a Date object
+            Date task2Date = dateFormat.parse("2023-06-10");
+
+            // Create a sample task using the Date object
+            Task task2 = new Task(2, "Not Done", "Task 2", "Description 2", task2Date,
+                    "02:00 PM", "04:00 PM", 120, "Yes",
+                    "2023-06-11 01:45 PM", "Type 2", "Yes", 0,
+                    "Every Week", 1);
+
+            taskList.add(task2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return taskList;
     }
+
 
     @Override
     public void onTaskEdit(Task task) {
@@ -103,6 +136,15 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.TaskA
         dialog.show();
     }
 
+    private void deleteTask(Task task) {
+        // Perform the deletion operation here
+        // You can remove the task from the taskList and notify the adapter
+
+        // Example implementation:
+        taskList.remove(task); // Remove the task from the list
+        taskAdapter.notifyDataSetChanged(); // Notify the adapter about the data change
+    }
+
 
     public void onEditButtonClick(View view) {
         // Retrieve the task associated with the clicked editButton
@@ -121,4 +163,6 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.TaskA
         // You can show a confirmation dialog and delete the task if confirmed, etc.
         onTaskDelete(task);
     }
+
+
 }

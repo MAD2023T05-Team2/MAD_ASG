@@ -1,89 +1,88 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#3EC660C6"
     android:layout_margin="8dp"
+    android:background="#3EC660C6"
     android:radius="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/taskNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="8dp"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:padding="8dp" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/taskDescTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/taskDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/taskTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/taskAlertTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/taskAlertDateTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/taskRepeatTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/taskRecurringDurationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/editButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:layout_marginTop="8dp"
             android:onClick="onEditButtonClick"
-            android:layout_marginTop="8dp"/>
+            android:text="Edit" />
 
         <Button
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete"
+            android:layout_marginTop="8dp"
             android:onClick="onDeleteButtonClick"
-            android:layout_marginTop="8dp"/>
+            android:text="Delete" />
 
 
     </LinearLayout>
