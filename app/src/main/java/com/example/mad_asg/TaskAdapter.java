@@ -1,11 +1,13 @@
 package com.example.mad_asg;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -45,16 +47,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(position);
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(adapterPosition);
+                }
             }
         });
 
         if (selectedPosition == position) {
             // Apply your desired styling or visual indication for the selected item
-            holder.itemView.setBackgroundColor(holder.itemView.getContext().getColor(R.color.selected_item_background));
+            int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.selected_item_background);
+            holder.itemView.setBackgroundColor(selectedColor);
         } else {
             // Reset the styling for other items
-            holder.itemView.setBackgroundColor(holder.itemView.getContext().getColor(android.R.color.transparent));
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 
