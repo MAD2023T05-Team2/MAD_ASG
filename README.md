@@ -14,13 +14,13 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | Feature | Description | In-charge |
 | :------ | :---------- | :-------- | 
 | Responsive layout | UI changes according to display size | - |
-| Videos to watch to destress |  For a peroid of time after studying for X time e.g. lock them out of this feature | - |
+| Videos to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Gwyneth |
 | Background Music | Can opt in or out of such music | - |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | Sherylyn |
 | CRED Tasks | Creating, Reading, Editing, Deleting of one-time/recurring tasks | Xin Le |x
 | Calendar View | Displaying tasks in another format | - |
 | Task Sorting | Sort them into user-defined categories | Sherylyn |
-| Push Notifications | Send notifications when nearing the tasks' deadline | - |
+| Push Notifications | Send notifications when nearing the tasks' deadline | Alethea |
 | You're not alone! | Study with cartoon characters / videos of celebrities | - |
 
 
