@@ -1,5 +1,12 @@
 # MAD_ASG
 
+# Team Members:
+*Avendano Kiara Kemuel Nacasas
+*Chan Woon Ning Alethea 
+*Chong Xin Le
+*Sherylyn Tan Qin Xi
+*Yeo Sze Yun, Gwyneth S10222843C
+
 ## Introduction
 
 Introducing our productivity app, '***Producti-vibe***' designed to help users stay organized and productive in an enjoyable way. Not only does the app adapts to your current mood, but you can also embark on a productivity journey with your friends, earning reward points along the way and track your progress on the leaderboard. With its combination of technology and social features, this app is the ultimate productivity solution to elevate your workflow and achieve your goals. 
