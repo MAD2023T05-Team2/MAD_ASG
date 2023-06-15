@@ -1,11 +1,11 @@
 # MAD_ASG
 
 # Team Members:
-*Avendano Kiara Kemuel Nacasas
-*Chan Woon Ning Alethea 
-*Chong Xin Le
-*Sherylyn Tan Qin Xi
-*Yeo Sze Yun, Gwyneth S10222843C
+* Avendano Kiara Kemuel Nacasas
+* Chan Woon Ning Alethea 
+* Chong Xin Le
+* Sherylyn Tan Qin Xi
+* Yeo Sze Yun, Gwyneth S10222843C
 
 ## Introduction
 
