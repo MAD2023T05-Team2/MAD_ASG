@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -87,6 +88,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
+
+       // CheckBox check_box;
         public TextView taskNameTextView;
         public TextView taskDescriptionTextView;
         public TextView taskStatusTextView;
@@ -102,6 +105,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskStartTimeTextView = view.findViewById(R.id.taskStartTimeTextView);
             taskEndTimeTextView = view.findViewById(R.id.taskEndTimeTextView);
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
+           // check_box =  view.findViewById(R.id.checkBox);
         }
     }
 }

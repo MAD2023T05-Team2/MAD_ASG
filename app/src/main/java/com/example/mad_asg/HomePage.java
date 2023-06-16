@@ -1,6 +1,9 @@
 package com.example.mad_asg;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +11,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomePage extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+    private TaskAdapter homeTaskadapter;
+    private List<Task> homeTaskList;
+    private TaskDatabase taskDatabase;
     final String TITLE = "Home Page";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +44,8 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.v(TITLE, "Task Button clicked!");
+                Intent i = new Intent(HomePage.this,MainActivity.class);
+                startActivity(i);
             }
         });
 
@@ -47,16 +59,26 @@ public class HomePage extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        /*for (int i = 0; i <100; i++){
+            Task myData = new Task();
+            myData.setMyImageID(R.drawable.spongebob);
+            myData.setMyText(String.valueOf(i));
+            myList.add(myData);
+        }
+        // Initialize RecyclerView and its adapter
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        homeTaskList = new ArrayList<>();
+        homeTaskadapter = new TaskAdapter(homeTaskList, this);
+        recyclerView.setAdapter(homeTaskadapter);
 
-        tasksButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(HomePage.this,MainActivity.class);
-                        startActivity(i);
-                    }
-                }
-        );
+        // Initialize the database
+        taskDatabase = new TaskDatabase(this);
+
+        // Load tasks from the database
+        List<Task> allTasks = taskDatabase.getAllTasks();
+        homeTaskadapter.notifyDataSetChanged();
+*/
     }
 
 }
