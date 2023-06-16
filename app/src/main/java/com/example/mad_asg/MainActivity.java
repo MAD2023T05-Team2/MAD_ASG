@@ -3,6 +3,7 @@ package com.example.mad_asg;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,11 +26,18 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     private List<Task> taskList;
     private TaskDatabase taskDatabase;
 
+    String TITLE = "Task Activity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.v(TITLE,"Created the page !");
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
         // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -64,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 }
             }
         });
-
     }
 
     @Override

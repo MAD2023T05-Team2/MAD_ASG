@@ -15,7 +15,11 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+    }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
         // Button Control
         Button timerButton = findViewById(R.id.TimerButton);
         timerButton.setOnClickListener(new View.OnClickListener() {
@@ -37,7 +41,10 @@ public class HomePage extends AppCompatActivity {
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Log.v(TITLE, "Calendar Button clicked!");
+                Intent i = new Intent(HomePage.this, CalendarView.class);
+                startActivity(i);
             }
         });
 
@@ -51,4 +58,5 @@ public class HomePage extends AppCompatActivity {
                 }
         );
     }
+
 }
