@@ -1,10 +1,10 @@
 # MAD_ASG
 
 # Team Members:
-* Avendano Kiara Kemuel Nacasas
-* Chan Woon Ning Alethea 
-* Chong Xin Le
-* Sherylyn Tan Qin Xi
+* Avendano Kiara Kemuel Nacasas S10219186A
+* Chan Woon Ning Alethea S10221902D
+* Chong Xin Le S10221973D
+* Sherylyn Tan Qin Xi S10222278A
 * Yeo Sze Yun, Gwyneth S10222843C
 
 ## Introduction
@@ -20,12 +20,12 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 
 | Feature | Description | In-charge |
 | :------ | :---------- | :-------- | 
-| Responsive layout | UI changes according to display size | - |
+| Responsive layout | UI changes according to display size | Kiara |
 | Videos to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Gwyneth |
 | Background Music | Can opt in or out of such music | - |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | Sherylyn |
 | CRED Tasks | Creating, Reading, Editing, Deleting of one-time/recurring tasks | Xin Le |x
-| Calendar View | Displaying tasks in another format | - |
+| Calendar View | Displaying tasks in another format | Kiara |
 | Task Sorting | Sort them into user-defined categories | Sherylyn |
 | Push Notifications | Send notifications when nearing the tasks' deadline | Alethea |
 | You're not alone! | Study with cartoon characters / videos of celebrities | - |
