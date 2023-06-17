@@ -6,18 +6,34 @@ import android.util.Log;
 import android.widget.CalendarView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 public class CalendarPage extends AppCompatActivity {
 
     String TITLE = "Calendar Page";
+
+    private RecyclerView recyclerView;
+    private ArrayList<Task> taskList;
+    private TaskAdapter adapter;
+
+    private TaskDatabase taskDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_view);
         Log.v(TITLE,"Created the page !");
+
+        recyclerView = findViewById(R.id.calendarTaskView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_calendar);
@@ -41,6 +57,8 @@ public class CalendarPage extends AppCompatActivity {
             }
             return false;
         });
+
+
     }
 
     @Override
