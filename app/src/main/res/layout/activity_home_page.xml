@@ -19,8 +19,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/homeTaskRecyclerView"
-        android:layout_width="370dp"
-        android:layout_height="338dp"
+        android:layout_width="371dp"
+        android:layout_height="365dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,49 +37,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/TimerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="18dp"
-        android:text="Timer"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/TasksButton"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_marginTop="20dp"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTaskRecyclerView"
-        app:layout_constraintVertical_bias="0.0" />
+        app:menu="@menu/bottom_menu" />
 
-    <Button
-        android:id="@+id/TasksButton"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="18dp"
-        android:text="Tasks"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/CalendarButton"
-        app:layout_constraintStart_toEndOf="@+id/TimerButton"
-        app:layout_constraintTop_toBottomOf="@+id/homeTaskRecyclerView"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/CalendarButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="18dp"
-        android:text="Calendar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/TasksButton"
-        app:layout_constraintTop_toBottomOf="@+id/homeTaskRecyclerView"
-        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
