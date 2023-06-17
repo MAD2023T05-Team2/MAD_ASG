@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -48,24 +49,28 @@ public class DestressPage extends AppCompatActivity {
         picFragButton = findViewById(R.id.pictures);
         vidFragButton = findViewById(R.id.videos);
 
+        replaceFragment(new DestressMessage());
+
         picFragButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                replaceFragment(new Pictures());
+                    replaceFragment(new Pictures());
 
-            }
-        });
+                }
+            });
 
-        vidFragButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
 
-                replaceFragment(new Videos());
+        vidFragButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
-    }
+                    replaceFragment(new Videos());
+
+                }
+            });
+        }
+
 
     private void replaceFragment(Fragment fragment) {
 
@@ -74,4 +79,6 @@ public class DestressPage extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
     }
+
+
 }
