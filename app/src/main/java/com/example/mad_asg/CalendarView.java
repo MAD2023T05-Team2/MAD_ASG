@@ -32,7 +32,7 @@ public class CalendarView extends AppCompatActivity {
                 startActivity(new Intent(CalendarView.this, HomePage.class));
                 return true;
             } else if (itemId == R.id.bottom_timer) {
-                startActivity(new Intent(CalendarView.this, MainActivity.class));
+                startActivity(new Intent(CalendarView.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
                 startActivity(new Intent(CalendarView.this, MainActivity.class));
