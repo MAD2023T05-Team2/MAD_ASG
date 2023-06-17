@@ -1,5 +1,4 @@
 package com.example.mad_asg;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -27,6 +26,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_RECURRING_ID = "recurring_id";
     private static final String COLUMN_RECURRING_DURATION = "recurring_duration";
     private static final String COLUMN_TASK_USER_ID = "task_user_id";
+    private static final String COLUMN_DUE_DATE = "due_date";
 
     public TaskDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,7 +47,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 COLUMN_REPEAT + " TEXT, " +
                 COLUMN_RECURRING_ID + " INTEGER, " +
                 COLUMN_RECURRING_DURATION + " TEXT, " +
-                COLUMN_TASK_USER_ID + " INTEGER" +
+                COLUMN_TASK_USER_ID + " INTEGER," +
+                COLUMN_DUE_DATE + " INTEGER" +
                 ")";
         db.execSQL(createTableQuery);
     }
@@ -74,6 +75,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         values.put(COLUMN_RECURRING_ID, task.getRecurringId());
         values.put(COLUMN_RECURRING_DURATION, task.getRecurringDuration());
         values.put(COLUMN_TASK_USER_ID, task.getTaskUserID());
+        values.put(COLUMN_DUE_DATE, task.getDueDate().getTime());
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
@@ -97,6 +99,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 int recurringIdIndex = cursor.getColumnIndex(COLUMN_RECURRING_ID);
                 int recurringDurationIndex = cursor.getColumnIndex(COLUMN_RECURRING_DURATION);
                 int taskUserIdIndex = cursor.getColumnIndex(COLUMN_TASK_USER_ID);
+                int taskDueDateIndex = cursor.getColumnIndex(COLUMN_DUE_DATE);
 
                 int id = cursor.getInt(idIndex);
                 String status = cursor.getString(statusIndex);
@@ -112,10 +115,12 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 int recurringId = cursor.getInt(recurringIdIndex);
                 String recurringDuration = cursor.getString(recurringDurationIndex);
                 int taskUserID = cursor.getInt(taskUserIdIndex);
+                long taskDueDateMillis = cursor.getLong(taskDueDateIndex);
+                Date taskDueDate = new Date(taskDueDateMillis);
 
                 Task task = new Task(id, status, taskName, taskDesc, taskDate,
                         taskStartTime, taskEndTime, taskDuration, taskType,
-                        repeat, recurringId, recurringDuration, taskUserID);
+                        repeat, recurringId, recurringDuration, taskUserID, taskDueDate);
                 taskList.add(task);
             }
             cursor.close();
@@ -124,4 +129,5 @@ public class TaskDatabase extends SQLiteOpenHelper {
         return taskList;
     }
 }
+
 

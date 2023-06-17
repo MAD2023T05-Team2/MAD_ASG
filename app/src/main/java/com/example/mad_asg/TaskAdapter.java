@@ -22,10 +22,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onItemClick(int position);
     }
 
+
+
     public TaskAdapter(List<Task> taskList, OnItemClickListener listener) {
         this.taskList = taskList;
         this.listener = listener;
     }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 
     @NonNull
     @Override
