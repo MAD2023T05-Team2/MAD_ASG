@@ -41,7 +41,7 @@ public class HomePage extends AppCompatActivity {
                 startActivity(new Intent(HomePage.this, MainActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
-                startActivity(new Intent(HomePage.this, CalendarView.class));
+                startActivity(new Intent(HomePage.this, CalendarPage.class));
                 return true;
             } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(HomePage.this, DestressPage.class));

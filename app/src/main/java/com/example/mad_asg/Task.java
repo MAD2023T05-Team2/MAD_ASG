@@ -17,9 +17,11 @@ public class Task {
     private String recurringDuration;
     private int taskUserID;
 
+    private Date DueDate;
+
     public Task(int id, String status, String taskName, String taskDesc, Date taskDate,
                 String taskStartTime, String taskEndTime, long taskDuration, String taskType,
-                String repeat, int recurringId, String recurringDuration, int taskUserID) {
+                String repeat, int recurringId, String recurringDuration, int taskUserID, Date DueDate) {
         this.Id = id;
         this.status = status;
         this.taskName = taskName;
@@ -33,6 +35,7 @@ public class Task {
         this.recurringId = recurringId;
         this.recurringDuration = recurringDuration;
         this.taskUserID = taskUserID;
+        this.DueDate = DueDate;
     }
 
     public int getId() {
@@ -85,5 +88,9 @@ public class Task {
 
     public int getTaskUserID() {
         return taskUserID;
+    }
+
+    public Date getDueDate() {
+        return DueDate;
     }
 }
