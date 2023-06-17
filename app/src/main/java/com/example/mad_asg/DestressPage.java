@@ -1,22 +1,29 @@
 package com.example.mad_asg;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DestressPage extends AppCompatActivity {
+    final String TITLE = "Destress Page";
 
     Button vidFragButton, picFragButton;
+    boolean isCountdownRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +58,12 @@ public class DestressPage extends AppCompatActivity {
 
         replaceFragment(new DestressMessage());
 
+
         picFragButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (!isCountdownRunning) {
+                    countDownTimer();}
                     replaceFragment(new Pictures());
 
                 }
@@ -64,7 +73,8 @@ public class DestressPage extends AppCompatActivity {
         vidFragButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (!isCountdownRunning) {
+                    countDownTimer();}
                     replaceFragment(new Videos());
 
                 }
@@ -78,6 +88,42 @@ public class DestressPage extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
+    }
+
+    CountDownTimer myCountdown;
+    private void countDownTimer(){
+
+        isCountdownRunning = true;
+
+        myCountdown = new CountDownTimer(60000,1000){
+            @Override
+            public void onTick(long l){
+                Log.v(TITLE, "Countdown" + l/1000);
+            }
+            @Override
+            public void onFinish(){
+                Log.v(TITLE, "countdown done!");
+                lockedOut();
+                myCountdown.cancel();
+            }
+        };
+        myCountdown.start();
+
+    }
+    private void lockedOut(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("1 minute is up! Back to being productive!").setCancelable(false);
+        builder.setPositiveButton("Let's go!", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                Log.v(TITLE, "User Accepts");
+                Intent intent = new Intent(DestressPage.this, HomePage.class);
+                startActivity(intent);
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 
