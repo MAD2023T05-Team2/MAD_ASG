@@ -28,7 +28,7 @@
             android:name=".MainActivity"
             android:exported="false"></activity>
         <activity
-            android:name=".CalendarView"
+            android:name=".CalendarPage"
             android:exported="false"></activity>
     </application>
 

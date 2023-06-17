@@ -34,7 +34,7 @@ public class DestressPage extends AppCompatActivity {
                 startActivity(new Intent(DestressPage.this, MainActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
-                startActivity(new Intent(DestressPage.this, CalendarView.class));
+                startActivity(new Intent(DestressPage.this, CalendarPage.class));
                 return true;
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(DestressPage.this, HomePage.class));
