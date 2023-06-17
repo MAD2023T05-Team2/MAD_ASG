@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".DestressMessage">
 
     <TextView
-        android:id="@+id/destressDesc2"
+        android:id="@+id/destressDesc"
         android:layout_width="271dp"
         android:layout_height="66dp"
         android:layout_gravity="center"
@@ -14,7 +15,7 @@
         android:text="Destress and elevate your mood by looking at a veriety of cute and funny picutres/videos!" />
 
     <TextView
-        android:id="@+id/destressMessage2"
+        android:id="@+id/destressMessage"
         android:layout_width="245dp"
         android:layout_height="170dp"
         android:layout_marginStart="77dp"
@@ -23,4 +24,11 @@
         android:gravity="center"
         android:text="Time to Destress!"
         android:textSize="48sp" />
+
+    <ImageView
+        android:id="@+id/gif"
+        android:layout_width="257dp"
+        android:layout_height="185dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="450dp" />
 </FrameLayout>

@@ -1,12 +1,5 @@
 package com.example.mad_asg;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +7,13 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -60,26 +58,29 @@ public class DestressPage extends AppCompatActivity {
 
 
         picFragButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isCountdownRunning) {
-                    countDownTimer();}
-                    replaceFragment(new Pictures());
-
+            @Override
+            public void onClick(View v) {
+                if (!isCountdownRunning) {
+                    countDownTimer();
                 }
-            });
+                replaceFragment(new Pictures());
+
+            }
+        });
 
 
         vidFragButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isCountdownRunning) {
-                    countDownTimer();}
-                    replaceFragment(new Videos());
-
+            @Override
+            public void onClick(View v) {
+                if (!isCountdownRunning) {
+                    countDownTimer();
                 }
-            });
-        }
+                replaceFragment(new Videos());
+
+            }
+        });
+
+    }
 
 
     private void replaceFragment(Fragment fragment) {
