@@ -155,7 +155,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 if (isValidInput) {
                     // Create a new Task object
                     Task newTask = new Task(taskList.size() + 1, "Pending", taskName, taskDesc, new Date(),
-                            taskStartTime, taskEndTime, Integer.parseInt(taskDurationString), "Type", "Repeat", 0, "", 1, new Date());
+                            taskStartTime, taskEndTime, Integer.parseInt(taskDurationString), "Type",
+                            "Repeat", 0, "", 1, new Date());
 
 
 
