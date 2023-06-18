@@ -1,4 +1,4 @@
-package com.example.mad_asg;
+package sg.edu.np.mad.productivibe;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

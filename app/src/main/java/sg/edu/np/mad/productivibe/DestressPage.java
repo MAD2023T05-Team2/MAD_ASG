@@ -1,4 +1,4 @@
-package com.example.mad_asg;
+package sg.edu.np.mad.productivibe;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,15 +7,12 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

@@ -1,4 +1,4 @@
-package com.example.mad_asg;
+package sg.edu.np.mad.productivibe;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +8,11 @@ import android.widget.CalendarView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import sg.edu.np.mad.productivibe.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 

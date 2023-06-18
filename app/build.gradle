@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mad_asg'
+    namespace 'sg.edu.np.mad.productivibe'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.mad_asg"
+        applicationId "sg.edu.np.mad.productivibe"
         minSdk 21
         targetSdk 33
         versionCode 1

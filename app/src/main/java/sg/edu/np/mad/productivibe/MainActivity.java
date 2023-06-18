@@ -1,6 +1,5 @@
-package com.example.mad_asg;
+package sg.edu.np.mad.productivibe;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;

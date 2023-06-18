@@ -1,11 +1,10 @@
-package com.example.mad_asg;
+package sg.edu.np.mad.productivibe;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;

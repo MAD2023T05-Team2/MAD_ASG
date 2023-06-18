@@ -1,4 +1,4 @@
-package com.example.mad_asg;
+package sg.edu.np.mad.productivibe;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,10 +7,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
