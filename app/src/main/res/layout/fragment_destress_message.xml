@@ -11,6 +11,9 @@
         android:layout_width="271dp"
         android:layout_height="66dp"
         android:layout_gravity="center"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="-60dp"
+        android:layout_marginEnd="59dp"
         android:gravity="center"
         android:text="Destress and elevate your mood by looking at a veriety of cute and funny picutres/videos!" />
 
@@ -29,6 +32,7 @@
         android:id="@+id/gif"
         android:layout_width="257dp"
         android:layout_height="185dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="450dp" />
+        android:layout_marginStart="78dp"
+        android:layout_marginTop="350dp"
+        android:src="@drawable/frog"/>
 </FrameLayout>

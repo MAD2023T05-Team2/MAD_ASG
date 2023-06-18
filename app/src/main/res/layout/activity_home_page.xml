@@ -17,31 +17,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/homeTaskRecyclerView"
-        android:layout_width="371dp"
-        android:layout_height="365dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="116dp"
         android:text="Upcoming tasks:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/homeTaskRecyclerView"
+        android:layout_width="371dp"
+        android:layout_height="365dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="83dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeTaskRecyclerView"

@@ -47,6 +47,28 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         setContentView(R.layout.activity_main);
         Log.v(TITLE, "Main Activity");
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_tasks);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.bottom_tasks) {
+                return true;
+            } else if (itemId == R.id.bottom_home) {
+                startActivity(new Intent(MainActivity.this, HomePage.class));
+                return true;
+            } else if (itemId == R.id.bottom_calendar) {
+                startActivity(new Intent(MainActivity.this, CalendarPage.class));
+                return true;
+            } else if (itemId == R.id.bottom_timer) {
+                startActivity(new Intent(MainActivity.this, DestressPage.class));
+                return true;
+            } else if (itemId == R.id.bottom_profile) {
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
