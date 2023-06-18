@@ -1,4 +1,4 @@
-package sg.edu.np.mad.productivibe;
+package sg.edu.np.mad.producti_vibe;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;

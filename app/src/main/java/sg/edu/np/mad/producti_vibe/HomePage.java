@@ -1,4 +1,4 @@
-package sg.edu.np.mad.productivibe;
+package sg.edu.np.mad.producti_vibe;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;

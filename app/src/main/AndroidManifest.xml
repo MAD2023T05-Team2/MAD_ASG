@@ -14,10 +14,10 @@
         android:theme="@style/Theme.MAD_ASG"
         tools:targetApi="31">
         <activity
-            android:name="sg.edu.np.mad.productivibe.DestressPage"
+            android:name="sg.edu.np.mad.producti_vibe.DestressPage"
             android:exported="false" />
         <activity
-            android:name="sg.edu.np.mad.productivibe.HomePage"
+            android:name="sg.edu.np.mad.producti_vibe.HomePage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +26,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sg.edu.np.mad.productivibe.MainActivity"
+            android:name="sg.edu.np.mad.producti_vibe.MainActivity"
             android:exported="false"/>
         <activity
-            android:name="sg.edu.np.mad.productivibe.CalendarPage"
+            android:name="sg.edu.np.mad.producti_vibe.CalendarPage"
             android:exported="false"/>
     </application>
 

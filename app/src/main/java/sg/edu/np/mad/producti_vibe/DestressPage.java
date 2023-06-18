@@ -1,4 +1,4 @@
-package sg.edu.np.mad.productivibe;
+package sg.edu.np.mad.producti_vibe;
 
 import android.content.DialogInterface;
 import android.content.Intent;
