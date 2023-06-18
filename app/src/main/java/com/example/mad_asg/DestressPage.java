@@ -14,15 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DestressPage extends AppCompatActivity {
     final String TITLE = "Destress Page";
-
     Button vidFragButton, picFragButton;
     boolean isCountdownRunning = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +56,6 @@ public class DestressPage extends AppCompatActivity {
 
         replaceFragment(new DestressMessage());
 
-
         picFragButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,10 +63,8 @@ public class DestressPage extends AppCompatActivity {
                     countDownTimer();
                 }
                 replaceFragment(new Pictures());
-
             }
         });
-
 
         vidFragButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,9 +76,7 @@ public class DestressPage extends AppCompatActivity {
 
             }
         });
-
     }
-
 
     private void replaceFragment(Fragment fragment) {
 
@@ -109,8 +104,8 @@ public class DestressPage extends AppCompatActivity {
             }
         };
         myCountdown.start();
-
     }
+
     private void lockedOut(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("1 minute is up! Back to being productive!").setCancelable(false);
@@ -122,10 +117,14 @@ public class DestressPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         AlertDialog alert = builder.create();
         alert.show();
     }
 
-
+//    RecyclerView dpRecyclerView = findViewById(R.id.pictureRecyclerView);
+//    DestressAdapter destressAdapter = new DestressAdapter(imageList);
+//    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//    dpRecyclerView.setLayoutManager(layoutManager);
+//    dpRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//    dpRecyclerView.setAdapter(destressAdapter);
 }

@@ -8,7 +8,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pictureRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/picture_item" />
+        android:layout_width="wrap_content"
+        android:layout_height="662dp"
+        android:layout_marginTop="70dp"
+        tools:listitem="@layout/dp_customlayout" />
+
 </FrameLayout>
