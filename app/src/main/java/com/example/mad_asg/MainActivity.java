@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
     private RecyclerView recyclerView;
     private TaskAdapter adapter;
     private List<Task> taskList;
@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         taskList = new ArrayList<>();
-        adapter = new TaskAdapter(taskList, this);
+        adapter = new TaskAdapter(taskList, this,this );
+        adapter.setOnItemClickListener(this); // Set item click listener
+        adapter.setOnEditClickListener(this); // Set edit click listener
         recyclerView.setAdapter(adapter);
 
         // Initialize the database
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         // Example button actions
         Button createButton = findViewById(R.id.createButton);
         Button deleteButton = findViewById(R.id.deleteButton);
+        Button editButton = findViewById(R.id.editButton);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,11 +80,26 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 }
             }
         });
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedPosition = adapter.getSelectedPosition();
+                if (selectedPosition != RecyclerView.NO_POSITION) {
+                    showEditTaskDialog(selectedPosition);
+                }
+            }
+        });
     }
 
     @Override
     public void onItemClick(int position) {
         adapter.setSelectedPosition(position);
+    }
+
+    @Override
+    public void onEditClick(int position) {
+        showEditTaskDialog(position);
     }
 
     private void showCreateTaskDialog() {
@@ -189,6 +207,55 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    private void showEditTaskDialog(final int position) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_edit_task, null);
+
+        final EditText taskNameEditText = dialogView.findViewById(R.id.editTaskNameEditText);
+        final EditText taskDescEditText = dialogView.findViewById(R.id.editTaskDescriptionEditText);
+        final EditText taskStartTimeEditText = dialogView.findViewById(R.id.editTaskStartTimeEditText);
+        final EditText taskEndTimeEditText = dialogView.findViewById(R.id.editTaskEndTimeEditText);
+        final EditText taskDurationEditText = dialogView.findViewById(R.id.editTaskDurationEditText);
+
+        // Populate the EditText fields with the existing task data
+        Task task = taskList.get(position);
+        taskNameEditText.setText(task.getTaskName());
+        taskDescEditText.setText(task.getTaskDesc());
+        taskStartTimeEditText.setText(task.getTaskStartTime());
+        taskEndTimeEditText.setText(task.getTaskEndTime());
+        taskDurationEditText.setText(String.valueOf(task.getTaskDuration()));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Task");
+        builder.setView(dialogView);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Get the edited values from the EditText fields
+                String editedTaskName = taskNameEditText.getText().toString().trim();
+                String editedTaskDesc = taskDescEditText.getText().toString().trim();
+                String editedTaskStartTime = taskStartTimeEditText.getText().toString().trim();
+                String editedTaskEndTime = taskEndTimeEditText.getText().toString().trim();
+                int editedTaskDuration = Integer.parseInt(taskDurationEditText.getText().toString().trim());
+
+                // Update the task in the list and database
+                Task task = taskList.get(position);
+                task.setTaskName(editedTaskName);
+                task.setTaskDesc(editedTaskDesc);
+                task.setTaskStartTime(editedTaskStartTime);
+                task.setTaskStartTime(editedTaskEndTime);
+                task.setTaskDuration(editedTaskDuration);
+
+                taskDatabase.updateTask(task);
+
+                // Notify the adapter of the updated task
+                adapter.notifyItemChanged(position);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.create().show();
     }
 
     private void showDeleteConfirmationDialog(final int position) {

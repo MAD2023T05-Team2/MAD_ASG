@@ -89,8 +89,65 @@ public class Task {
     public int getTaskUserID() {
         return taskUserID;
     }
-
     public Date getDueDate() {
         return dueDate;
     }
-}
+
+
+    public void setId(int id) {
+        Id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setTaskDesc(String taskDesc) {
+        this.taskDesc = taskDesc;
+    }
+
+    public void setTaskDate(Date taskDate) {
+        this.taskDate = taskDate;
+    }
+
+    public void setTaskStartTime(String taskStartTime) {
+        this.taskStartTime = taskStartTime;
+    }
+
+    public void setTaskEndTime(String taskEndTime) {
+        this.taskEndTime = taskEndTime;
+    }
+
+    public void setTaskDuration(long taskDuration) {
+        this.taskDuration = taskDuration;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
+
+    public void setRepeat(String repeat) {
+        this.repeat = repeat;
+    }
+
+    public void setRecurringId(int recurringId) {
+        this.recurringId = recurringId;
+    }
+
+    public void setRecurringDuration(String recurringDuration) {
+        this.recurringDuration = recurringDuration;
+    }
+
+    public void setTaskUserID(int taskUserID) {
+        this.taskUserID = taskUserID;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }}
+
+

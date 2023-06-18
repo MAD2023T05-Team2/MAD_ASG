@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -16,23 +17,31 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
     private OnItemClickListener listener;
+    private OnEditClickListener editListener;
     private int selectedPosition = RecyclerView.NO_POSITION;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
+    public interface OnEditClickListener {
+        void onEditClick(int position);
+    }
 
 
 
-    public TaskAdapter(List<Task> taskList, OnItemClickListener listener) {
+    public TaskAdapter(List<Task> taskList, OnItemClickListener listener, OnEditClickListener editListener) {
         this.taskList = taskList;
         this.listener = listener;
+        this.editListener = editListener;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
+    public void setOnEditClickListener(OnEditClickListener listener) {
+        this.editListener = listener;
+    }
 
     @NonNull
     @Override
@@ -104,6 +113,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TextView taskEndTimeTextView;
         public TextView taskDurationTextView;
 
+        public Button editButton;
+
         public TaskViewHolder(View view) {
             super(view);
             taskNameTextView = view.findViewById(R.id.taskNameTextView);
@@ -112,6 +123,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskStartTimeTextView = view.findViewById(R.id.taskStartTimeTextView);
             taskEndTimeTextView = view.findViewById(R.id.taskEndTimeTextView);
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
+            editButton = itemView.findViewById(R.id.editButton);
            // check_box =  view.findViewById(R.id.checkBox);
         }
     }

@@ -63,7 +63,6 @@ public class TaskDatabase extends SQLiteOpenHelper {
     public void addTask(Task task) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        //values.put(COLUMN_ID, task.getId());
         values.put(COLUMN_STATUS, task.getStatus());
         values.put(COLUMN_TASK_NAME, task.getTaskName());
         values.put(COLUMN_TASK_DESC, task.getTaskDesc());
@@ -80,56 +79,6 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
-
-//    public List<Task> getAllTasks() {
-//        List<Task> taskList = new ArrayList<>();
-//        SQLiteDatabase db = getReadableDatabase();
-//        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
-//        if (cursor != null) {
-//            while (cursor.moveToNext()) {
-//                int idIndex = cursor.getColumnIndex(COLUMN_ID);
-//                int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
-//                int taskNameIndex = cursor.getColumnIndex(COLUMN_TASK_NAME);
-//                int taskDescIndex = cursor.getColumnIndex(COLUMN_TASK_DESC);
-//                int taskDateIndex = cursor.getColumnIndex(COLUMN_TASK_DATE);
-//                int taskStartTimeIndex = cursor.getColumnIndex(COLUMN_TASK_START_TIME);
-//                int taskEndTimeIndex = cursor.getColumnIndex(COLUMN_TASK_END_TIME);
-//                int taskDurationIndex = cursor.getColumnIndex(COLUMN_TASK_DURATION);
-//                int taskTypeIndex = cursor.getColumnIndex(COLUMN_TASK_TYPE);
-//                int repeatIndex = cursor.getColumnIndex(COLUMN_REPEAT);
-//                int recurringIdIndex = cursor.getColumnIndex(COLUMN_RECURRING_ID);
-//                int recurringDurationIndex = cursor.getColumnIndex(COLUMN_RECURRING_DURATION);
-//                int taskUserIdIndex = cursor.getColumnIndex(COLUMN_TASK_USER_ID);
-//                int taskDueDateIndex = cursor.getColumnIndex(COLUMN_DUE_DATE);
-//
-//
-//                int id = cursor.getInt(idIndex);
-//                String status = cursor.getString(statusIndex);
-//                String taskName = cursor.getString(taskNameIndex);
-//                String taskDesc = cursor.getString(taskDescIndex);
-//                long taskDateMillis = cursor.getLong(taskDateIndex);
-//                Date taskDate = new Date(taskDateMillis);
-//                String taskStartTime = cursor.getString(taskStartTimeIndex);
-//                String taskEndTime = cursor.getString(taskEndTimeIndex);
-//                long taskDuration = cursor.getLong(taskDurationIndex);
-//                String taskType = cursor.getString(taskTypeIndex);
-//                String repeat = cursor.getString(repeatIndex);
-//                int recurringId = cursor.getInt(recurringIdIndex);
-//                String recurringDuration = cursor.getString(recurringDurationIndex);
-//                int taskUserID = cursor.getInt(taskUserIdIndex);
-//                long taskDueDateMillis = cursor.getLong(taskDueDateIndex);
-//                Date taskDueDate = new Date(taskDueDateMillis);
-//
-//                Task task = new Task(id, status, taskName, taskDesc, taskDate,
-//                        taskStartTime, taskEndTime, taskDuration, taskType,
-//                        repeat, recurringId, recurringDuration, taskUserID, taskDueDate);
-//                taskList.add(task);
-//            }
-//            cursor.close();
-//        }
-//        db.close();
-//        return taskList;
-//    }
 
     public List<Task> getAllTasks() {
         List<Task> taskList = new ArrayList<>();
@@ -178,6 +127,20 @@ public class TaskDatabase extends SQLiteOpenHelper {
         }
         db.close();
         return taskList;
+    }
+
+    public void updateTask(Task task) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TASK_NAME, task.getTaskName());
+        values.put(COLUMN_TASK_DESC, task.getTaskDesc());
+        // ... Add other fields to be updated
+
+        String selection = COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(task.getId())};
+
+        int rowsAffected = db.update(TABLE_NAME, values, selection, selectionArgs);
+        db.close();
     }
 }
 
