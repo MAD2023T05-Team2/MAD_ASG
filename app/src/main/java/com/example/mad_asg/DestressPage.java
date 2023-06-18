@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -21,7 +23,6 @@ public class DestressPage extends AppCompatActivity {
     final String TITLE = "Destress Page";
     Button vidFragButton, picFragButton;
     boolean isCountdownRunning = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,6 @@ public class DestressPage extends AppCompatActivity {
         vidFragButton = findViewById(R.id.videos);
 
         replaceFragment(new DestressMessage());
-
 
         picFragButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +103,8 @@ public class DestressPage extends AppCompatActivity {
             }
         };
         myCountdown.start();
-
     }
+
     private void lockedOut(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("1 minute is up! Back to being productive!").setCancelable(false);
@@ -116,7 +116,6 @@ public class DestressPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         AlertDialog alert = builder.create();
         alert.show();
     }
