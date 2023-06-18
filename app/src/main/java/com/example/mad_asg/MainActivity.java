@@ -1,9 +1,15 @@
 package com.example.mad_asg;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
         // Initialize the database
         taskDatabase = new TaskDatabase(this);
+
 
         // Load tasks from the database
         taskList.addAll(taskDatabase.getAllTasks());
@@ -140,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
                     // Notify the adapter of the new task
                     adapter.notifyItemInserted(taskList.size() - 1);
+
+                    // Trigger Task Notifications
+                    sendPushNotification(newTask);
                 }
             }
         });
@@ -288,5 +301,51 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         }
     }
 
+    public void sendPushNotification(Task task) {
+        // Notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+
+            String taskDeadline = task.getTaskEndTime(); // To be edited after date is added
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            try {
+                Date deadline = sdf.parse(taskDeadline);
+                Date currentTime = new Date();
+                long timeRemaining = deadline.getTime() - currentTime.getTime();
+
+                // Notification sent if the time remaining is <= 2 hours
+                if (timeRemaining <= 7200000) {
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    // Calculating the time left
+                    long hour = timeRemaining / 3600000;
+                    long minutes = (timeRemaining % 3600000) / 60000;
+                    NotificationCompat.Builder notification = new NotificationCompat.Builder(MainActivity.this, "Task Deadline Notification")
+                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+                            .setContentTitle("'" + task.getTaskName() + "' Deadline Approaching!")
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText("Your task ending in " + hour + " hour " + minutes + " minutes, don't miss the deadline! Complete your task before the deadline hits."))
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                            .setContentIntent(pendingIntent);
+
+                    // Notification Scheduling
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    //long triggerTime = deadline; // When the alarm goes off
+                    //int interval = 120000; //1800000; // Alarm to repeat every 30 minutes
+                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent);
+
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    notificationManager.notify(1, notification.build());
+                }
+            } catch (ParseException e) {
+                e.printStackTrace(); }
+        }
+    }
 }
 
