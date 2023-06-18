@@ -7,32 +7,33 @@
     tools:context=".DestressMessage">
 
     <TextView
-        android:id="@+id/destressDesc"
-        android:layout_width="271dp"
-        android:layout_height="66dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="-60dp"
-        android:layout_marginEnd="59dp"
-        android:gravity="center"
-        android:text="Destress and elevate your mood by looking at a veriety of cute and funny picutres/videos!" />
-
-    <TextView
         android:id="@+id/destressMessage"
         android:layout_width="245dp"
         android:layout_height="170dp"
-        android:layout_marginStart="77dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="59dp"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="60dp"
         android:gravity="center"
-        android:text="Time to Destress!"
-        android:textSize="48sp" />
+        android:textSize="40sp"
+        android:text="Time to Destress!"/>
+
+    <TextView
+        android:id="@+id/destressDesc"
+        android:layout_width="271dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="-85dp"
+        android:layout_marginEnd="70dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:text="Destress and Elevate Your Mood: Indulge in some photos/videos!" />
 
     <ImageView
         android:id="@+id/gif"
         android:layout_width="257dp"
         android:layout_height="185dp"
-        android:layout_marginStart="78dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="220dp"
         android:src="@drawable/frog"/>
 </FrameLayout>

@@ -19,7 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DestressPage extends AppCompatActivity {
     final String TITLE = "Destress Page";
-
     Button vidFragButton, picFragButton;
     boolean isCountdownRunning = false;
 
@@ -64,10 +63,8 @@ public class DestressPage extends AppCompatActivity {
                     countDownTimer();
                 }
                 replaceFragment(new Pictures());
-
             }
         });
-
 
         vidFragButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,12 +73,9 @@ public class DestressPage extends AppCompatActivity {
                     countDownTimer();
                 }
                 replaceFragment(new Videos());
-
             }
         });
-
     }
-
 
     private void replaceFragment(Fragment fragment) {
 
@@ -127,5 +121,10 @@ public class DestressPage extends AppCompatActivity {
         alert.show();
     }
 
-
+//    RecyclerView dpRecyclerView = findViewById(R.id.pictureRecyclerView);
+//    DestressAdapter destressAdapter = new DestressAdapter(imageList);
+//    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//    dpRecyclerView.setLayoutManager(layoutManager);
+//    dpRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//    dpRecyclerView.setAdapter(destressAdapter);
 }

@@ -10,5 +10,5 @@
         android:id="@+id/pictureRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/picture_item" />
+        tools:listitem="@layout/dp_customlayout" />
 </FrameLayout>
