@@ -22,7 +22,7 @@ public class Pictures extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_pictures, container, false);
+        view = inflater.inflate(R.layout.di_main, container, false);
         return view;
     }
 //    imageList = new ArrayList<>();

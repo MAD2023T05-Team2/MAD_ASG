@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pic_framelayout"
     android:layout_width="match_parent"
@@ -10,5 +11,6 @@
         android:id="@+id/pictureRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/dp_customlayout" />
+        tools:listitem="@layout/di_customlayout" />
+
 </FrameLayout>
