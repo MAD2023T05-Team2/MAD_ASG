@@ -13,7 +13,6 @@ import android.widget.ImageView;
 public class DestressMessage extends Fragment {
 
     View view;
-    ImageView gif;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,7 +22,9 @@ public class DestressMessage extends Fragment {
         return view;
     }
 
-    /*gif = findViewById(R.id.gif);
+    /*@Override View onCreate(Bundle saved instance)
+
+    ImageView gif = findViewById(R.id.gif);
 
     // Adding the gif here using glide library
         Glide.with(this).load(R.drawable.frog).into(gif);
