@@ -36,18 +36,18 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.v(TITLE,"Main Activity");
+        Log.v(TITLE, "Main Activity");
 
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         taskList = new ArrayList<>();
-        adapter = new TaskAdapter(taskList, this,this );
+        adapter = new TaskAdapter(taskList, this, this);
         adapter.setOnItemClickListener(this); // Set item click listener
         adapter.setOnEditClickListener(this); // Set edit click listener
         recyclerView.setAdapter(adapter);
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         showEditTaskDialog(position);
     }
 
+
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
@@ -125,58 +126,13 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 String taskDurationString = taskDurationEditText.getText().toString().trim();
 
                 // Validate user input
-                boolean isValidInput = true;
-                StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
-
-                if (taskName.isEmpty()) {
-                    isValidInput = false;
-                    errorMessage.append("\n- Task name is required");
-                }
-                if (taskDesc.isEmpty()) {
-                    isValidInput = false;
-                    errorMessage.append("\n- Task description is required");
-                }
-                if (taskStartTime.isEmpty()) {
-                    isValidInput = false;
-                    errorMessage.append("\n- Task start time is required");
-                } else {
-                    if (!isValidTimeFormat(taskStartTime)) {
-                        isValidInput = false;
-                        errorMessage.append("\n- Task start time is in an invalid format");
-                    }
-                }
-                if (taskEndTime.isEmpty()) {
-                    isValidInput = false;
-                    errorMessage.append("\n- Task end time is required");
-                } else {
-                    if (!isValidTimeFormat(taskEndTime)) {
-                        isValidInput = false;
-                        errorMessage.append("\n- Task end time is in an invalid format");
-                    }
-                }
-                if (taskDurationString.isEmpty()) {
-                    isValidInput = false;
-                    errorMessage.append("\n- Task duration is required");
-                } else {
-                    try {
-                        int taskDuration = Integer.parseInt(taskDurationString);
-                        if (taskDuration <= 0) {
-                            isValidInput = false;
-                            errorMessage.append("\n- Task duration should be a positive number");
-                        }
-                    } catch (NumberFormatException e) {
-                        isValidInput = false;
-                        errorMessage.append("\n- Task duration should be a valid number");
-                    }
-                }
-
-                if (isValidInput) {
+                if (validateInput(taskName, taskDesc, taskStartTime, taskEndTime, taskDurationString)) {
                     // Create a new Task object
-                    Task newTask = new Task(taskList.size() + 1, "Pending", taskName, taskDesc, new Date(),
+                    Task newTask = new Task(
+                            taskList.size() + 1, "Pending", taskName, taskDesc, new Date(),
                             taskStartTime, taskEndTime, Integer.parseInt(taskDurationString), "Type",
-                            "Repeat", 0, "", 1, new Date());
-
-
+                            "Repeat", 0, "", 1, new Date()
+                    );
 
                     // Add the new task to the list and database
                     taskList.add(newTask);
@@ -184,13 +140,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
                     // Notify the adapter of the new task
                     adapter.notifyItemInserted(taskList.size() - 1);
-                } else {
-                    // Display error message for invalid input
-                    AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                    errorDialogBuilder.setTitle("Invalid Input");
-                    errorDialogBuilder.setMessage(errorMessage.toString());
-                    errorDialogBuilder.setPositiveButton("OK", null);
-                    errorDialogBuilder.create().show();
                 }
             }
         });
@@ -198,16 +147,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.create().show();
     }
 
-    private boolean isValidTimeFormat(String time) {
-        try {
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            timeFormat.setLenient(false);
-            timeFormat.parse(time);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
 
     private void showEditTaskDialog(final int position) {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -277,5 +216,77 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         adapter.setSelectedPosition(RecyclerView.NO_POSITION);
         adapter.notifyDataSetChanged();
     }
+
+
+    // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
+    private boolean validateInput(String taskName, String taskDesc, String taskStartTime, String taskEndTime, String taskDurationString) {
+        boolean isValidInput = true;
+        StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
+
+        if (taskName.isEmpty()) {
+            isValidInput = false;
+            errorMessage.append("\n- Task name is required");
+        }
+        if (taskDesc.isEmpty()) {
+            isValidInput = false;
+            errorMessage.append("\n- Task description is required");
+        }
+        if (taskStartTime.isEmpty()) {
+            isValidInput = false;
+            errorMessage.append("\n- Task start time is required");
+        } else {
+            if (!isValidTimeFormat(taskStartTime)) {
+                isValidInput = false;
+                errorMessage.append("\n- Task start time is in an invalid format");
+            }
+        }
+        if (taskEndTime.isEmpty()) {
+            isValidInput = false;
+            errorMessage.append("\n- Task end time is required");
+        } else {
+            if (!isValidTimeFormat(taskEndTime)) {
+                isValidInput = false;
+                errorMessage.append("\n- Task end time is in an invalid format");
+            }
+        }
+        if (taskDurationString.isEmpty()) {
+            isValidInput = false;
+            errorMessage.append("\n- Task duration is required");
+        } else {
+            try {
+                int taskDuration = Integer.parseInt(taskDurationString);
+                if (taskDuration <= 0) {
+                    isValidInput = false;
+                    errorMessage.append("\n- Task duration should be a positive number");
+                }
+            } catch (NumberFormatException e) {
+                isValidInput = false;
+                errorMessage.append("\n- Task duration should be a valid number");
+            }
+        }
+
+        if (!isValidInput) {
+            // Display error message for invalid input
+            AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            errorDialogBuilder.setTitle("Invalid Input");
+            errorDialogBuilder.setMessage(errorMessage.toString());
+            errorDialogBuilder.setPositiveButton("OK", null);
+            errorDialogBuilder.create().show();
+        }
+
+        return isValidInput;
+    }
+
+    private boolean isValidTimeFormat(String time) {
+        try {
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            timeFormat.setLenient(false);
+            timeFormat.parse(time);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
 }
 
