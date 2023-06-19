@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginPage extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class LoginPage extends AppCompatActivity {
                 Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
                 loginToHome.putExtra("Username", username.getText().toString());
                 startActivity(loginToHome);
+                Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -43,7 +45,6 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public void onClick (View v){
                 Intent loginToSignUp = new Intent(LoginPage.this, SignUpPage.class);
-                //loginToSignUp.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(loginToSignUp);
             }
         });

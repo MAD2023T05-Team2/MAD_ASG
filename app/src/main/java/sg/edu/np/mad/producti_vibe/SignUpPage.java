@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SignUpPage extends AppCompatActivity {
 
@@ -31,6 +32,7 @@ public class SignUpPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
                 startActivity(signupToLogin);
+                Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
             }
         });
     }
