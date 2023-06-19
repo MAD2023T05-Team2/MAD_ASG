@@ -128,6 +128,9 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 int taskUserID = cursor.getInt(taskUserIdIndex);
                 long taskDueDateMillis = cursor.getLong(taskDueDateIndex);
                 Date taskDueDate = new Date(taskDueDateMillis);
+                Log.v(TABLE_NAME,String.format("%s-%s-%s", taskDueDate.toString().substring(8, 10),
+                        taskDueDate.toString().substring(4, 7),
+                        taskDueDate.toString().substring(30, 34)));
 
                 Task task = new Task(id, status, taskName, taskDesc, taskDate,
                         taskStartTime, taskEndTime, taskDuration, taskType,
@@ -144,12 +147,23 @@ public class TaskDatabase extends SQLiteOpenHelper {
     // part of R in CRUD
     // since filtering a list is only available for API 24++
 
-    public List<Task> getFilteredTasks(String colName, String value){
+    public List<Task> getFilteredTasks(String colName, String compare,String value){
         List<Task> filteredList = new ArrayList<>();
-        String QUERY_TASKS = String.format("SELECT * FROM %s WHERE %s like %s;",
+        String QUERY_TASKS = String.format("SELECT * FROM %s WHERE %s %s %s;",
                 TABLE_NAME,
                 colName,
+                compare,
                 value);
+        if (compare == "date") {
+            // need to retrieve rows of tasks due that day
+            // format of new Date() = Mon Jun 19 14:26:59 GMT+08:00 2023
+            QUERY_TASKS = String.format("SELECT * FROM %1$s " +
+                            "WHERE substr(%2$s, 8, 10) || '-' || substr(%2$s , 4, 7) || '-' || substr(%2$s , 30, 34)" +
+                            " LIKE '%3$s' ;",
+                    TABLE_NAME,
+                    colName,
+                    value);
+        }
         Log.d(TABLE_NAME,QUERY_TASKS);
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY_TASKS,null);
@@ -188,6 +202,10 @@ public class TaskDatabase extends SQLiteOpenHelper {
                     int taskUserID = cursor.getInt(taskUserIdIndex);
                     long taskDueDateMillis = cursor.getLong(taskDueDateIndex);
                     Date taskDueDate = new Date(taskDueDateMillis);
+
+                    Log.v(TABLE_NAME,String.format("%s %s %s", taskDueDate.toString().substring(8, 2),
+                            taskDueDate.toString().substring(4, 3),
+                            taskDueDate.toString().substring(24, 4)));
 
                     Task task = new Task(id, status, taskName, taskDesc, taskDate,
                             taskStartTime, taskEndTime, taskDuration, taskType,
