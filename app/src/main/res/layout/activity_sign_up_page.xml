@@ -55,8 +55,8 @@
             android:layout_height="60dp"
             android:layout_marginStart="7dp"
             android:layout_marginTop="190dp"
+            android:backgroundTint="@color/teal"
             android:text="Create Account"
-            android:textSize="20dp"
-            android:backgroundTint = "@color/forest_green"/>
+            android:textSize="20dp" />
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
