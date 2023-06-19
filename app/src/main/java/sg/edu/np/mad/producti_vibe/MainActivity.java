@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
     private RecyclerView recyclerView;
-    private TaskAdapter adapter;
+    public TaskAdapter adapter;
     private List<Task> taskList;
     private TaskDatabase taskDatabase;
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         recyclerView.setAdapter(adapter);
 
         // Initialize the database
-        taskDatabase = new TaskDatabase(this);
+        taskDatabase = TaskDatabase.getInstance(this);
 
 
         // Load tasks from the database
