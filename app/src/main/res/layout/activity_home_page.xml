@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="40dp"
-        android:text="Hello, [Name]!"
         android:textStyle="bold"
         android:textSize="40sp"
         app:layout_constraintStart_toStartOf="parent"

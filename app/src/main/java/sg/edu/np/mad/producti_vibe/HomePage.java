@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -21,8 +21,9 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     private TaskAdapter homeTaskadapter;
     final String TITLE = "Home Page";
 
+    String recvUsername = "";
 
-    @SuppressLint("NonConstantResourceId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,11 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     protected void onStart() {
         super.onStart();
 
+        Intent myRecvIntent = getIntent();
+        recvUsername = myRecvIntent.getStringExtra("Username");
+        TextView myMessage = findViewById(R.id.textView);
+        myMessage.setText("Hello, " + recvUsername);
+
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
         // Load tasks from the database
@@ -70,75 +76,6 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     }
 
 
-/*
-
-        ImageView home = findViewById(R.id.homeicon);
-        home.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-
-                Log.v(TITLE, "Task Button clicked!");
-                Intent i = new Intent(HomePage.this, HomePage.class);
-                startActivity(i);
-                return false;
-            }
-        });
-
-        ImageView tasks = findViewById(R.id.todolist);
-        tasks.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-
-                Log.v(TITLE, "Task Button clicked!");
-                Intent i = new Intent(HomePage.this, MainActivity.class);
-                startActivity(i);
-                return false;
-            }
-        });
-
-        ImageView calendar = findViewById(R.id.calendaricon);
-        calendar.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-
-                Log.v(TITLE, "Task Button clicked!");
-                Intent i = new Intent(HomePage.this, CalendarView.class);
-                startActivity(i);
-                return false;
-            }
-        });
-
-        ImageView timer = findViewById(R.id.timericon);
-        timer.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-
-                Log.v(TITLE, "Task Button clicked!");
-                Intent i = new Intent(HomePage.this, MainActivity.class);
-                startActivity(i);
-                return false;
-            }
-        });
-        /*for (int i = 0; i <100; i++){
-            Task myData = new Task();
-            myData.setMyImageID(R.drawable.spongebob);
-            myData.setMyText(String.valueOf(i));
-            myList.add(myData);
-        }
-        // Initialize RecyclerView and its adapter
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        homeTaskList = new ArrayList<>();
-        homeTaskadapter = new TaskAdapter(homeTaskList, this);
-        recyclerView.setAdapter(homeTaskadapter);
-
-        // Initialize the database
-        taskDatabase = new TaskDatabase(this);
-
-        // Load tasks from the database
-        List<Task> allTasks = taskDatabase.getAllTasks();
-        homeTaskadapter.notifyDataSetChanged();
-*/
 
     @Override
     public void onItemClick(int position) {
