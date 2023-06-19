@@ -21,7 +21,7 @@ public class Videos extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_videos, container, false);
         vv = view.findViewById(R.id.videoView);
-        vv.setVideoPath("android.resource://"+ requireActivity().getPackageName() +"/"+R.raw.flowers);
+        vv.setVideoPath("android.resource://"+ requireActivity().getPackageName() +"/"+R.raw.raining_trees);
         MediaController med = new MediaController(requireActivity());
         vv.setMediaController(med);
         med.setAnchorView(vv);
