@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
@@ -122,5 +123,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             editButton = itemView.findViewById(R.id.editButton);
            // check_box =  view.findViewById(R.id.checkBox);
         }
+    }
+    public void setFilter(List<Task> filterTasks) {
+        List<Task> filterLists = new ArrayList<>();
+        filterLists.addAll(filterTasks);
+        notifyDataSetChanged();
     }
 }

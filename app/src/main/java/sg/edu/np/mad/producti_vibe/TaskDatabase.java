@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.text.CaseMap;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -137,6 +139,75 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
         return taskList;
     }
+
+    // query for rows matching the given value
+    // part of R in CRUD
+    // since filtering a list is only available for API 24++
+
+    public List<Task> getFilteredTasks(String colName, String value){
+        List<Task> filteredList = new ArrayList<>();
+        String QUERY_TASKS = String.format("SELECT * FROM %s WHERE %s like %s;",
+                TABLE_NAME,
+                colName,
+                value);
+        Log.d(TABLE_NAME,QUERY_TASKS);
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(QUERY_TASKS,null);
+        // instead of crashing the app, push the issues to appear in Log
+        try{
+            if(cursor.moveToFirst()){
+                // if it can means there is a value to retrieve
+                int idIndex = cursor.getColumnIndex(COLUMN_ID);
+                int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
+                int taskNameIndex = cursor.getColumnIndex(COLUMN_TASK_NAME);
+                int taskDescIndex = cursor.getColumnIndex(COLUMN_TASK_DESC);
+                int taskDateIndex = cursor.getColumnIndex(COLUMN_TASK_DATE);
+                int taskStartTimeIndex = cursor.getColumnIndex(COLUMN_TASK_START_TIME);
+                int taskEndTimeIndex = cursor.getColumnIndex(COLUMN_TASK_END_TIME);
+                int taskDurationIndex = cursor.getColumnIndex(COLUMN_TASK_DURATION);
+                int taskTypeIndex = cursor.getColumnIndex(COLUMN_TASK_TYPE);
+                int repeatIndex = cursor.getColumnIndex(COLUMN_REPEAT);
+                int recurringIdIndex = cursor.getColumnIndex(COLUMN_RECURRING_ID);
+                int recurringDurationIndex = cursor.getColumnIndex(COLUMN_RECURRING_DURATION);
+                int taskUserIdIndex = cursor.getColumnIndex(COLUMN_TASK_USER_ID);
+                int taskDueDateIndex = cursor.getColumnIndex(COLUMN_DUE_DATE);
+                do{
+                    int id = cursor.getInt(idIndex);
+                    String status = cursor.getString(statusIndex);
+                    String taskName = cursor.getString(taskNameIndex);
+                    String taskDesc = cursor.getString(taskDescIndex);
+                    long taskDateMillis = cursor.getLong(taskDateIndex);
+                    Date taskDate = new Date(taskDateMillis);
+                    String taskStartTime = cursor.getString(taskStartTimeIndex);
+                    String taskEndTime = cursor.getString(taskEndTimeIndex);
+                    long taskDuration = cursor.getLong(taskDurationIndex);
+                    String taskType = cursor.getString(taskTypeIndex);
+                    String repeat = cursor.getString(repeatIndex);
+                    int recurringId = cursor.getInt(recurringIdIndex);
+                    String recurringDuration = cursor.getString(recurringDurationIndex);
+                    int taskUserID = cursor.getInt(taskUserIdIndex);
+                    long taskDueDateMillis = cursor.getLong(taskDueDateIndex);
+                    Date taskDueDate = new Date(taskDueDateMillis);
+
+                    Task task = new Task(id, status, taskName, taskDesc, taskDate,
+                            taskStartTime, taskEndTime, taskDuration, taskType,
+                            repeat, recurringId, recurringDuration, taskUserID, taskDueDate);
+                    filteredList.add(task);
+                }
+                while (cursor.moveToNext());
+            }
+        } catch (Exception e){
+            Log.d(TABLE_NAME,"Error retrieving values from database");
+        }
+        finally {
+            if(cursor != null && !cursor.isClosed()){
+                cursor.close();
+                // close connection
+            }
+        }
+        return filteredList;
+    }
+
 
     public void updateTask(Task task) {
         SQLiteDatabase db = getWritableDatabase();

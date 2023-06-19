@@ -86,7 +86,11 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 String strDate =String.format("%1$s/%2$s/%3$s", day, (month + 1),year);
                 // filter out recycler view
                 Log.i(TITLE, strDate);
-
+                // retrieving the filtered values
+                List<Task> filteredTasksList = taskDatabase.getFilteredTasks("due_date",strDate);
+                adapter.setFilter(filteredTasksList);
+                //adapter.notifyDataSetChanged();
+                Log.v(TITLE,filteredTasksList.toString());
             }
         });
 
