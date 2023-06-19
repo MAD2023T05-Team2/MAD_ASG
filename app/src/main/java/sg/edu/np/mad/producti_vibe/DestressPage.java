@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,6 +23,7 @@ public class DestressPage extends AppCompatActivity {
     final String TITLE = "Destress Page";
     Button vidFragButton, picFragButton;
     boolean isCountdownRunning = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,11 +120,4 @@ public class DestressPage extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-//    RecyclerView dpRecyclerView = findViewById(R.id.pictureRecyclerView);
-//    DestressAdapter destressAdapter = new DestressAdapter(imageList);
-//    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//    dpRecyclerView.setLayoutManager(layoutManager);
-//    dpRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//    dpRecyclerView.setAdapter(destressAdapter);
 }

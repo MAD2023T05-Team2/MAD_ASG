@@ -1,30 +1,30 @@
 package sg.edu.np.mad.producti_vibe;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
 public class Pictures extends Fragment {
-
-    View view;
-
-
+    private RecyclerView DIrecyclerView;
+    private RecyclerView.Adapter DIAdapter;
+    int[] destressImages = {R.drawable.grades, R.drawable.guilty, R.drawable.sleep, R.drawable.study, R.drawable.hotdog};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Initialize Recycler View & the Adapter
+        DIrecyclerView = DIrecyclerView.findViewById(R.id.pictureRecyclerView);
+        DIrecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        DIrecyclerView.setHasFixedSize(false); // Size of recycler view changes with content
+        DIAdapter = new DIAdpater(getActivity(), destressImages);
+        DIrecyclerView.setAdapter(DIAdapter);
+
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.di_main, container, false);
-        return view;
+        return inflater.inflate(R.layout.di_page, container, false);
     }
-//    imageList = new ArrayList<>();
-//    RecyclerView recyclerView = findViewById(R.id.recyclerview);
-//    CustomAdapter custAdapter = new CustomAdapter(myList);
-//    LinearLayoutManager mylayoutManager = new LinearLayoutManager(this);
-//        recyclerView.setLayoutManager(mylayoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setAdapter(custAdapter);
 }

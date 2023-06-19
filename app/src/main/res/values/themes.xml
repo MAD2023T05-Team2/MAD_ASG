@@ -3,6 +3,7 @@
     <style name="Base.Theme.MAD_ASG" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:fontFamily">serif</item>
     </style>
 
     <style name="Theme.MAD_ASG" parent="Base.Theme.MAD_ASG" />
