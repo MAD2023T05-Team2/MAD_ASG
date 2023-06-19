@@ -4,70 +4,105 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/selected_item_background"
     tools:context=".LoginPage">
+
+    <TextView
+        android:id="@+id/landingHead"
+        android:layout_width="290dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="37dp"
+        android:text="The best time to start is now!"
+        android:textAlignment="center"
+        android:textColor="@color/teal"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/landingDesc"
+        android:layout_width="290dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="113dp"
+        android:text="You're about to discover a world of productivity and endless possibilities! Let us guide you through it."
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/landingImage"
+        android:layout_width="268dp"
+        android:layout_height="278dp"
+        android:layout_marginStart="-330dp"
+        android:layout_marginTop="1dp"
+        android:src="@drawable/landingimage"
+        app:layout_constraintStart_toEndOf="@+id/cardLoginView"
+        app:layout_constraintTop_toBottomOf="@+id/landingDesc" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLoginView"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:layout_marginTop="258dp"
+        android:layout_height="210dp"
+        android:layout_marginTop="430dp"
+        android:backgroundTint="@color/selected_item_background"
+        app:cardElevation="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardCornerRadius="30dp"
-        tools:layout_editor_absoluteX="1dp" >
-
-        <TextView
-            android:id="@+id/login"
-            android:layout_width="133dp"
-            android:layout_height="63dp"
-            android:layout_marginStart="120dp"
-            android:text="Login"
-            android:textAlignment="center"
-            android:textSize="45sp" />
+        tools:layout_editor_absoluteX="0dp">
 
         <EditText
             android:id="@+id/username"
-            android:layout_width="360dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="65dp"
+            android:layout_width="330dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/custom_edit_text"
             android:drawableLeft="@drawable/baseline_person_24"
-            android:drawablePadding="8dp"
-            android:paddingLeft="10dp"
-            android:hint="Username" />
+            android:drawablePadding="10dp"
+            android:hint="Username"
+            android:paddingLeft="14dp" />
 
         <EditText
             android:id="@+id/password"
-            android:layout_width="360dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="125dp"
+            android:layout_width="330dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="73dp"
             android:background="@drawable/custom_edit_text"
             android:drawableLeft="@drawable/baseline_password_24"
-            android:drawablePadding="8dp"
-            android:paddingLeft="10dp"
+            android:drawablePadding="10dp"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:paddingLeft="14dp" />
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="377dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="190dp"
-            android:text="Login"
-            android:textSize="20dp"
-            android:backgroundTint = "@color/forest_green"/>
+            android:layout_width="330dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="142dp"
+            android:backgroundTint="@color/teal"
+            android:cursorVisible="true"
+            android:fontFamily="serif"
+            android:text="LOG IN"
+            android:textSize="16dp" />
     </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/signup"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="30dp"
-        android:text="Not registered yet? Sign up here!"
+        android:layout_marginTop="0dp"
+        android:text="Not a member? Join now!"
         android:textAlignment="center"
-        android:textSize="16dp"
+        android:textSize="15dp"
         app:layout_constraintTop_toBottomOf="@+id/cardLoginView"
         tools:layout_editor_absoluteX="0dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

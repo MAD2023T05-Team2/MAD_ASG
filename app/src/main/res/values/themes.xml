@@ -1,9 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.MAD_ASG" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:fontFamily">serif</item>
+        <item name="android:statusBarColor">@color/teal</item> // Customises the emulator's island color
+        <item name="android:fontFamily">serif</item> // Overall application font
     </style>
 
     <style name="Theme.MAD_ASG" parent="Base.Theme.MAD_ASG" />

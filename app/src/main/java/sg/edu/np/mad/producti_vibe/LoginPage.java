@@ -3,8 +3,11 @@ package sg.edu.np.mad.producti_vibe;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +22,11 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
+        TextView memberYN = findViewById(R.id.signup);
+        Spannable spannable = new SpannableString("Not a member? Join now!");
+        spannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 12, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(Color.BLUE), 14, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        memberYN.setText(spannable);
     }
 
     @Override
