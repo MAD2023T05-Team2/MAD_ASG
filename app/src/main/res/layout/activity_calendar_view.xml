@@ -34,11 +34,9 @@
         android:id="@+id/calendarTaskView"
         android:layout_width="403dp"
         android:layout_height="210dp"
-        android:layout_marginStart="6dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="2dp"
-        app:layout_constraintEnd_toStartOf="@+id/bottomNavigationView"
-        app:layout_constraintHorizontal_bias="0.004"
+        android:layout_marginBottom="19dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 

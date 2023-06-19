@@ -28,7 +28,16 @@ public class TaskDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_TASK_USER_ID = "task_user_id";
     private static final String COLUMN_DUE_DATE = "due_date";
 
-    public TaskDatabase(Context context) {
+    private static TaskDatabase sInstance;
+    public static synchronized TaskDatabase getInstance(Context context){
+        // uses the app's context, ensuring no accidental data / activity's context leakage
+        if (sInstance == null){
+            sInstance = new TaskDatabase(context.getApplicationContext());
+        }
+        return sInstance;
+    }
+    private TaskDatabase(Context context) {
+        // private instead of public to force usage of getInstance()
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -25,9 +25,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public interface OnEditClickListener {
         void onEditClick(int position);
     }
-
-
-
     public TaskAdapter(List<Task> taskList, OnItemClickListener listener, OnEditClickListener editListener) {
         this.taskList = taskList;
         this.listener = listener;

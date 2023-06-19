@@ -1,6 +1,7 @@
 package sg.edu.np.mad.producti_vibe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
@@ -10,15 +11,17 @@ import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class HomePage extends AppCompatActivity {
+public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
-    private RecyclerView recyclerView;
-    private TaskAdapter homeTaskadapter;
-    private List<Task> homeTaskList;
+    private RecyclerView homeTaskRecyclerView;
     private TaskDatabase taskDatabase;
+    private TaskAdapter homeTaskadapter;
     final String TITLE = "Home Page";
+
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +54,24 @@ public class HomePage extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
+
+        // Initialize the database
+        taskDatabase = TaskDatabase.getInstance(this);
+        // Load tasks from the database
+        List<Task> homeTaskList = taskDatabase.getAllTasks();
+        // recyclerview
+        homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
+        homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        homeTaskadapter = new TaskAdapter(homeTaskList, this::onItemClick, this::onEditClick);
+        homeTaskRecyclerView.setAdapter(homeTaskadapter);
+        homeTaskadapter.notifyDataSetChanged();
+    }
+
+
 /*
+
         ImageView home = findViewById(R.id.homeicon);
         home.setOnTouchListener(new View.OnTouchListener(){
             @Override
@@ -121,6 +139,16 @@ public class HomePage extends AppCompatActivity {
         List<Task> allTasks = taskDatabase.getAllTasks();
         homeTaskadapter.notifyDataSetChanged();
 */
+
+    @Override
+    public void onItemClick(int position) {
+        homeTaskadapter.setSelectedPosition(position);
     }
+
+    @Override
+    public void onEditClick(int position) {
+        Log.i(TITLE,"Trying to edit click?????");
+    }
+
 
 }

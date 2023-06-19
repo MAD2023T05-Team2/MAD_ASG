@@ -11,19 +11,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import sg.edu.np.mad.producti_vibe.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class CalendarPage extends AppCompatActivity {
+public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
     String TITLE = "Calendar Page";
 
-    private RecyclerView recyclerView;
-    private ArrayList<Task> taskList;
+    private RecyclerView filteredRecyclerView;
+    private ArrayList<Task> filteredTaskList;
     private TaskAdapter adapter;
-
     private TaskDatabase taskDatabase;
 
     @Override
@@ -31,9 +35,6 @@ public class CalendarPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_view);
         Log.v(TITLE,"Created the page !");
-
-        recyclerView = findViewById(R.id.calendarTaskView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -66,18 +67,39 @@ public class CalendarPage extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
 
+        filteredRecyclerView = findViewById(R.id.calendarTaskView);
+        filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize the database
+        taskDatabase = TaskDatabase.getInstance(this);
+        // Load tasks from the database
+        List<Task> filteredTaskList = taskDatabase.getAllTasks();
+        adapter = new TaskAdapter(filteredTaskList, this::onItemClick, this::onEditClick);
+        filteredRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        // recyclerview
         // watch out for user selecting other dates
         CalendarView calendarView = findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
-
+                String strDate =String.format("%1$s/%2$s/%3$s", day, (month + 1),year);
                 // filter out recycler view
-                Log.i(TITLE, " " + String.valueOf(day) + String.valueOf(month) + String.valueOf(year));
+                Log.i(TITLE, strDate);
 
             }
         });
+
     }
 
 
+    @Override
+    public void onItemClick(int position) {
+        adapter.setSelectedPosition(position);
+    }
+
+    @Override
+    public void onEditClick(int position) {
+        Log.i(TITLE,"Trying to edit click?????");
+    }
 }
