@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                             taskStartTime, taskEndTime, Integer.parseInt(taskDurationString), "Type",
                             "Repeat", 0, "", 1, new Date()
                     );
-
                     // Add the new task to the list and database
                     taskList.add(newTask);
                     taskDatabase.addTask(newTask);
