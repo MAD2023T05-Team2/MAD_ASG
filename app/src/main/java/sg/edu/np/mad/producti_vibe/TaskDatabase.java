@@ -120,6 +120,14 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteTask(int taskId) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(taskId)};
+        db.delete(TABLE_NAME, selection, selectionArgs);
+        db.close();
+    }
+
     public List<Task> getAllTasks() {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();

@@ -269,57 +269,15 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     }
 
     private void deleteTask(int position) {
-        taskList.remove(position);
-        adapter.setSelectedPosition(RecyclerView.NO_POSITION);
-        adapter.notifyDataSetChanged();
-    }
+        Task task = taskList.get(position); // Retrieve the task to be deleted
+        taskList.remove(position); // Remove the task from the list
+        adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
-//    public void sendPushNotification(Task task) {
-//        // Notification channel
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            manager.createNotificationChannel(notificationChannel);
-//
-//            String taskDeadline = task.getTaskEndTime(); // To be edited after date is added
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//            try {
-//                Date deadline = sdf.parse(taskDeadline);
-//                Date currentTime = new Date();
-//                long timeRemaining = deadline.getTime() - currentTime.getTime();
-//
-//                // Notification sent if the time remaining is <= 2 hours
-//                if (timeRemaining <= 7200000) {
-//                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-//                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                    // Calculating the time left
-//                    long hour = timeRemaining / 3600000;
-//                    long minutes = (timeRemaining % 3600000) / 60000;
-//                    NotificationCompat.Builder notification = new NotificationCompat.Builder(MainActivity.this, "Task Deadline Notification")
-//                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                            .setContentTitle("'" + task.getTaskName() + "' Deadline Approaching!")
-//                            .setStyle(new NotificationCompat.BigTextStyle()
-//                                    .bigText("Your task ending in " + hour + " hour " + minutes + " minutes, don't miss the deadline! Complete your task before the deadline hits."))
-//                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                            .setContentIntent(pendingIntent);
-//
-//                    // Notification Scheduling
-//                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//                    //long triggerTime = deadline; // When the alarm goes off
-//                    //int interval = 120000; //1800000; // Alarm to repeat every 30 minutes
-//                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent);
-//
-//                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-//                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    notificationManager.notify(1, notification.build());
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace(); }
-//        }
-//    }
+        TaskDatabase taskDatabase = TaskDatabase.getInstance(this); // Get the TaskDatabase instance
+        taskDatabase.deleteTask(task.getId()); // Delete the task from the database
+
+        adapter.notifyDataSetChanged(); // Update the RecyclerView
+    }
 
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
