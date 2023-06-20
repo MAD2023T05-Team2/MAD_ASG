@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,8 +54,9 @@ public class SignUpPage extends AppCompatActivity {
 
                 if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("")) { //check if all fields are filled
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
+                    Log.v("SignUpPage", "Empty Fields");
                 }
-                else if (db.findUserData(signUpUser) == null){ //there is no such username
+                else if (db.findUserData(signUpUser) == null){ //there is no such username, can create account
                     User userData = new User();
                     userData.setName(signUpN);
                     userData.setUserName(signUpUser);
@@ -63,9 +65,11 @@ public class SignUpPage extends AppCompatActivity {
                     Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
                     startActivity(signupToLogin);
                     Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+                    Log.v("SignUpPage", "can create account");
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "Username already exists! Please choose another username!", Toast.LENGTH_SHORT).show();
+                    Log.v("SignUpPage", "username exists");
                 }
             }
         });

@@ -266,11 +266,10 @@ public class TaskDatabase extends SQLiteOpenHelper {
 
     public User findUserData(String username){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'";
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
         User queryUserData = new User();
 
-        if (cursor.getCount() > 0){
+        if (cursor.moveToFirst()){
             queryUserData.setUserId(cursor.getInt(0));
             queryUserData.setName(cursor.getString(1));
             queryUserData.setUserName(cursor.getString(2));
