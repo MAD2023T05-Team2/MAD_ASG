@@ -7,9 +7,8 @@ public class Task {
     private String status;
     private String taskName;
     private String taskDesc;
-    private Date taskDate;
-    private String taskStartTime;
-    private String taskEndTime;
+    private Date taskDateTime;
+    private Date taskDueDateTime;
     private long taskDuration;
     private String taskType;
     private String repeat;
@@ -17,25 +16,22 @@ public class Task {
     private String recurringDuration;
     private int taskUserID;
 
-    private Date dueDate;
 
-    public Task(int id, String status, String taskName, String taskDesc, Date taskDate,
-                String taskStartTime, String taskEndTime, long taskDuration, String taskType,
-                String repeat, int recurringId, String recurringDuration, int taskUserID, Date dueDate) {
+    public Task(int id, String status, String taskName, String taskDesc, Date taskDateTime,
+                Date taskDueDateTime, long taskDuration, String taskType,
+                String repeat, int recurringId, String recurringDuration, int taskUserID) {
         this.Id = id;
         this.status = status;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
-        this.taskDate = taskDate;
-        this.taskStartTime = taskStartTime;
-        this.taskEndTime = taskEndTime;
+        this.taskDateTime = taskDateTime;
+        this.taskDueDateTime = taskDueDateTime;
         this.taskDuration = taskDuration;
         this.taskType = taskType;
         this.repeat = repeat;
         this.recurringId = recurringId;
         this.recurringDuration = recurringDuration;
         this.taskUserID = taskUserID;
-        this.dueDate = dueDate;
     }
 
     public int getId() {
@@ -54,16 +50,12 @@ public class Task {
         return taskDesc;
     }
 
-    public Date getTaskDate() {
-        return taskDate;
+    public Date getTaskDateTime() {
+        return taskDateTime;
     }
 
-    public String getTaskStartTime() {
-        return taskStartTime;
-    }
-
-    public String getTaskEndTime() {
-        return taskEndTime;
+    public Date getTaskDueDateTime() {
+        return taskDueDateTime;
     }
 
     public long getTaskDuration() {
@@ -89,9 +81,6 @@ public class Task {
     public int getTaskUserID() {
         return taskUserID;
     }
-    public Date getDueDate() {
-        return dueDate;
-    }
 
 
     public void setId(int id) {
@@ -110,16 +99,12 @@ public class Task {
         this.taskDesc = taskDesc;
     }
 
-    public void setTaskDate(Date taskDate) {
-        this.taskDate = taskDate;
+    public void setTaskDateTime(Date taskDateTime) {
+        this.taskDateTime = taskDateTime;
     }
 
-    public void setTaskStartTime(String taskStartTime) {
-        this.taskStartTime = taskStartTime;
-    }
-
-    public void setTaskEndTime(String taskEndTime) {
-        this.taskEndTime = taskEndTime;
+    public void setTaskDueDateTime(Date taskDueDateTime) {
+        this.taskDueDateTime = taskDueDateTime;
     }
 
     public void setTaskDuration(long taskDuration) {
@@ -145,9 +130,9 @@ public class Task {
     public void setTaskUserID(int taskUserID) {
         this.taskUserID = taskUserID;
     }
+}
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }}
+
+
 
 
