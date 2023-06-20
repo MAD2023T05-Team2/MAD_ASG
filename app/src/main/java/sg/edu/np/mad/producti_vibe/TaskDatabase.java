@@ -14,7 +14,9 @@ import java.util.List;
 public class TaskDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "task_database";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME = "tasks";
+
+    // for tasks
+    //private static final String TABLE_NAME = "tasks";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_STATUS = "status";
     private static final String COLUMN_TASK_NAME = "task_name";
@@ -27,6 +29,13 @@ public class TaskDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_RECURRING_ID = "recurring_id";
     private static final String COLUMN_RECURRING_DURATION = "recurring_duration";
     private static final String COLUMN_TASK_USER_ID = "task_user_id";
+
+    // for user accounts
+    private static final String COLUMN_USERID = "user_id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_PASSWORD = "password";
+
 
 
     private static TaskDatabase sInstance;
@@ -44,7 +53,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableQuery = "CREATE TABLE " + TABLE_NAME + " (" +
+        String createTasksTable = "CREATE TABLE " + "tasks" + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_STATUS + " TEXT, " +
                 COLUMN_TASK_NAME + " TEXT, " +
@@ -58,13 +67,21 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 COLUMN_RECURRING_DURATION + " TEXT, " +
                 COLUMN_TASK_USER_ID + " INTEGER" +
                 ")";
-        db.execSQL(createTableQuery);
+        db.execSQL(createTasksTable);
+
+        String createUserAccountsTable = "CREATE TABLE " + "user_accounts" + " (" +
+                COLUMN_USERID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                COLUMN_NAME + " TEXT, "+
+                COLUMN_USERNAME + " TEXT, "+
+                COLUMN_PASSWORD + " TEXT"+
+                ")";
+        db.execSQL(createUserAccountsTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String dropTableQuery = "DROP TABLE IF EXISTS " + TABLE_NAME;
-        db.execSQL(dropTableQuery);
+        db.execSQL("DROP TABLE IF EXISTS " + "tasks");
+        db.execSQL("DROP TABLE IF EXISTS " + "user_accounts");
         onCreate(db);
     }
 
@@ -82,7 +99,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         values.put(COLUMN_RECURRING_ID, task.getRecurringId());
         values.put(COLUMN_RECURRING_DURATION, task.getRecurringDuration());
         values.put(COLUMN_TASK_USER_ID, task.getTaskUserID());
-        db.insert(TABLE_NAME, null, values);
+        db.insert("tasks", null, values);
         db.close();
     }
 
@@ -99,14 +116,14 @@ public class TaskDatabase extends SQLiteOpenHelper {
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(task.getId())};
 
-        int rowsAffected = db.update(TABLE_NAME, values, selection, selectionArgs);
+        int rowsAffected = db.update("tasks", values, selection, selectionArgs);
         db.close();
     }
 
     public List<Task> getAllTasks() {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = db.query("tasks", null, null, null, null, null, null);
         if (cursor != null) {
             int idIndex = cursor.getColumnIndex(COLUMN_ID);
             int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
@@ -157,7 +174,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
     public List<Task> getFilteredTasks(String colName, String compare,String value){
         List<Task> filteredList = new ArrayList<>();
         String QUERY_TASKS = String.format("SELECT * FROM %s WHERE %s %s %s;",
-                TABLE_NAME,
+                "tasks",
                 colName,
                 compare,
                 value);
@@ -167,11 +184,11 @@ public class TaskDatabase extends SQLiteOpenHelper {
             QUERY_TASKS = String.format("SELECT * FROM %1$s " +
                             "WHERE substr(%2$s, 8, 10) || '-' || substr(%2$s , 4, 7) || '-' || substr(%2$s , 30, 34)" +
                             " LIKE '%3$s' ;",
-                    TABLE_NAME,
+                    "tasks",
                     colName,
                     value);
         }
-        Log.d(TABLE_NAME,QUERY_TASKS);
+        Log.d("tasks",QUERY_TASKS);
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY_TASKS,null);
         // instead of crashing the app, push the issues to appear in Log
@@ -207,7 +224,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
                     String recurringDuration = cursor.getString(recurringDurationIndex);
                     int taskUserID = cursor.getInt(taskUserIdIndex);
 
-                    Log.v(TABLE_NAME,String.format("%s %s %s", taskDueDateTime.toString().substring(8, 2),
+                    Log.v("tasks",String.format("%s %s %s", taskDueDateTime.toString().substring(8, 2),
                             taskDueDateTime.toString().substring(4, 3),
                             taskDueDateTime.toString().substring(24, 4)));
 
@@ -219,7 +236,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 while (cursor.moveToNext());
             }
         } catch (Exception e){
-            Log.d(TABLE_NAME,"Error retrieving values from database");
+            Log.d("tasks","Error retrieving values from database");
         }
         finally {
             if(cursor != null && !cursor.isClosed()){
@@ -228,6 +245,35 @@ public class TaskDatabase extends SQLiteOpenHelper {
             }
         }
         return filteredList;
+    }
+
+    public void addUser(User userData){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, userData.getUserName());
+        values.put(COLUMN_PASSWORD, userData.getPassWord());
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert("user_accounts", null, values);
+        db.close();
+    }
+
+    public User findUserData(String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        User queryUserData = new User();
+
+        if (cursor.getCount() > 0){
+            queryUserData.setUserId(cursor.getInt(0));
+            queryUserData.setName(cursor.getString(1));
+            queryUserData.setUserName(cursor.getString(2));
+            queryUserData.setPassWord(cursor.getString(3));
+        }
+        else{
+            queryUserData = null;
+        }
+        cursor.close();
+        db.close();
+        return queryUserData;
     }
 
 

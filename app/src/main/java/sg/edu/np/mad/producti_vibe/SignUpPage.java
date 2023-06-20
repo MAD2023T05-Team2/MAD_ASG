@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 public class SignUpPage extends AppCompatActivity {
 
+    private TaskDatabase db;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +40,33 @@ public class SignUpPage extends AppCompatActivity {
         EditText signUpUsername = findViewById(R.id.signUpUsername);
         EditText signUpPassword = findViewById(R.id.signUpPassword);
         Button createAccountButton = findViewById(R.id.createAccountButton);
+        // Initialize the database
+        db = TaskDatabase.getInstance(this);
 
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
-                startActivity(signupToLogin);
-                Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+
+                String signUpN = signUpName.getText().toString();
+                String signUpUser = signUpUsername.getText().toString();
+                String signUpPass = signUpPassword.getText().toString();
+
+                if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("")) { //check if all fields are filled
+                    Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
+                }
+                else if (db.findUserData(signUpUser) == null){ //there is no such username
+                    User userData = new User();
+                    userData.setName(signUpN);
+                    userData.setUserName(signUpUser);
+                    userData.setPassWord(signUpPass);
+                    db.addUser(userData);
+                    Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
+                    startActivity(signupToLogin);
+                    Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Username already exists! Please choose another username!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
