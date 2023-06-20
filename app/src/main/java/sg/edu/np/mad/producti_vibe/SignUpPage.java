@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SignUpPage extends AppCompatActivity {
+
+    private TaskDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +41,36 @@ public class SignUpPage extends AppCompatActivity {
         EditText signUpUsername = findViewById(R.id.signUpUsername);
         EditText signUpPassword = findViewById(R.id.signUpPassword);
         Button createAccountButton = findViewById(R.id.createAccountButton);
+        // Initialize the database
+        db = TaskDatabase.getInstance(this);
 
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
-                startActivity(signupToLogin);
-                Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+
+                String signUpN = signUpName.getText().toString();
+                String signUpUser = signUpUsername.getText().toString();
+                String signUpPass = signUpPassword.getText().toString();
+
+                if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("")) { //check if all fields are filled
+                    Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
+                    Log.v("SignUpPage", "Empty Fields");
+                }
+                else if (db.findUserData(signUpUser) == null){ //there is no such username, can create account
+                    User userData = new User();
+                    userData.setName(signUpN);
+                    userData.setUserName(signUpUser);
+                    userData.setPassWord(signUpPass);
+                    db.addUser(userData);
+                    Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
+                    startActivity(signupToLogin);
+                    Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+                    Log.v("SignUpPage", "can create account");
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Username already exists! Please choose another username!", Toast.LENGTH_SHORT).show();
+                    Log.v("SignUpPage", "username exists");
+                }
             }
         });
 

@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     public TaskAdapter adapter;
     private List<Task> taskList;
     private TaskDatabase taskDatabase;
+
     String TITLE = "Task Activity";
 
     @Override
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskList.addAll(taskDatabase.getAllTasks());
         adapter.notifyDataSetChanged();
 
-        //  Button actions
+        //  button actions
         Button createButton = findViewById(R.id.createButton);
         Button deleteButton = findViewById(R.id.deleteButton);
         Button editButton = findViewById(R.id.editButton);
@@ -266,61 +269,20 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     }
 
     private void deleteTask(int position) {
-        taskList.remove(position);
-        adapter.setSelectedPosition(RecyclerView.NO_POSITION);
-        adapter.notifyDataSetChanged();
-    }
+        Task task = taskList.get(position); // Retrieve the task to be deleted
+        taskList.remove(position); // Remove the task from the list
+        adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
-//    public void sendPushNotification(Task task) {
-//        // Notification channel
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            manager.createNotificationChannel(notificationChannel);
-//
-//            Date taskDeadline = task.getTaskDueDateTime(); // To be edited after date is added
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//            try {
-//                Date deadline = sdf.parse(taskDeadline);
-//                Date currentTime = new Date();
-//                long timeRemaining = deadline.getTime() - currentTime.getTime();
-//
-//                // Notification sent if the time remaining is <= 2 hours
-//                if (timeRemaining <= 7200000) {
-//                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-//                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                    // Calculating the time left
-//                    long hour = timeRemaining / 3600000;
-//                    long minutes = (timeRemaining % 3600000) / 60000;
-//                    NotificationCompat.Builder notification = new NotificationCompat.Builder(MainActivity.this, "Task Deadline Notification")
-//                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                            .setContentTitle("'" + task.getTaskName() + "' Deadline Approaching!")
-//                            .setStyle(new NotificationCompat.BigTextStyle()
-//                                    .bigText("Your task ending in " + hour + " hour " + minutes + " minutes, don't miss the deadline! Complete your task before the deadline hits."))
-//                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                            .setContentIntent(pendingIntent);
-//
-//                    // Notification Scheduling
-//                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//                    //long triggerTime = deadline; // When the alarm goes off
-//                    //int interval = 120000; //1800000; // Alarm to repeat every 30 minutes
-//                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent);
-//
-//                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-//                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    notificationManager.notify(1, notification.build());
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace(); }
-//        }
-//    }
+        TaskDatabase taskDatabase = TaskDatabase.getInstance(this); // Get the TaskDatabase instance
+        taskDatabase.deleteTask(task.getId()); // Delete the task from the database
+
+        adapter.notifyDataSetChanged(); // Update the RecyclerView
+    }
 
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
-    private boolean validateInput(String taskName, String taskDesc,Date taskDateTime, Date taskDueDateTime,String taskDurationString) {
+
+    private boolean validateInput(String taskName, String taskDesc, Date taskDateTime, Date taskDueDateTime, String taskDurationString) {
         boolean isValidInput = true;
         StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
 
@@ -333,24 +295,26 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             errorMessage.append("\n- Task description is required");
         }
 
-        if (taskDateTime == null) {
+        if (taskDateTime == null || !isValidDateTimeFormat(taskDateTime)) {
             isValidInput = false;
-            errorMessage.append("\n- Task start date is required");
+            errorMessage.append("\n- Task start date and time are in an invalid format (dd/MM/yy HH:mm)");
         } else {
-            if (!isValidDateFormat(taskDateTime)) {
+            if (taskDateTime.before(new Date())) {
                 isValidInput = false;
-                errorMessage.append("\n- Task start date is in an invalid format");
+                errorMessage.append("\n- Task start date and time cannot be in the past");
             }
         }
-        if (taskDueDateTime == null) {
+
+        if (taskDueDateTime == null || !isValidDateTimeFormat(taskDueDateTime)) {
             isValidInput = false;
-            errorMessage.append("\n- Task due date is required");
+            errorMessage.append("\n- Task due date and time are in an invalid format (dd/MM/yy HH:mm)");
         } else {
-            if (!isValidDateFormat(taskDueDateTime)) {
+            if (taskDueDateTime.before(taskDateTime)) {
                 isValidInput = false;
-                errorMessage.append("\n- Task due date is in an invalid format");
+                errorMessage.append("\n- Task due date and time cannot be earlier than the start date and time");
             }
         }
+
 
         if (taskDurationString.isEmpty()) {
             isValidInput = false;
@@ -368,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             }
         }
 
-
         if (!isValidInput) {
             // Display error message for invalid input
             AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -381,27 +344,25 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         return isValidInput;
     }
 
-    private boolean isValidTimeFormat(String time) {
+    private boolean isValidDateTimeFormat(Date date) {
+        // Define the desired date and time format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+
+        // Format the date object to a string in the desired format
+        String dateString = dateFormat.format(date);
+
+        // Parse the formatted string back to a date object
+        Date parsedDate;
         try {
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            timeFormat.setLenient(false);
-            timeFormat.parse(time);
-            return true;
+            parsedDate = dateFormat.parse(dateString);
         } catch (ParseException e) {
             return false;
         }
+
+        // Check if the parsed date object matches the original date object
+        return parsedDate.equals(date);
     }
 
-    private boolean isValidDateFormat(Date date) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-            dateFormat.setLenient(false);
-            dateFormat.format(date);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
 
 }
 

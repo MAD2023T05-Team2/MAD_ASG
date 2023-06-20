@@ -41,10 +41,18 @@ public class LoginPage extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
-                loginToHome.putExtra("Username", username.getText().toString());
-                startActivity(loginToHome);
-                Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                String userName = username.getText().toString();
+                String pass = password.getText().toString();
+
+                if (userName.equals("") || pass.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
+                    loginToHome.putExtra("Username", username.getText().toString());
+                    startActivity(loginToHome);
+                    Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
