@@ -124,7 +124,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(taskId)};
-        db.delete(TABLE_NAME, selection, selectionArgs);
+        db.delete("tasks", selection, selectionArgs);
         db.close();
     }
 
