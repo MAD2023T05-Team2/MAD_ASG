@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskList.addAll(taskDatabase.getAllTasks());
         adapter.notifyDataSetChanged();
 
-        // Example button actions
+        //  button actions
         Button createButton = findViewById(R.id.createButton);
         Button deleteButton = findViewById(R.id.deleteButton);
         Button editButton = findViewById(R.id.editButton);
@@ -140,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
         final EditText taskNameEditText = dialogView.findViewById(R.id.taskNameEditText);
         final EditText taskDescEditText = dialogView.findViewById(R.id.taskDescriptionEditText);
-        final EditText taskStartTimeEditText = dialogView.findViewById(R.id.taskStartTimeEditText);
-        final EditText taskEndTimeEditText = dialogView.findViewById(R.id.taskEndTimeEditText);
         final EditText taskDurationEditText = dialogView.findViewById(R.id.taskDurationEditText);
+        final EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
+        final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Task");
@@ -152,27 +152,36 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             public void onClick(DialogInterface dialog, int which) {
                 String taskName = taskNameEditText.getText().toString().trim();
                 String taskDesc = taskDescEditText.getText().toString().trim();
-                String taskStartTime = taskStartTimeEditText.getText().toString().trim();
-                String taskEndTime = taskEndTimeEditText.getText().toString().trim();
                 String taskDurationString = taskDurationEditText.getText().toString().trim();
+                String taskDateTime = taskDateTimeEditText.getText().toString().trim();
+                String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
+
+                // Convert the edited date strings to Date objects
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                Date taskDateD = null;
+                Date taskDueDateD = null;
+                try {
+                    taskDateD = dateFormat.parse(taskDateTime);
+                    taskDueDateD = dateFormat.parse(taskDueDateTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 // Validate user input
-                if (validateInput(taskName, taskDesc, taskStartTime, taskEndTime, taskDurationString)) {
+                if (validateInput(taskName, taskDesc, taskDateD, taskDueDateD, taskDurationString)) {
                     // Create a new Task object
                     Task newTask = new Task(
-                            taskList.size() + 1, "Pending", taskName, taskDesc, new Date(),
-                            taskStartTime, taskEndTime, Integer.parseInt(taskDurationString), "Type",
-                            "Repeat", 0, "", 1, new Date()
+                            taskList.size() + 1, "Pending", taskName, taskDesc, taskDateD,
+                            taskDueDateD, Integer.parseInt(taskDurationString), "Type",
+                            "Repeat", 0, "", 1
                     );
+
                     // Add the new task to the list and database
                     taskList.add(newTask);
                     taskDatabase.addTask(newTask);
 
                     // Notify the adapter of the new task
                     adapter.notifyItemInserted(taskList.size() - 1);
-
-                    // Trigger Task Notifications
-                    sendPushNotification(newTask);
                 }
             }
         });
@@ -187,18 +196,22 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
         final EditText taskNameEditText = dialogView.findViewById(R.id.editTaskNameEditText);
         final EditText taskDescEditText = dialogView.findViewById(R.id.editTaskDescriptionEditText);
-        final EditText taskStartTimeEditText = dialogView.findViewById(R.id.editTaskStartTimeEditText);
-        final EditText taskEndTimeEditText = dialogView.findViewById(R.id.editTaskEndTimeEditText);
         final EditText taskDurationEditText = dialogView.findViewById(R.id.editTaskDurationEditText);
+        final EditText taskDateTimeEditText = dialogView.findViewById(R.id.editTaskDateTimeEditText);
+        final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.editTaskDueDateTimeEditText);
 
         // Populate the EditText fields with the existing task data
         Task task = taskList.get(position);
         taskNameEditText.setText(task.getTaskName());
         taskDescEditText.setText(task.getTaskDesc());
-        taskStartTimeEditText.setText(task.getTaskStartTime());
-        taskEndTimeEditText.setText(task.getTaskEndTime());
         taskDurationEditText.setText(String.valueOf(task.getTaskDuration()));
+        // Convert the date objects to string representations
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+        String taskDateTime = dateFormat.format(task.getTaskDateTime());
+        String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
 
+        taskDateTimeEditText.setText(taskDateTime);
+        taskDueDateTimeEditText.setText(taskDueDateTime);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Task");
         builder.setView(dialogView);
@@ -208,17 +221,28 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 // Get the edited values from the EditText fields
                 String editedTaskName = taskNameEditText.getText().toString().trim();
                 String editedTaskDesc = taskDescEditText.getText().toString().trim();
-                String editedTaskStartTime = taskStartTimeEditText.getText().toString().trim();
-                String editedTaskEndTime = taskEndTimeEditText.getText().toString().trim();
                 int editedTaskDuration = Integer.parseInt(taskDurationEditText.getText().toString().trim());
+                String editedTaskDate = taskDateTimeEditText.getText().toString().trim();
+                String editedTaskDueDate = taskDueDateTimeEditText.getText().toString().trim();
+
+                // Convert the edited date strings to Date objects
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                Date editedDate = null;
+                Date editedDueDate = null;
+                try {
+                    editedDate = dateFormat.parse(editedTaskDate);
+                    editedDueDate = dateFormat.parse(editedTaskDueDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 // Update the task in the list and database
                 Task task = taskList.get(position);
                 task.setTaskName(editedTaskName);
                 task.setTaskDesc(editedTaskDesc);
-                task.setTaskStartTime(editedTaskStartTime);
-                task.setTaskStartTime(editedTaskEndTime);
                 task.setTaskDuration(editedTaskDuration);
+                task.setTaskDateTime(editedDate);
+                task.setTaskDueDateTime(editedDueDate);
 
                 taskDatabase.updateTask(task);
 
@@ -250,9 +274,56 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         adapter.notifyDataSetChanged();
     }
 
+//    public void sendPushNotification(Task task) {
+//        // Notification channel
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
+//            NotificationManager manager = getSystemService(NotificationManager.class);
+//            manager.createNotificationChannel(notificationChannel);
+//
+//            String taskDeadline = task.getTaskEndTime(); // To be edited after date is added
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//            try {
+//                Date deadline = sdf.parse(taskDeadline);
+//                Date currentTime = new Date();
+//                long timeRemaining = deadline.getTime() - currentTime.getTime();
+//
+//                // Notification sent if the time remaining is <= 2 hours
+//                if (timeRemaining <= 7200000) {
+//                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+//                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//                    // Calculating the time left
+//                    long hour = timeRemaining / 3600000;
+//                    long minutes = (timeRemaining % 3600000) / 60000;
+//                    NotificationCompat.Builder notification = new NotificationCompat.Builder(MainActivity.this, "Task Deadline Notification")
+//                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+//                            .setContentTitle("'" + task.getTaskName() + "' Deadline Approaching!")
+//                            .setStyle(new NotificationCompat.BigTextStyle()
+//                                    .bigText("Your task ending in " + hour + " hour " + minutes + " minutes, don't miss the deadline! Complete your task before the deadline hits."))
+//                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                            .setContentIntent(pendingIntent);
+//
+//                    // Notification Scheduling
+//                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//                    //long triggerTime = deadline; // When the alarm goes off
+//                    //int interval = 120000; //1800000; // Alarm to repeat every 30 minutes
+//                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent);
+//
+//                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+//                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    notificationManager.notify(1, notification.build());
+//                }
+//            } catch (ParseException e) {
+//                e.printStackTrace(); }
+//        }
+//    }
+
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
-    private boolean validateInput(String taskName, String taskDesc, String taskStartTime, String taskEndTime, String taskDurationString) {
+    private boolean validateInput(String taskName, String taskDesc,Date taskDateTime, Date taskDueDateTime,String taskDurationString) {
         boolean isValidInput = true;
         StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
 
@@ -264,24 +335,26 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             isValidInput = false;
             errorMessage.append("\n- Task description is required");
         }
-        if (taskStartTime.isEmpty()) {
+
+        if (taskDateTime == null) {
             isValidInput = false;
-            errorMessage.append("\n- Task start time is required");
+            errorMessage.append("\n- Task start date is required");
         } else {
-            if (!isValidTimeFormat(taskStartTime)) {
+            if (!isValidDateFormat(taskDateTime)) {
                 isValidInput = false;
-                errorMessage.append("\n- Task start time is in an invalid format");
+                errorMessage.append("\n- Task start date is in an invalid format");
             }
         }
-        if (taskEndTime.isEmpty()) {
+        if (taskDueDateTime == null) {
             isValidInput = false;
-            errorMessage.append("\n- Task end time is required");
+            errorMessage.append("\n- Task due date is required");
         } else {
-            if (!isValidTimeFormat(taskEndTime)) {
+            if (!isValidDateFormat(taskDueDateTime)) {
                 isValidInput = false;
-                errorMessage.append("\n- Task end time is in an invalid format");
+                errorMessage.append("\n- Task due date is in an invalid format");
             }
         }
+
         if (taskDurationString.isEmpty()) {
             isValidInput = false;
             errorMessage.append("\n- Task duration is required");
@@ -297,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 errorMessage.append("\n- Task duration should be a valid number");
             }
         }
+
 
         if (!isValidInput) {
             // Display error message for invalid input
@@ -321,51 +395,18 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         }
     }
 
-    public void sendPushNotification(Task task) {
-        // Notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(notificationChannel);
-
-            String taskDeadline = task.getTaskEndTime(); // To be edited after date is added
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            try {
-                Date deadline = sdf.parse(taskDeadline);
-                Date currentTime = new Date();
-                long timeRemaining = deadline.getTime() - currentTime.getTime();
-
-                // Notification sent if the time remaining is <= 2 hours
-                if (timeRemaining <= 7200000) {
-                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    // Calculating the time left
-                    long hour = timeRemaining / 3600000;
-                    long minutes = (timeRemaining % 3600000) / 60000;
-                    NotificationCompat.Builder notification = new NotificationCompat.Builder(MainActivity.this, "Task Deadline Notification")
-                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-                            .setContentTitle("'" + task.getTaskName() + "' Deadline Approaching!")
-                            .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText("Your task ending in " + hour + " hour " + minutes + " minutes, don't miss the deadline! Complete your task before the deadline hits."))
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                            .setContentIntent(pendingIntent);
-
-                    // Notification Scheduling
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    //long triggerTime = deadline; // When the alarm goes off
-                    //int interval = 120000; //1800000; // Alarm to repeat every 30 minutes
-                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent);
-
-                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    notificationManager.notify(1, notification.build());
-                }
-            } catch (ParseException e) {
-                e.printStackTrace(); }
+    private boolean isValidDateFormat(Date date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+            dateFormat.setLenient(false);
+            dateFormat.format(date);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
+
 }
+
+
 

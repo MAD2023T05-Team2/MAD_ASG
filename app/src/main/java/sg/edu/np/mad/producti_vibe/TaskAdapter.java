@@ -11,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
@@ -54,9 +56,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskNameTextView.setText(task.getTaskName());
         holder.taskDescriptionTextView.setText(task.getTaskDesc());
         holder.taskStatusTextView.setText(task.getStatus());
-        holder.taskStartTimeTextView.setText(task.getTaskStartTime());
-        holder.taskEndTimeTextView.setText(task.getTaskEndTime());
-        holder.taskDurationTextView.setText(String.valueOf(task.getTaskDuration()));
+
+        // format datetime nicely
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+        String taskDateTime = dateFormat.format(task.getTaskDateTime());
+        String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
+
+        holder.taskDateTimeTextView.setText(taskDateTime);
+        holder.taskDueDateTimeTextView.setText(taskDueDateTime);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,13 +109,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
-       // CheckBox check_box;
+        // CheckBox check_box;
         public TextView taskNameTextView;
         public TextView taskDescriptionTextView;
         public TextView taskStatusTextView;
-        public TextView taskStartTimeTextView;
-        public TextView taskEndTimeTextView;
         public TextView taskDurationTextView;
+        public TextView taskDateTimeTextView;
+        public TextView taskDueDateTimeTextView;
 
         public Button editButton;
 
@@ -117,11 +124,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskNameTextView = view.findViewById(R.id.taskNameTextView);
             taskDescriptionTextView = view.findViewById(R.id.taskDescriptionTextView);
             taskStatusTextView = view.findViewById(R.id.taskStatusTextView);
-            taskStartTimeTextView = view.findViewById(R.id.taskStartTimeTextView);
-            taskEndTimeTextView = view.findViewById(R.id.taskEndTimeTextView);
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
+            taskDateTimeTextView = view.findViewById(R.id.taskDateTimeTextView);
+            taskDueDateTimeTextView = view.findViewById(R.id.taskDueDateTimeTextView);
             editButton = itemView.findViewById(R.id.editButton);
-           // check_box =  view.findViewById(R.id.checkBox);
+            // check_box =  view.findViewById(R.id.checkBox);
         }
     }
     public void setFilter(List<Task> filterTasks) {
@@ -130,3 +137,5 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         notifyDataSetChanged();
     }
 }
+
+
