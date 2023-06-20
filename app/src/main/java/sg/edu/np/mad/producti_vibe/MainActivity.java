@@ -7,8 +7,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     public TaskAdapter adapter;
     private List<Task> taskList;
     private TaskDatabase taskDatabase;
-
     String TITLE = "Task Activity";
 
     @Override
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskList.addAll(taskDatabase.getAllTasks());
         adapter.notifyDataSetChanged();
 
-        //  button actions
+        //  Button actions
         Button createButton = findViewById(R.id.createButton);
         Button deleteButton = findViewById(R.id.deleteButton);
         Button editButton = findViewById(R.id.editButton);
@@ -281,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 //            NotificationManager manager = getSystemService(NotificationManager.class);
 //            manager.createNotificationChannel(notificationChannel);
 //
-//            String taskDeadline = task.getTaskEndTime(); // To be edited after date is added
+//            Date taskDeadline = task.getTaskDueDateTime(); // To be edited after date is added
 //            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 //            try {
 //                Date deadline = sdf.parse(taskDeadline);

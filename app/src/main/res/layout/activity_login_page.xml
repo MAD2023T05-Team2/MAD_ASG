@@ -77,11 +77,11 @@
             android:layout_marginStart="33dp"
             android:layout_marginTop="73dp"
             android:background="@drawable/custom_edit_text"
-            android:drawableLeft="@drawable/baseline_password_24"
+            android:drawableLeft="@drawable/baseline_lock_24"
             android:drawablePadding="10dp"
             android:hint="Password"
             android:inputType="textPassword"
-            android:paddingLeft="14dp" />
+            android:paddingLeft="15dp" />
 
         <Button
             android:id="@+id/loginButton"

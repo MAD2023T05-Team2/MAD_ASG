@@ -7,15 +7,37 @@
     android:background="@color/selected_item_background"
     tools:context=".SignUpPage">
 
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="181dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="104dp"
+        android:src="@drawable/productivibe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/registrationImage"
+        android:layout_width="301dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:src="@drawable/registrationimage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
     <TextView
         android:id="@+id/registerHead"
         android:layout_width="300dp"
-        android:layout_height="45dp"
+        android:layout_height="35dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="288dp"
         android:text="Get Started Now"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="27sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,28 +47,19 @@
         android:layout_width="300dp"
         android:layout_height="30dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="327dp"
         android:text="Create your account"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/registerImage"
-        android:layout_width="wrap_content"
-        android:layout_height="104dp"
-        android:layout_marginTop="128dp"
-        android:src="@drawable/productbanner"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
 
     <!--    CardView for User Input     -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardSignUpView"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:layout_marginTop="388dp"
+        android:layout_height="285dp"
+        android:layout_marginTop="365dp"
         android:backgroundTint="@color/selected_item_background"
         app:cardElevation="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -83,18 +96,31 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="110dp"
             android:background="@drawable/custom_edit_text"
-            android:drawableLeft="@drawable/baseline_password_24"
+            android:drawableLeft="@drawable/baseline_lock_24"
             android:drawablePadding="10dp"
             android:hint="Password"
             android:inputType="textPassword"
-            android:paddingLeft="14dp" />
+            android:paddingLeft="15dp" />
+
+        <EditText
+            android:id="@+id/confirmSignUpPassword"
+            android:layout_width="330dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="165dp"
+            android:background="@drawable/custom_edit_text"
+            android:drawableLeft="@drawable/baseline_password_24"
+            android:drawablePadding="10dp"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:paddingLeft="15dp" />
 
         <Button
             android:id="@+id/createAccountButton"
             android:layout_width="330dp"
             android:layout_height="55dp"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="175dp"
+            android:layout_marginTop="225dp"
             android:backgroundTint="@color/teal"
             android:cursorVisible="true"
             android:fontFamily="serif"
@@ -107,7 +133,7 @@
         android:id="@+id/toLogin"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:text="Already have an account? Log in"
         android:textAlignment="center"
         android:textSize="15dp"
