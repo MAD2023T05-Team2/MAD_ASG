@@ -52,11 +52,11 @@ public class SignUpPage extends AppCompatActivity {
                 String signUpUser = signUpUsername.getText().toString();
                 String signUpPass = signUpPassword.getText().toString();
 
-                if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("")) { //check if all fields are filled
+                if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("")) { // Check if all fields are filled
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                     Log.v("SignUpPage", "Empty Fields");
                 }
-                else if (db.findUserData(signUpUser) == null){ //there is no such username, can create account
+                else if (db.findUserData(signUpUser) == null){ // No existing username, allow for account creation
                     User userData = new User();
                     userData.setName(signUpN);
                     userData.setUserName(signUpUser);

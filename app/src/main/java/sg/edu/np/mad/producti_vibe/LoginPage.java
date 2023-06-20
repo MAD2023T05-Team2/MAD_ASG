@@ -3,6 +3,7 @@ package sg.edu.np.mad.producti_vibe;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 
 public class LoginPage extends AppCompatActivity {
 
-
+    public static final String SHARED_PREFS = "sharedPrefs";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,15 @@ public class LoginPage extends AppCompatActivity {
                 if (userName.equals("") || pass.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                 }
-                else{
+                else {
+//                    // For the Persistent Login Session
+//                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putString("Name", "True");
+//                    editor.apply();
+//                    checkBox();
+
+                    // Successful Login
                     Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
                     loginToHome.putExtra("Username", username.getText().toString());
                     startActivity(loginToHome);
@@ -64,4 +73,18 @@ public class LoginPage extends AppCompatActivity {
             }
         });
     }
+
+//    private void checkBox() {
+//        EditText username = findViewById(R.id.username);
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        String check = sharedPreferences.getString("Name", "");
+//
+//        if (check.equals("True")) {
+//            Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
+//            loginToHome.putExtra("Username", username.getText().toString());
+//            startActivity(loginToHome);
+//            Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
+//    }
 }

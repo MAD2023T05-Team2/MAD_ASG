@@ -51,7 +51,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLoginView"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
+        android:layout_height="226dp"
         android:layout_marginTop="440dp"
         android:backgroundTint="@color/selected_item_background"
         app:cardElevation="0dp"
@@ -83,12 +83,23 @@
             android:inputType="textPassword"
             android:paddingLeft="15dp" />
 
+        <CheckBox
+            android:id="@+id/rememberMe"
+            android:layout_width="170dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="121dp"
+            android:text="Remember Me"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:buttonTint="@color/teal"/>
+
         <Button
             android:id="@+id/loginButton"
             android:layout_width="330dp"
             android:layout_height="55dp"
             android:layout_marginStart="33dp"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="165dp"
             android:backgroundTint="@color/teal"
             android:cursorVisible="true"
             android:fontFamily="serif"
