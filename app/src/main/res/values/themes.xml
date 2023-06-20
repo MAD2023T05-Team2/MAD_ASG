@@ -3,6 +3,7 @@
     <style name="Base.Theme.MAD_ASG" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/teal</item> // Customises the emulator's island color
         <item name="android:fontFamily">serif</item> // Overall application font
+        <item name="cornerRadius">8dp</item>
     </style>
 
     <style name="Theme.MAD_ASG" parent="Base.Theme.MAD_ASG" />
