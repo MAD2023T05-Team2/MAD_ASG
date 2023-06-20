@@ -77,7 +77,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         if (selectedPosition == position) {
             // Apply your desired styling or visual indication for the selected item
-            int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.selected_item_background);
+            int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.lighter_teal);
             holder.itemView.setBackgroundColor(selectedColor);
         } else {
             // Reset the styling for other items

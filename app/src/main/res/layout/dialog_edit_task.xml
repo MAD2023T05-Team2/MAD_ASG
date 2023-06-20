@@ -10,42 +10,55 @@
         android:padding="16dp">
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Name" />
+
         <EditText
             android:id="@+id/editTaskNameEditText"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Task Name"
-            android:inputType="text" />
+            android:text="Task Description" />
 
         <EditText
             android:id="@+id/editTaskDescriptionEditText"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Task Description"
-            android:inputType="text" />
+            android:text="Start Date and Time (dd/MM/yy HH:mm)" />
 
         <EditText
             android:id="@+id/editTaskDateTimeEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Date (dd/MM/yy HH:mm)"
-            android:inputType="datetime" />
+            android:layout_height="wrap_content" />
 
-        <EditText
-            android:id= "@+id/editTaskDueDateTimeEditText"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Due Date (dd/MM/yy HH:mm)"
-            android:inputType="datetime" />
+            android:text="Due Date and Time (dd/MM/yy HH:mm)" />
 
+        <EditText
+            android:id="@+id/editTaskDueDateTimeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration (minutes)" />
 
         <EditText
             android:id="@+id/editTaskDurationEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Duration (in minutes)"
-            android:inputType="number" />
-
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

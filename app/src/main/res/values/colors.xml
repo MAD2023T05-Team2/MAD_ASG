@@ -4,5 +4,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="teal">#68B2A0</color>
+    <color name = "lighter_teal">#7ed6c1</color>
 
 </resources>

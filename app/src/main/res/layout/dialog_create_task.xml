@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Date (dd/MM/yy)" />
+            android:text="Start Date and Time (dd/MM/yy HH:mm)" />
 
         <EditText
             android:id="@+id/taskDateTimeEditText"
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Due Date (dd/MM/yy)" />
+            android:text="Due Date and Time (dd/MM/yy HH:mm)" />
 
         <EditText
             android:id="@+id/taskDueDateTimeEditText"
