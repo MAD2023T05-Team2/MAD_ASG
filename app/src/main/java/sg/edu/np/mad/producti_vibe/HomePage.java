@@ -20,9 +20,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     private TaskDatabase taskDatabase;
     private TaskAdapter homeTaskadapter;
     final String TITLE = "Home Page";
-
     String recvUsername = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +55,9 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     @Override
     protected void onStart() {
         super.onStart();
-
         Intent myRecvIntent = getIntent();
         recvUsername = myRecvIntent.getStringExtra("Username");
+
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvUsername);
 

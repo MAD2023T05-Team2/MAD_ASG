@@ -12,7 +12,7 @@
         android:layout_width="300dp"
         android:layout_height="45dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="284dp"
+        android:layout_marginTop="300dp"
         android:text="Get Started Now"
         android:textAlignment="center"
         android:textSize="30sp"
@@ -23,12 +23,12 @@
     <TextView
         android:id="@+id/registerDesc"
         android:layout_width="300dp"
-        android:layout_height="45dp"
+        android:layout_height="30dp"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="340dp"
+        android:layout_marginTop="350dp"
         android:text="Create your account"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,6 +41,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
+    <!--    CardView for User Input     -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardSignUpView"
         android:layout_width="match_parent"
@@ -98,7 +99,8 @@
             android:cursorVisible="true"
             android:fontFamily="serif"
             android:text="CREATE ACCOUNT"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            app:cornerRadius="8dp" />
     </androidx.cardview.widget.CardView>
 
     <TextView
