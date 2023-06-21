@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="12dp"
-            android:text="Working on this in Stage 2?"
+            android:text="Working on this in Stage 2!"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="12dp"
-            android:text="Today's Tasks:"
+            android:layout_marginTop="15dp"
+            android:text="Tasks To Complete:"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,10 +77,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/homeTaskRecyclerView"
-            android:layout_width="340dp"
-            android:layout_height="395dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="50dp"
+            android:layout_width="325dp"
+            android:layout_height="355dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="45dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 

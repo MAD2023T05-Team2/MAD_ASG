@@ -91,8 +91,7 @@
             android:layout_marginTop="121dp"
             android:text="Remember Me"
             android:textSize="15dp"
-            android:textStyle="bold"
-            android:buttonTint="@color/teal"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/loginButton"

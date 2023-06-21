@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/selected_item_background">
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="35dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
         android:hapticFeedbackEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,13 +30,33 @@
         app:backgroundTint="@color/selected_item_background"
         app:menu="@menu/bottom_menu" />
 
+    <View
+        android:layout_width="315dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="390dp"
+        android:layout_marginStart="38dp"
+        android:background="@color/teal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/signup"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="45dp"
+        android:text="Due Today:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendarTaskView"
-        android:layout_width="403dp"
-        android:layout_height="210dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="19dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        android:layout_width="348dp"
+        android:layout_height="245dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 

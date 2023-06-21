@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="12dp" >
 
         <TextView
             android:layout_width="match_parent"
@@ -52,14 +53,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Duration (minutes)" />
+            android:text="Task Duration (minutes)" />
 
         <EditText
             android:id="@+id/taskDurationEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-
+        <CheckBox
+            android:id="@+id/onTaskNotifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Receive Reminders"
+            android:textSize="13dp"/>
 
     </LinearLayout>
 

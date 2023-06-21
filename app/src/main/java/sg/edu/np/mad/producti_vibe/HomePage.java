@@ -73,8 +73,6 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         homeTaskadapter.notifyDataSetChanged();
     }
 
-
-
     @Override
     public void onItemClick(int position) {
         homeTaskadapter.setSelectedPosition(position);

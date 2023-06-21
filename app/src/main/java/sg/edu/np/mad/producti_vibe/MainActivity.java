@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +30,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     public TaskAdapter adapter;
     private List<Task> taskList;
     private TaskDatabase taskDatabase;
+    public static final String SHARED_PREFS = "sharedPrefs";
+    PendingIntent pendingIntent;
+    AlarmManager alarmManager;
     String TITLE = "Task Activity";
 
     @Override
@@ -181,13 +187,18 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
                     // Notify the adapter of the new task
                     adapter.notifyItemInserted(taskList.size() - 1);
+
+                    // Trigger Notification Scheduling
+                    notificationChannel();
+                    pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(MainActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
+                    alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    sendPushNotification(newTask);
                 }
             }
         });
         builder.setNegativeButton("Cancel", null);
         builder.create().show();
     }
-
 
     private void showEditTaskDialog(final int position) {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -247,6 +258,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
                 // Notify the adapter of the updated task
                 adapter.notifyItemChanged(position);
+
+                // Trigger Notification Scheduling
+                notificationChannel();
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(MainActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                // Cancel & Push Notification again
+                cancelNotification();
+                sendPushNotification(task);
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -276,55 +295,38 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
         adapter.notifyDataSetChanged(); // Update the RecyclerView
+        alarmManager.cancel(pendingIntent); // Halt all notifications
     }
 
-    //    public void sendPushNotification(Task task) {
-//        // Notification channel
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            manager.createNotificationChannel(notificationChannel);
-//
-//            String taskDeadline = task.getTaskEndTime(); // To be edited after date is added
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//            try {
-//                Date deadline = sdf.parse(taskDeadline);
-//                Date currentTime = new Date();
-//                long timeRemaining = deadline.getTime() - currentTime.getTime();
-//
-//                // Notification sent if the time remaining is <= 2 hours
-//                if (timeRemaining <= 7200000) {
-//                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-//                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                    // Calculating the time left
-//                    long hour = timeRemaining / 3600000;
-//                    long minutes = (timeRemaining % 3600000) / 60000;
-//                    NotificationCompat.Builder notification = new NotificationCompat.Builder(MainActivity.this, "Task Deadline Notification")
-//                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                            .setContentTitle("'" + task.getTaskName() + "' Deadline Approaching!")
-//                            .setStyle(new NotificationCompat.BigTextStyle()
-//                                    .bigText("Your task ending in " + hour + " hour " + minutes + " minutes, don't miss the deadline! Complete your task before the deadline hits."))
-//                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                            .setContentIntent(pendingIntent);
-//
-//                    // Notification Scheduling
-//                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//                    //long triggerTime = deadline; // When the alarm goes off
-//                    //int interval = 120000; //1800000; // Alarm to repeat every 30 minutes
-//                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent);
-//
-//                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-//                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    notificationManager.notify(1, notification.build());
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace(); }
-//        }
-//    }
+    public void sendPushNotification(Task task) {
+        Calendar deadline = Calendar.getInstance();
+        deadline.setTime(task.getTaskDateTime()); // Set deadline based on user input
+        Calendar currentTime = Calendar.getInstance(); // Retrieve current time
+        long milliDiff = deadline.getTimeInMillis() - currentTime.getTimeInMillis();
+        double days = milliDiff / (24 * 60 * 60 * 1000);
+        int daysDiff = (int) Math.round(days); // Calculate days till deadline
 
+        if (daysDiff<=14) {
+            int interval4days = 30000; // Once every 4 days until it hits 345600000
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval4days, pendingIntent);
+        }
+        else {
+            int interval1week = 604800000; // Once every week
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval1week, pendingIntent);
+        }
+    }
+
+    public void notificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+        }
+    }
+
+    public void cancelNotification() {
+        alarmManager.cancel(pendingIntent);
+    }
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
 
