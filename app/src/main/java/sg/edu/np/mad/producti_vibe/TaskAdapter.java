@@ -108,6 +108,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return selectedPosition;
     }
 
+    // update the dataset used for adapter
+    public void updateList(List<Task> updatedList){
+        this.taskList = updatedList;
+    }
+
+    public void clearList(){
+        int size = taskList.size();
+        taskList.clear();
+        notifyItemRangeRemoved(0,size);
+
+    }
+
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         // CheckBox check_box;
@@ -131,13 +143,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             editButton = itemView.findViewById(R.id.editButton);
             // check_box =  view.findViewById(R.id.checkBox);
         }
-    }
-
-    public void clearList(){
-        int size = taskList.size();
-        taskList.clear();
-        notifyItemChanged(0,size);
-
     }
 
 

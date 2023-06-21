@@ -8,18 +8,13 @@ import android.widget.CalendarView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import sg.edu.np.mad.producti_vibe.R;
+//import sg.edu.np.mad.producti_vibe.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.DateFormatSymbols;
-import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +23,6 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
 
     String TITLE = "Calendar Page";
 
-    private RecyclerView filteredRecyclerView;
     private List<Task> filteredTaskList;
     private TaskAdapter adapter;
     private TaskDatabase taskDatabase;
@@ -70,7 +64,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
     protected void onStart(){
         super.onStart();
 
-        filteredRecyclerView = findViewById(R.id.calendarTaskView);
+        RecyclerView filteredRecyclerView = findViewById(R.id.calendarTaskView);
         filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the database
@@ -106,7 +100,8 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 }
                 else{
                     //adapter.clearList();
-                    adapter.notifyDataSetChanged();
+                    adapter.updateList(filteredTaskList);
+                    adapter.notifyItemRangeChanged(0,filteredTaskList.size());
                     Log.d("FILTERED", "List should not be empty");
                 }
                 Log.v("AFTER FILTERING",filteredTaskList.toString());
@@ -131,7 +126,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         List<Task> temp = new ArrayList<>();
         Log.d("TRYING TO DEBUG", String.valueOf(filteredTaskList.size()));
         // convert date object to a string with a nicer format
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
         for (Task t : filteredTaskList){
             // check if it contains the date
             String comparedDate = format.format(t.getTaskDueDateTime());
