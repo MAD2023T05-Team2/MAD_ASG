@@ -132,11 +132,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             // check_box =  view.findViewById(R.id.checkBox);
         }
     }
-    public void setFilter(List<Task> filterTasks) {
-        List<Task> filterLists = new ArrayList<>();
-        filterLists.addAll(filterTasks);
-        notifyDataSetChanged();
+
+    public void clearList(){
+        int size = taskList.size();
+        taskList.clear();
+        notifyItemChanged(0,size);
+
     }
+
+
 }
 
 

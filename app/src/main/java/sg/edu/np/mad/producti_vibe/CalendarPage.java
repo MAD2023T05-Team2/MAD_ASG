@@ -29,7 +29,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
     String TITLE = "Calendar Page";
 
     private RecyclerView filteredRecyclerView;
-    private ArrayList<Task> filteredTaskList;
+    private List<Task> filteredTaskList;
     private TaskAdapter adapter;
     private TaskDatabase taskDatabase;
 
@@ -76,10 +76,14 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
         // Load tasks from the database
-        List<Task> filteredTaskList = taskDatabase.getAllTasks();
+        filteredTaskList = taskDatabase.getAllTasks();
+        for (Task t: filteredTaskList){
+            Log.d("LIST",t.getTaskDueDateTime().toString());
+        }
+        filteredTaskList.clear();
         adapter = new TaskAdapter(filteredTaskList, this::onItemClick, this::onEditClick);
         filteredRecyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+
         // recyclerview
         // watch out for user selecting other dates
         CalendarView calendarView = findViewById(R.id.calendarView);
@@ -87,15 +91,25 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             @Override
             public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
                 //formatting
-                String month_name = DateFormatSymbols.getInstance().getMonths()[month].substring(0,3);
-                String strDate = String.format("%1$s-%2$s-%3$s", day, month_name,year);
+                //String month_name = DateFormatSymbols.getInstance().getMonths()[month].substring(0,3);
+                String strDate = String.format("%1$s-%2$s-%3$s", day, (month + 1),year);
                 // filter out recycler view
                 Log.i(TITLE, strDate);
                 // retrieving the filtered values
-                List<Task> filteredTasksList = taskDatabase.getFilteredTasks("due_date","date",strDate);
-                adapter.setFilter(filteredTasksList);
-                adapter.notifyDataSetChanged();
-                Log.v(TITLE,filteredTasksList.toString());
+                filteredTaskList = filterListDate(taskDatabase.getAllTasks(),strDate);
+                //List<Task> filteredTasksList = taskDatabase.getFilteredTasks("due_date","date",strDate);
+                if (filteredTaskList.isEmpty()){
+                    //filteredTasksList.clear();
+                    adapter.clearList();
+                    //adapter.notifyDataSetChanged();
+                    Log.d("FILTERED","List is empty");
+                }
+                else{
+                    //adapter.clearList();
+                    adapter.notifyDataSetChanged();
+                    Log.d("FILTERED", "List should not be empty");
+                }
+                Log.v("AFTER FILTERING",filteredTaskList.toString());
             }
         });
 
@@ -110,5 +124,23 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
     @Override
     public void onEditClick(int position) {
         Log.i(TITLE,"Trying to edit click?????");
+    }
+
+    public List<Task> filterListDate(List<Task> filteredTaskList, String strDate){
+        // filter out tasks based on due data
+        List<Task> temp = new ArrayList<>();
+        Log.d("TRYING TO DEBUG", String.valueOf(filteredTaskList.size()));
+        // convert date object to a string with a nicer format
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy");
+        for (Task t : filteredTaskList){
+            // check if it contains the date
+            String comparedDate = format.format(t.getTaskDueDateTime());
+            Log.d("FILTERING",comparedDate);
+            Log.d("FILTERING",strDate);
+            if (comparedDate.equals(strDate)){
+                temp.add(t);
+            }
+        }
+        return temp;
     }
 }
