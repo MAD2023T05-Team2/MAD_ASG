@@ -44,6 +44,8 @@
         <activity
             android:name=".CalendarPage"
             android:exported="false" />
+        <activity
+            android:name=".PicturesActivity"
+            android:exported="false" />
     </application>
-
 </manifest>

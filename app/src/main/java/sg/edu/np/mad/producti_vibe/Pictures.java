@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class Pictures extends Fragment {
     private RecyclerView DIrecyclerView;
     private RecyclerView.Adapter DIAdapter;
-    int[] destressImages = {R.drawable.grades, R.drawable.guilty, R.drawable.sleep, R.drawable.study, R.drawable.hotdog};
+    int[] destressImages = {R.drawable.grades, R.drawable.guilty, R.drawable.study, R.drawable.study, R.drawable.hotdog};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
