@@ -17,9 +17,9 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
         Intent repeatingIntent = new Intent(context, NotificationReminder.class);
         repeatingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, repeatingIntent, PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Task Deadline Notification")
-                .setSmallIcon(R.drawable.productivibe)
-                .setContentTitle("Task Deadline Approaching!")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Task Reminder Notification")
+                .setSmallIcon(R.drawable.baseline_timer_24)
+                .setContentTitle("Task Reminder!")
                 .setStyle(new NotificationCompat.BigTextStyle() // Will try to add in task name & time remaining/deadline
                         .bigText("Make sure to complete your task before the deadline hits! Good Luck :)"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -307,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         int daysDiff = (int) Math.round(days); // Calculate days till deadline
 
         if (daysDiff<=14) {
-            int interval4days = 30000; // Once every 4 days until it hits 345600000
+            int interval4days = 259200000; // Once every 3 days until it hits
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval4days, pendingIntent);
         }
         else {
@@ -318,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
     public void notificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel("Task Deadline Notification", "Task Deadline", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel("Task Reminder Notification", "Task Reminder", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);
         }
