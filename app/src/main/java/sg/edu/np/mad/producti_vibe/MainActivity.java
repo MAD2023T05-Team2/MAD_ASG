@@ -295,8 +295,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         TaskDatabase taskDatabase = TaskDatabase.getInstance(this); // Get the TaskDatabase instance
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
-        adapter.notifyDataSetChanged(); // Update the RecyclerView
         alarmManager.cancel(pendingIntent); // Halt all notifications
+        adapter.notifyDataSetChanged(); // Update the RecyclerView
     }
 
     public void sendPushNotification(Task task) {
