@@ -21,10 +21,9 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | Feature | Description | In-charge |
 | :------ | :---------- | :-------- | 
 | Responsive layout | UI changes according to display size | Kiara |
-| Videos to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Gwyneth |
-| Background Music | Can opt in or out of such music | - |
+| Videos/Pictures to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Gwyneth |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | Sherylyn |
-| CRED Tasks | Creating, Reading, Editing, Deleting of one-time/recurring tasks | Xin Le |x
+| CRED Tasks | Creating, Reading, Editing, Deleting of  tasks | Xin Le |x
 | Calendar View | Displaying tasks in another format | Kiara |
 | Task Sorting | Sort them into user-defined categories | Sherylyn |
 | Push Notifications | Send notifications when nearing the tasks' deadline | Alethea |
@@ -40,6 +39,7 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | Splash Screen | Opening App | - |
 | Timer / Stopwatch | Track how long the user has been productive | - |
 | ++ Music | Selected Music will play as the timer goes on | - |
+| Background Music | Can opt in or out of such music | - |
 | Language Pack | - | - |
 | Friends! | Study with friends | - | 
 | User login | Login and sign up with Remember me function | - |
