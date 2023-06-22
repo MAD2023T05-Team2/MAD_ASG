@@ -45,7 +45,10 @@
             android:name=".CalendarPage"
             android:exported="false" />
         <activity
-            android:name=".PicturesActivity"
+            android:name=".PicturesFragment"
+            android:exported="false" />
+        <activity
+            android:name=".VideosFragment"
             android:exported="false" />
     </application>
 </manifest>

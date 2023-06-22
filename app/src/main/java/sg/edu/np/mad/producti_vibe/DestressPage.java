@@ -21,7 +21,8 @@ import com.bumptech.glide.Glide;
 
 public class DestressPage extends AppCompatActivity {
     private static final String TITLE = "Destress Page";
-    private Button getStartedButton;
+    private Button picturesButton;
+    private Button videosButton;
     private boolean isCountdownRunning = false;
 
     @Override
@@ -29,7 +30,7 @@ public class DestressPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destress_page);
 
-        getStartedButton = findViewById(R.id.getStartedButton);
+        picturesButton = findViewById(R.id.pictures);
 
         replaceFragment(new DestressMessage());
     }
@@ -38,13 +39,19 @@ public class DestressPage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        getStartedButton.setOnClickListener(v -> {
+        picturesButton.setOnClickListener(v -> {
             if (!isCountdownRunning) {
                 countDownTimer();
             }
-            Intent intent = new Intent(DestressPage.this, PicturesActivity.class);
-            startActivity(intent);
+            replaceFragment(new PicturesFragment());
         });
+
+//        videosButton.setOnClickListener(v -> {
+//            if (!isCountdownRunning) {
+//                countDownTimer();
+//            }
+//            replaceFragment(new VideosFragment());
+//        });
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -53,6 +60,8 @@ public class DestressPage extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
     }
+
+
 
     private CountDownTimer myCountdown;
 
