@@ -27,6 +27,8 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
     private TaskAdapter adapter;
     private TaskDatabase taskDatabase;
 
+    private RecyclerView filteredRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
     protected void onStart(){
         super.onStart();
 
-        RecyclerView filteredRecyclerView = findViewById(R.id.calendarTaskView);
+        filteredRecyclerView = findViewById(R.id.calendarTaskView);
         filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the database
@@ -113,7 +115,11 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
 
     @Override
     public void onItemClick(int position) {
+        if (adapter.getSelectedPosition() == position){
+            position = filteredRecyclerView.NO_POSITION;
+        }
         adapter.setSelectedPosition(position);
+
     }
 
     @Override

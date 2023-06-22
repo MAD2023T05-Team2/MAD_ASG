@@ -131,7 +131,11 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
     @Override
     public void onItemClick(int position) {
+        if (adapter.getSelectedPosition() == position){
+            position = RecyclerView.NO_POSITION;
+        }
         adapter.setSelectedPosition(position);
+
     }
 
     @Override

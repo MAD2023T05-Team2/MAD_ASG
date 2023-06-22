@@ -77,7 +77,11 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
 
     @Override
     public void onItemClick(int position) {
-        homeTaskadapter.setSelectedPosition(position);
+        if (homeTaskadapter.getSelectedPosition() == position){
+            position = homeTaskRecyclerView.NO_POSITION;
+        }
+            homeTaskadapter.setSelectedPosition(position);
+
     }
 
     @Override
