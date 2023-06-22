@@ -68,7 +68,8 @@
             android:drawableLeft="@drawable/baseline_person_24"
             android:drawablePadding="10dp"
             android:hint="Username"
-            android:paddingLeft="14dp" />
+            android:paddingLeft="14dp"
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/password"
@@ -81,7 +82,8 @@
             android:drawablePadding="10dp"
             android:hint="Password"
             android:inputType="textPassword"
-            android:paddingLeft="15dp" />
+            android:paddingLeft="15dp"
+            android:singleLine="true" />
 
         <CheckBox
             android:id="@+id/rememberMe"
