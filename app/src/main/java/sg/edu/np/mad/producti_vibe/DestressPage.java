@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DestressPage extends AppCompatActivity {
     private static final String TITLE = "Destress Page";
@@ -33,6 +34,29 @@ public class DestressPage extends AppCompatActivity {
         picturesButton = findViewById(R.id.pictures);
 
         replaceFragment(new DestressMessage());
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_timer);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.bottom_timer) {
+                return true;
+            } else if (itemId == R.id.bottom_home) {
+                startActivity(new Intent(DestressPage.this, HomePage.class));
+                return true;
+            } else if (itemId == R.id.bottom_calendar) {
+                startActivity(new Intent(DestressPage.this, CalendarPage.class));
+                return true;
+            } else if (itemId == R.id.bottom_tasks) {
+                startActivity(new Intent(DestressPage.this, MainActivity.class));
+                return true;
+            } else if (itemId == R.id.bottom_profile) {
+                startActivity(new Intent(DestressPage.this, MainActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
