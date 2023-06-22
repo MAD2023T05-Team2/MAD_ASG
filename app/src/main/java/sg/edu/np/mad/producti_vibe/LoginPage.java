@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 public class LoginPage extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
+    private TaskDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,8 @@ public class LoginPage extends AppCompatActivity {
         EditText username = findViewById(R.id.username);
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
+        // Initialize the database
+        db = TaskDatabase.getInstance(this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,22 +49,34 @@ public class LoginPage extends AppCompatActivity {
                 String userName = username.getText().toString();
                 String pass = password.getText().toString();
 
+                User userData = db.findUserData(userName);
+
                 if (userName.equals("") || pass.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                 }
-                else {
-//                    // For the Persistent Login Session
+
+                else if (userData != null){ //Username exists in database
+                    if (userData.getPassWord().equals(pass)){ //Check if the password entered is the same
+                        // Successful Login
+                        Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
+                        loginToHome.putExtra("Name", userData.getName());
+                        //loginToHome.putExtra("Name", username.getText().toString());
+                        startActivity(loginToHome);
+                        Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                        // For the Persistent Login Session
 //                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 //                    SharedPreferences.Editor editor = sharedPreferences.edit();
 //                    editor.putString("Name", "True");
 //                    editor.apply();
 //                    checkBox();
-
-                    // Successful Login
-                    Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
-                    loginToHome.putExtra("Username", username.getText().toString());
-                    startActivity(loginToHome);
-                    Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+//
+                    Toast.makeText(getApplicationContext(), "Username is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

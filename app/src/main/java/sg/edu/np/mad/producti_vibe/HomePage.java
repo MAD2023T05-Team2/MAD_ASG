@@ -20,7 +20,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     private TaskDatabase taskDatabase;
     private TaskAdapter homeTaskadapter;
     final String TITLE = "Home Page";
-    String recvUsername = "";
+    String recvName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +56,10 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     protected void onStart() {
         super.onStart();
         Intent myRecvIntent = getIntent();
-        recvUsername = myRecvIntent.getStringExtra("Username");
+        recvName = myRecvIntent.getStringExtra("Name");
 
         TextView myMessage = findViewById(R.id.textView);
-        myMessage.setText("Hello, " + recvUsername);
+        myMessage.setText("Hello, " + recvName);
 
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
