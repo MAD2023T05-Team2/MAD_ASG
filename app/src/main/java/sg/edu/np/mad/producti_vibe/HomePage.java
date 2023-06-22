@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -45,7 +46,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
                 startActivity(new Intent(HomePage.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
-                startActivity(new Intent(HomePage.this, MainActivity.class));
+                startActivity(new Intent(HomePage.this, ProfilePage.class));
                 return true;
             }
             return false;
@@ -55,8 +56,9 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     @Override
     protected void onStart() {
         super.onStart();
-        Intent myRecvIntent = getIntent();
-        recvName = myRecvIntent.getStringExtra("Name");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String recvName = sharedPreferences.getString("Name", null);
 
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvName);

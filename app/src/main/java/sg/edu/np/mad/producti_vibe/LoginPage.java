@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +31,29 @@ public class LoginPage extends AppCompatActivity {
         spannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 21, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.BLUE), 23, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         memberYN.setText(spannable);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", 0);
+        String remember = sharedPreferences.getString("Remember", "");
+
+        if (remember.equals("True")) {
+            Intent intent = new Intent(LoginPage.this, HomePage.class);
+            startActivity(intent);
+        }
+
+
         TextView signup = findViewById(R.id.signup);
         EditText username = findViewById(R.id.username);
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
+        CheckBox rememberMe = findViewById(R.id.rememberMe);
+
+
         // Initialize the database
         db = TaskDatabase.getInstance(this);
 
@@ -59,16 +73,28 @@ public class LoginPage extends AppCompatActivity {
                     if (userData.getPassWord().equals(pass)){ //Check if the password entered is the same
                         // Successful Login
                         Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
-                        loginToHome.putExtra("Name", userData.getName());
-                        //loginToHome.putExtra("Name", username.getText().toString());
                         startActivity(loginToHome);
-                        Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
-                        // For the Persistent Login Session
-//                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putString("Name", "True");
-//                    editor.apply();
-//                    checkBox();
+
+                        //Remember the name so that it will be displayed on the home page
+                        SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor RNeditor = rememberName.edit();
+                        RNeditor.putString("Name", userData.getName());
+                        RNeditor.apply();
+
+                        boolean isChecked = rememberMe.isChecked();
+                        SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+
+                        if (isChecked) {
+                            RUDeditor.putString("Remember", "True");
+                            Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            RUDeditor.putString("Remember", "False");
+                            Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        RUDeditor.apply();
+
                     }
                     else{
                         Toast.makeText(getApplicationContext(), "Password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();

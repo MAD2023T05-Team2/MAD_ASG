@@ -176,6 +176,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
 
     public void addUser(User userData){
         ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, userData.getName());
         values.put(COLUMN_USERNAME, userData.getUserName());
         values.put(COLUMN_PASSWORD, userData.getPassWord());
         SQLiteDatabase db = this.getWritableDatabase();

@@ -51,7 +51,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 startActivity(new Intent(CalendarPage.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
-                startActivity(new Intent(CalendarPage.this, MainActivity.class));
+                startActivity(new Intent(CalendarPage.this, ProfilePage.class));
                 return true;
             }
             return false;

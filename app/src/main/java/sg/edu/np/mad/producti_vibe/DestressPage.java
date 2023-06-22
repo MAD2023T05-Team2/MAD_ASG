@@ -52,7 +52,7 @@ public class DestressPage extends AppCompatActivity {
                 startActivity(new Intent(DestressPage.this, MainActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
-                startActivity(new Intent(DestressPage.this, MainActivity.class));
+                startActivity(new Intent(DestressPage.this, ProfilePage.class));
                 return true;
             }
             return false;

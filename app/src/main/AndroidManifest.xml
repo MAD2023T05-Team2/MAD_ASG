@@ -15,6 +15,9 @@
         android:theme="@style/Theme.MAD_ASG"
         tools:targetApi="31">
         <activity
+            android:name=".ProfilePage"
+            android:exported="false" />
+        <activity
             android:name=".SignUpPage"
             android:exported="false" />
         <activity
@@ -47,13 +50,11 @@
         <activity
             android:name=".PicturesFragment"
             android:exported="false" />
-        <activity
-            android:name=".VideosFragment"
-            android:exported="false" />
 
-        <receiver android:name=".BroadcastReceiver"
+        <receiver
+            android:name=".BroadcastReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
