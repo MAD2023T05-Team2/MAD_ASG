@@ -44,6 +44,12 @@
         <activity
             android:name=".CalendarPage"
             android:exported="false" />
+        <activity
+            android:name=".PicturesFragment"
+            android:exported="false" />
+        <activity
+            android:name=".VideosFragment"
+            android:exported="false" />
 
         <receiver android:name=".BroadcastReceiver"
             android:enabled="true"

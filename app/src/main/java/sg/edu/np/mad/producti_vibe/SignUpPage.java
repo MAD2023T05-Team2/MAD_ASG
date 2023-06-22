@@ -40,6 +40,7 @@ public class SignUpPage extends AppCompatActivity {
         EditText signUpName = findViewById(R.id.signUpName);
         EditText signUpUsername = findViewById(R.id.signUpUsername);
         EditText signUpPassword = findViewById(R.id.signUpPassword);
+        EditText cfmPassword = findViewById(R.id.confirmSignUpPassword);
         Button createAccountButton = findViewById(R.id.createAccountButton);
         // Initialize the database
         db = TaskDatabase.getInstance(this);
@@ -51,21 +52,31 @@ public class SignUpPage extends AppCompatActivity {
                 String signUpN = signUpName.getText().toString();
                 String signUpUser = signUpUsername.getText().toString();
                 String signUpPass = signUpPassword.getText().toString();
+                String cfmPass = cfmPassword.getText().toString();
 
                 if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("")) { // Check if all fields are filled
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                     Log.v("SignUpPage", "Empty Fields");
                 }
-                else if (db.findUserData(signUpUser) == null){ // No existing username, allow for account creation
-                    User userData = new User();
-                    userData.setName(signUpN);
-                    userData.setUserName(signUpUser);
-                    userData.setPassWord(signUpPass);
-                    db.addUser(userData);
-                    Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
-                    startActivity(signupToLogin);
-                    Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
-                    Log.v("SignUpPage", "can create account");
+                else if (db.findUserData(signUpUser) == null) { // No existing username, allow for account creation
+                    if (cfmPass.equals(signUpPass))//check if password and confirmed password matches
+                    {
+                        User userData = new User();
+                        userData.setName(signUpN);
+                        userData.setUserName(signUpUser);
+                        userData.setPassWord(signUpPass);
+                        db.addUser(userData);
+                        Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
+                        startActivity(signupToLogin);
+                        Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+                        Log.v("SignUpPage", "can create account");
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                        Log.v("Pass", signUpPass);
+                        Log.v("CfmPass", cfmPass);
+                    }
+
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "Username already exists! Please choose another username!", Toast.LENGTH_SHORT).show();

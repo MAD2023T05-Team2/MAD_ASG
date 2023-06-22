@@ -334,6 +334,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         boolean isValidInput = true;
         StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
 
+        // check if empty or not
         if (taskName.isEmpty()) {
             isValidInput = false;
             errorMessage.append("\n- Task name is required");
@@ -343,6 +344,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             errorMessage.append("\n- Task description is required");
         }
 
+        // check to ensure not null and is in a valid datetime format
+        // also checks if date is in the past
         if (taskDateTime == null || !isValidDateTimeFormat(taskDateTime)) {
             isValidInput = false;
             errorMessage.append("\n- Task start date and time are in an invalid format (dd/MM/yy HH:mm)");
@@ -363,7 +366,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             }
         }
 
-
+        // check if not not null and not a integer
+        // negative values are parsed into positive numbers
         if (taskDurationString.isEmpty()) {
             isValidInput = false;
             errorMessage.append("\n- Task duration is required");
