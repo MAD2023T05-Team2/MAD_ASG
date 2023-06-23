@@ -32,6 +32,7 @@ public class DestressPage extends AppCompatActivity {
         setContentView(R.layout.activity_destress_page);
 
         picturesButton = findViewById(R.id.pictures);
+        videosButton = findViewById(R.id.videos);
 
         replaceFragment(new DestressMessage());
 
@@ -70,12 +71,12 @@ public class DestressPage extends AppCompatActivity {
             replaceFragment(new PicturesFragment());
         });
 
-//        videosButton.setOnClickListener(v -> {
-//            if (!isCountdownRunning) {
-//                countDownTimer();
-//            }
-//            replaceFragment(new VideosFragment());
-//        });
+        videosButton.setOnClickListener(v -> {
+            if (!isCountdownRunning) {
+                countDownTimer();
+            }
+            replaceFragment(new VideosFragment());
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -84,8 +85,6 @@ public class DestressPage extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
     }
-
-
 
     private CountDownTimer myCountdown;
 

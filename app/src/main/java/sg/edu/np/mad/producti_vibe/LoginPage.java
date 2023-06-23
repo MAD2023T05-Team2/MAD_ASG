@@ -116,17 +116,4 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
-//    private void checkBox() {
-//        EditText username = findViewById(R.id.username);
-//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-//        String check = sharedPreferences.getString("Name", "");
-//
-//        if (check.equals("True")) {
-//            Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
-//            loginToHome.putExtra("Username", username.getText().toString());
-//            startActivity(loginToHome);
-//            Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
-//            finish();
-//        }
-//    }
 }

@@ -61,6 +61,7 @@
         android:layout_height="285dp"
         android:layout_marginTop="375dp"
         android:backgroundTint="@color/selected_item_background"
+        android:singleLine="true"
         app:cardElevation="0dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
@@ -75,7 +76,8 @@
             android:drawableLeft="@drawable/baseline_person_24"
             android:drawablePadding="10dp"
             android:hint="Your Name"
-            android:paddingLeft="14dp" />
+            android:paddingLeft="14dp"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/signUpUsername"
@@ -87,7 +89,8 @@
             android:drawableLeft="@drawable/baseline_person_24"
             android:drawablePadding="10dp"
             android:hint="Username"
-            android:paddingLeft="14dp" />
+            android:paddingLeft="14dp"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/signUpPassword"
@@ -100,7 +103,8 @@
             android:drawablePadding="10dp"
             android:hint="Password"
             android:inputType="textPassword"
-            android:paddingLeft="15dp" />
+            android:paddingLeft="15dp"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/confirmSignUpPassword"
@@ -113,7 +117,8 @@
             android:drawablePadding="10dp"
             android:hint="Confirm Password"
             android:inputType="textPassword"
-            android:paddingLeft="15dp" />
+            android:paddingLeft="15dp"
+            android:singleLine="true"/>
 
         <Button
             android:id="@+id/createAccountButton"
