@@ -75,10 +75,11 @@ public class LoginPage extends AppCompatActivity {
                         Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
                         startActivity(loginToHome);
 
-                        //Remember the name so that it will be displayed on the home page
+                        //Remember the name so that it will be displayed on the home page and username for calling of tasks specific to the user later on
                         SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor RNeditor = rememberName.edit();
                         RNeditor.putString("Name", userData.getName());
+                        RNeditor.putString("Username", userData.getUserName());
                         RNeditor.apply();
 
                         boolean isChecked = rememberMe.isChecked();
