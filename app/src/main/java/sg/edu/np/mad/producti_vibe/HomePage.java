@@ -12,8 +12,11 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
@@ -66,7 +69,8 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
         // Load tasks from the database
-        List<Task> homeTaskList = taskDatabase.getAllTasks();
+        //homeTaskList = taskDatabase.getAllTasks();
+        List<Task> homeTaskList = filterCurrentDate(taskDatabase.getAllTasks());
         // recyclerview
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
         homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -87,6 +91,24 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     @Override
     public void onEditClick(int position) {
         Log.i(TITLE,"Trying to edit click?????");
+    }
+
+    public List<Task> filterCurrentDate(List<Task> filteredTaskList){
+        // filter out tasks based on due data
+        List<Task> temp = new ArrayList<>();
+        // convert date object to a string with a nicer format
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        //get current date
+        Date currentDate = new Date();
+        String strDate = format.format(currentDate);
+        for (Task t : filteredTaskList){
+            // check if it contains the date
+            String comparedDate = format.format(t.getTaskDueDateTime());
+            if (comparedDate.equals(strDate)){
+                temp.add(t);
+            }
+        }
+        return temp;
     }
 
 
