@@ -31,7 +31,7 @@
             android:id="@+id/taskDateTimeLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Date: " />
+            android:text="Start: " />
 
         <TextView
             android:id="@+id/taskDateTimeTextView"
@@ -42,15 +42,13 @@
             android:id="@+id/taskDueDateTimeLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Due Date: "
-            android:layout_marginStart="16dp" />
+            android:text="Deadline: "
+            android:layout_marginStart="16dp"/>
 
         <TextView
             android:id="@+id/taskDueDateTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -62,15 +60,12 @@
             android:id="@+id/taskDurationLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Duration:" />
+            android:text="Task Duration: " />
 
         <TextView
             android:id="@+id/taskDurationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
-
     </LinearLayout>
 
 </LinearLayout>

@@ -1,7 +1,5 @@
 package sg.edu.np.mad.producti_vibe;
 
-import java.util.Date;
-
 public class User {
 
     private int userId;
@@ -18,8 +16,8 @@ public class User {
         this.passWord = passWord;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserId() {
+        return String.valueOf(userId);
     }
 
     public void setUserId(int userId) {

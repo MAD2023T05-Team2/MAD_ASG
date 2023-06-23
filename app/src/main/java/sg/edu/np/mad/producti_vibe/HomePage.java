@@ -23,7 +23,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     private RecyclerView homeTaskRecyclerView;
     private TaskDatabase taskDatabase;
     private TaskAdapter homeTaskadapter;
-    final String TITLE = "Home Page";
+    final String TITLE = "HomePage";
     String recvName = "";
 
     @Override
@@ -62,6 +62,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
 
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String recvName = sharedPreferences.getString("Name", null);
+        Log.d(TITLE, "Received name from SharedPreferences: " + recvName);
 
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvName);

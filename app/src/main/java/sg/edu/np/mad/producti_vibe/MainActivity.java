@@ -5,28 +5,27 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,12 +35,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+//import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
+
 public class MainActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
     private RecyclerView recyclerView;
     public TaskAdapter adapter;
     private List<Task> taskList;
     private TaskDatabase taskDatabase;
-    public static final String SHARED_PREFS = "sharedPrefs";
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
     String TITLE = "Task Activity";
@@ -91,40 +92,48 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
 
-
         // Load tasks from the database
         taskList.addAll(taskDatabase.getAllTasks());
         adapter.notifyDataSetChanged();
 
-        //  button actions
-        Button createButton = findViewById(R.id.createButton);
-        Button deleteButton = findViewById(R.id.deleteButton);
-        Button editButton = findViewById(R.id.editButton);
+        // Swipe gesture functionality to edit/delete tasks
+        ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                if (direction == ItemTouchHelper.LEFT) {
+                    showDeleteConfirmationDialog(position); // Swipe left to delete task
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    showEditTaskDialog(position); // Swipe right to edit task
+                }
+            }
+//            @Override
+//            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+//                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.orange))
+//                        .addSwipeRightBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.teal))
+//                        .addSwipeLeftActionIcon(R.drawable.baseline_delete_24)
+//                        .addSwipeRightActionIcon(R.drawable.baseline_edit_calendar_24)
+//                        .create()
+//                        .decorate();
+//
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//            }
+        };
 
-        createButton.setOnClickListener(new View.OnClickListener() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        // Floating Button Action
+        FloatingActionButton createTask = findViewById(R.id.createTask);
+        createTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCreateTaskDialog();
-            }
-        });
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedPosition = adapter.getSelectedPosition();
-                if (selectedPosition != RecyclerView.NO_POSITION) {
-                    showDeleteConfirmationDialog(selectedPosition);
-                }
-            }
-        });
-
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedPosition = adapter.getSelectedPosition();
-                if (selectedPosition != RecyclerView.NO_POSITION) {
-                    showEditTaskDialog(selectedPosition);
-                }
             }
         });
     }
@@ -135,14 +144,12 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             position = RecyclerView.NO_POSITION;
         }
         adapter.setSelectedPosition(position);
-
     }
 
     @Override
     public void onEditClick(int position) {
         showEditTaskDialog(position);
     }
-
 
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -261,9 +268,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
                 taskDatabase.updateTask(task);
 
-                // Notify the adapter of the updated task
-                adapter.notifyItemChanged(position);
-
                 // Trigger Notification Scheduling
                 notificationChannel();
                 pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(MainActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
@@ -271,6 +275,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 // Cancel & Push Notification again
                 cancelNotification();
                 sendPushNotification(task);
+
+                // Notify the adapter of the updated task
+                adapter.notifyItemChanged(position);
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -299,8 +306,21 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         TaskDatabase taskDatabase = TaskDatabase.getInstance(this); // Get the TaskDatabase instance
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
-        alarmManager.cancel(pendingIntent); // Halt all notifications
+        if (pendingIntent != null && alarmManager != null) {
+            alarmManager.cancel(pendingIntent); // Halt the notifications for the deleted task
+        }
         adapter.notifyDataSetChanged(); // Update the RecyclerView
+
+        // Undoing the task deletion
+        Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        taskList.add(position, task);
+                        adapter.notifyItemInserted(position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                }) .show();
     }
 
     public void sendPushNotification(Task task) {
@@ -397,7 +417,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             errorDialogBuilder.setPositiveButton("OK", null);
             errorDialogBuilder.create().show();
         }
-
         return isValidInput;
     }
 
@@ -415,12 +434,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         } catch (ParseException e) {
             return false;
         }
-
         // Check if the parsed date object matches the original date object
         return parsedDate.equals(date);
     }
-
-
 }
 
 

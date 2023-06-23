@@ -69,13 +69,13 @@ public class LoginPage extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                 }
 
-                else if (userData != null){ //Username exists in database
-                    if (userData.getPassWord().equals(pass)){ //Check if the password entered is the same
+                else if (userData != null){ // Username exists in database
+                    if (userData.getPassWord().equals(pass)){ // Check if the password entered is the same
                         // Successful Login
                         Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
                         startActivity(loginToHome);
 
-                        //Remember the name so that it will be displayed on the home page and username for calling of tasks specific to the user later on
+                        // Remember the name so that it will be displayed on the home page
                         SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor RNeditor = rememberName.edit();
                         RNeditor.putString("Name", userData.getName());
@@ -117,4 +117,17 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
+//    private void checkBox() {
+//        EditText username = findViewById(R.id.username);
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        String check = sharedPreferences.getString("Name", "");
+//
+//        if (check.equals("True")) {
+//            Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
+//            loginToHome.putExtra("Username", username.getText().toString());
+//            startActivity(loginToHome);
+//            Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
+//    }
 }

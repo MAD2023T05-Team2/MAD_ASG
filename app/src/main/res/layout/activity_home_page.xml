@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/selected_item_background"
     tools:context=".HomePage">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -53,7 +54,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardMoodView"
-            android:layout_width="335dp"
+            android:layout_width="347dp"
             android:layout_height="103dp"
             android:backgroundTint="@color/homepage_card"
             app:cardCornerRadius="25dp"
@@ -87,7 +88,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLoginView"
-        android:layout_width="335dp"
+        android:layout_width="347dp"
         android:layout_height="390dp"
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/homepage_card"
@@ -114,9 +115,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/homeTaskRecyclerView"
-            android:layout_width="330dp"
+            android:layout_width="337dp"
             android:layout_height="335dp"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />

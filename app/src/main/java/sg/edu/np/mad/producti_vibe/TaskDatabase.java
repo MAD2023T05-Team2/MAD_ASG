@@ -1,6 +1,8 @@
 package sg.edu.np.mad.producti_vibe;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,6 +16,7 @@ import java.util.List;
 public class TaskDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "task_database";
     private static final int DATABASE_VERSION = 1;
+    public static final String SHARED_PREFS = "sharedPrefs";
 
     // for tasks
     //private static final String TABLE_NAME = "tasks";
@@ -28,7 +31,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_REPEAT = "repeat";
     private static final String COLUMN_RECURRING_ID = "recurring_id";
     private static final String COLUMN_RECURRING_DURATION = "recurring_duration";
-    private static final String COLUMN_TASK_USER_ID = "task_user_id";
+    private static String COLUMN_TASK_USER_ID = "task_user_id";
 
     // for user accounts
     private static final String COLUMN_USERID = "user_id";
@@ -65,7 +68,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 COLUMN_REPEAT + " TEXT, " +
                 COLUMN_RECURRING_ID + " INTEGER, " +
                 COLUMN_RECURRING_DURATION + " TEXT, " +
-                COLUMN_TASK_USER_ID + " INTEGER" +
+                COLUMN_TASK_USER_ID + " INTEGER," + "FOREIGN KEY (" + COLUMN_TASK_USER_ID + ") REFERENCES users(" + COLUMN_USERID +")" +
                 ")";
         db.execSQL(createTasksTable);
 
@@ -162,7 +165,6 @@ public class TaskDatabase extends SQLiteOpenHelper {
                 String recurringDuration = cursor.getString(recurringDurationIndex);
                 int taskUserID = cursor.getInt(taskUserIdIndex);
 
-
                 Task task = new Task(id, status, taskName, taskDesc, taskDateTime,
                         taskDueDateTime, taskDuration, taskType,
                         repeat, recurringId, recurringDuration, taskUserID);
@@ -184,7 +186,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public User findUserData(String username){
+    public User findUserData(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
         User queryUserData = new User();
@@ -202,9 +204,6 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
         return queryUserData;
     }
-
-
-    }
-
+}
 
 

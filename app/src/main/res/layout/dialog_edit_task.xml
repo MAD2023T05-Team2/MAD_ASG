@@ -9,56 +9,70 @@
         android:orientation="vertical"
         android:padding="12dp" >
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Task Name" />
+            android:text="Task Name"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editTaskNameEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_drive_file_rename_outline_24"
+            android:drawablePadding="7dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Task Description" />
+            android:text="Task Description"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editTaskDescriptionEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_drive_file_rename_outline_24"
+            android:drawablePadding="7dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Date and Time (dd/MM/yy HH:mm)" />
+            android:text="Start Date and Time (dd/MM/yy HH:mm)"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editTaskDateTimeEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_calendar_month_24"
+            android:drawablePadding="7dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Due Date and Time (dd/MM/yy HH:mm)" />
+            android:text="Due Date and Time (dd/MM/yy HH:mm)"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editTaskDueDateTimeEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_calendar_month_24"
+            android:drawablePadding="7dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Duration (minutes)" />
+            android:text="Duration (minutes)"
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editTaskDurationEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_access_time_24"
+            android:drawablePadding="7dp"/>
 
 
     </LinearLayout>

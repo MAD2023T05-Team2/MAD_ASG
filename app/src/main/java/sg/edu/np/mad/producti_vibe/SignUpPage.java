@@ -2,7 +2,10 @@ package sg.edu.np.mad.producti_vibe;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -66,6 +69,16 @@ public class SignUpPage extends AppCompatActivity {
                         userData.setUserName(signUpUser);
                         userData.setPassWord(signUpPass);
                         db.addUser(userData);
+
+                        // Remember the UserId
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor UNeditor = sharedPreferences.edit();
+                        UNeditor.putString("UserId", userData.getUserId()); // userId is the value you obtained after registration
+                        UNeditor.apply();
+                        Intent toDB = new Intent(SignUpPage.this, TaskDatabase.class);
+                        toDB.putExtra("userId", userData.getUserId()); // userId is the value you obtained after registration
+                        startActivity(toDB);
+
                         Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
                         startActivity(signupToLogin);
                         Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
@@ -76,7 +89,6 @@ public class SignUpPage extends AppCompatActivity {
                         Log.v("Pass", signUpPass);
                         Log.v("CfmPass", cfmPass);
                     }
-
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "Username already exists! Please choose another username!", Toast.LENGTH_SHORT).show();
