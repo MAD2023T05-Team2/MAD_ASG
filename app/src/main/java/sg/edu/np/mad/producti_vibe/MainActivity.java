@@ -96,35 +96,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskList.addAll(taskDatabase.getAllTasks());
         adapter.notifyDataSetChanged();
 
-        // Swipe gesture functionality to edit/delete tasks
-        ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                if (direction == ItemTouchHelper.LEFT) {
-                    showDeleteConfirmationDialog(position); // Swipe left to delete task
-                } else if (direction == ItemTouchHelper.RIGHT) {
-                    showEditTaskDialog(position); // Swipe right to edit task
-                }
-            }
-//            @Override
-//            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-//                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-//                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.orange))
-//                        .addSwipeRightBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.teal))
-//                        .addSwipeLeftActionIcon(R.drawable.baseline_delete_24)
-//                        .addSwipeRightActionIcon(R.drawable.baseline_edit_calendar_24)
-//                        .create()
-//                        .decorate();
-//
-//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-//            }
-        };
-
+        // Implementation of swipe gesture for editing/deletion of tasks
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -137,6 +109,35 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
             }
         });
     }
+
+    // Swipe gesture functionality
+    ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            if (direction == ItemTouchHelper.LEFT) {
+                showDeleteConfirmationDialog(position); // Swipe left to delete task
+            } else if (direction == ItemTouchHelper.RIGHT) {
+                showEditTaskDialog(position); // Swipe right to edit task
+            }
+        }
+//            @Override
+//            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+//                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.orange))
+//                        .addSwipeRightBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.teal))
+//                        .addSwipeLeftActionIcon(R.drawable.baseline_delete_24)
+//                        .addSwipeRightActionIcon(R.drawable.baseline_edit_calendar_24)
+//                        .create()
+//                        .decorate();
+//
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//            }
+    };
 
     @Override
     public void onItemClick(int position) {
@@ -267,6 +268,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 task.setTaskDueDateTime(editedDueDate);
 
                 taskDatabase.updateTask(task);
+                // Notify the adapter of the updated task
+                adapter.notifyItemChanged(position);
 
                 // Trigger Notification Scheduling
                 notificationChannel();
@@ -275,12 +278,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 // Cancel & Push Notification again
                 cancelNotification();
                 sendPushNotification(task);
-
-                // Notify the adapter of the updated task
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 adapter.notifyItemChanged(position);
             }
         });
-        builder.setNegativeButton("Cancel", null);
         builder.create().show();
     }
 
@@ -294,7 +299,12 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 deleteTask(position);
             }
         });
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                adapter.notifyItemChanged(position);
+            }
+        });
         builder.create().show();
     }
 

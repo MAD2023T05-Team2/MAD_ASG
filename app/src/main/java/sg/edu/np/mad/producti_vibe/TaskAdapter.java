@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -130,8 +131,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TextView taskDateTimeTextView;
         public TextView taskDueDateTimeTextView;
 
-        //public Button editButton;
-
         public TaskViewHolder(View view) {
             super(view);
             taskNameTextView = view.findViewById(R.id.taskNameTextView);
@@ -140,12 +139,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
             taskDateTimeTextView = view.findViewById(R.id.taskDateTimeTextView);
             taskDueDateTimeTextView = view.findViewById(R.id.taskDueDateTimeTextView);
-            //editButton = itemView.findViewById(R.id.editButton);
             // check_box =  view.findViewById(R.id.checkBox);
         }
     }
-
-
 }
-
-

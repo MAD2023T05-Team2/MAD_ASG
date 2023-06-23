@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.MediaController;
-import android.widget.VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,7 @@ public class VideosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.videoRecyclerView);
         videoList = new ArrayList<>();
 
         // Add the video resource IDs to the list
