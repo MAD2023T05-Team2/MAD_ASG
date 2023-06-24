@@ -1,4 +1,4 @@
-# MAD_ASG
+![ss1](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/1da95edf-92ac-4c77-8936-bb05d3466e9f)# MAD_ASG
 
 # Team Members:
 * Avendano Kiara Kemuel Nacasas S10219186A
@@ -54,20 +54,20 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 * Select "Sign Up" if they want to create a new account
 * "LOGIN" button brings the user to the home page if the account is valid
 
-![ss1](https://github.com/yenkraii/MAD_ASG/assets/116244909/4901399d-dfa0-4db6-bf44-97e7ee005bf2)
+![ss1](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/ab95ef04-3b40-4ec3-b964-8d7e15096c73)
 
 ### Sign Up Page
 * Username that user enters cannot exist in the database, must be unique
 * Input of Password and Confirm Password must be the same
 * Username and Password is case sensitive
 
-![ss8](https://github.com/yenkraii/MAD_ASG/assets/116244909/a56ad030-91df-4123-9e00-1936136f0bca)
+![ss8](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/f016f9a7-5cb4-46b2-b67b-a5ef9862461d)
 
 ### Home Page
 * Shows tasks that are due today
 * Can change the task from "Pending" to "Done" (will update in Task Page and Calendar)
  
-![ss2](https://github.com/yenkraii/MAD_ASG/assets/116244909/f574cd1a-2b3f-43b7-ac11-117f63f482a9)
+![ss2](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/0a44661e-811a-42a0-a1e3-2babcb96e596)
 
 ### Task
 * Allows user to view all task
@@ -75,34 +75,35 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 * Swipe right to edit, left to delete
 * Can change the task from "Pending" to "Done" (will update in Home Page and Calendar)
 
-![ss3](https://github.com/yenkraii/MAD_ASG/assets/116244909/61e6c60e-bbe0-48ee-a7e8-5c752ae1c0de)
+![ss3](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/807a6dc2-0cff-4bfd-a5ed-96bbe6e58854)
 
 ### Create Task
 * Enter details of the new task
 * Task will be added to the task list
 
-![ss9](https://github.com/yenkraii/MAD_ASG/assets/116244909/ad74cd82-cac6-4b21-a283-411c165292e7)
+![ss9](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/15f9e982-e6f0-4a7e-ae55-a2f34c88ac26)
 
 ### Calendar
 * Click arrow buttons to change months
 * Click on a date to see tasks for that date
 * Can change the task from "Pending" to "Done" (will update in Home Page and Task Page)
-  
-![ss4](https://github.com/yenkraii/MAD_ASG/assets/116244909/09a445b4-8d74-43cd-8cc6-fc2ae28bef1e)
+
+![ss4](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/b2f00a5a-9f8a-4c9e-880c-72e7d5ea83da)
 
 ### Destress Page
 * Select between Photos and Videos to look at for destressing
-  
-![ss5](https://github.com/yenkraii/MAD_ASG/assets/116244909/58b02073-05b2-49f5-87b0-94bc12cd934e)
+   
+![ss5](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/e86b2428-3d30-4fc8-9597-5365dd0014b4)
 
 ### Photos
 * Funny photos will be displayed for the user to look at
 * Scrollable
   
-![ss6](https://github.com/yenkraii/MAD_ASG/assets/116244909/31af8efe-99c4-4195-b090-c13878330d71)
+![ss6](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/0520d2b9-3fa4-4eac-bb56-bca4adf1b19e)
 
 ### Videos
 * Different relaxing videos will play
 * Can choose video to watch
   
-![ss7](https://github.com/yenkraii/MAD_ASG/assets/116244909/3baa0416-0c2f-4640-9dfd-102f5a5237f4)
+![ss7](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/899cd9a1-3b3a-4363-a93f-f680c933a556)
+
