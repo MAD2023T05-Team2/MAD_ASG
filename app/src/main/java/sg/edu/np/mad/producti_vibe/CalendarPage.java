@@ -46,7 +46,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             if (itemId == R.id.bottom_calendar) {
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
-                startActivity(new Intent(CalendarPage.this, MainActivity.class));
+                startActivity(new Intent(CalendarPage.this, TaskActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(CalendarPage.this, HomePage.class));

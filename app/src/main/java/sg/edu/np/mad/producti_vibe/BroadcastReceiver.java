@@ -15,7 +15,7 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         // To navigate back to MainActivity when notification is clicked
-        Intent repeatingIntent = new Intent(context, MainActivity.class);
+        Intent repeatingIntent = new Intent(context, TaskActivity.class);
         repeatingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, repeatingIntent, PendingIntent.FLAG_IMMUTABLE);
 

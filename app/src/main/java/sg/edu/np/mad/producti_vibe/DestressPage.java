@@ -50,7 +50,7 @@ public class DestressPage extends AppCompatActivity {
                 startActivity(new Intent(DestressPage.this, CalendarPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
-                startActivity(new Intent(DestressPage.this, MainActivity.class));
+                startActivity(new Intent(DestressPage.this, TaskActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
                 startActivity(new Intent(DestressPage.this, ProfilePage.class));
@@ -114,7 +114,7 @@ public class DestressPage extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Let's go!", (dialog, which) -> {
                     Log.v(TITLE, "User Accepts");
-                    Intent intent = new Intent(DestressPage.this, MainActivity.class);
+                    Intent intent = new Intent(DestressPage.this, TaskActivity.class);
                     startActivity(intent);
                 });
 

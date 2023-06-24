@@ -31,7 +31,7 @@ public class ProfilePage extends AppCompatActivity {
                 startActivity(new Intent(ProfilePage.this, CalendarPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
-                startActivity(new Intent(ProfilePage.this, MainActivity.class));
+                startActivity(new Intent(ProfilePage.this, TaskActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(ProfilePage.this, DestressPage.class));

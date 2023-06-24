@@ -40,7 +40,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
             if (itemId == R.id.bottom_home) {
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
-                startActivity(new Intent(HomePage.this, MainActivity.class));
+                startActivity(new Intent(HomePage.this, TaskActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
                 startActivity(new Intent(HomePage.this, CalendarPage.class));
