@@ -26,7 +26,6 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | CRED Tasks | Creating, Reading, Editing, Deleting of  tasks | Xin Le |x
 | Calendar View | Displaying tasks in another format | Kiara |
 | Push Notifications | Send notifications when nearing the tasks' deadline | Alethea |
-| You're not alone! | Study with cartoon characters / videos of celebrities | - |
 
 
 ### Stage 2
@@ -35,16 +34,17 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | :------ | :---------- | :-------- | 
 | Mood Dialogs | Prompt users their feelings that day (Dynamic Layout) | - |
 | Splash Screen | Opening App | - |
-| Task Sorting | Sort them into user-defined categories | Sherylyn |
+| Task Sorting | Sort them into user-defined categories | - |
 | Timer / Stopwatch | Track how long the user has been productive | - |
 | ++ Music | Selected Music will play as the timer goes on | - |
+| Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
 | Background Music | Can opt in or out of such music | - |
 | Language Pack | - | - |
 | Friends! | Study with friends | - | 
 | User login | Login and sign up with Remember me function | - |
 | Statistics | Displays charts (mood/study hours) | - |
 | Reward System | Points earned based on productiveness and reflected on a leaderboard | - |
-| Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
+| You're not alone! | Study with cartoon characters / videos of celebrities | - |
 
 
 ### Log In Page
