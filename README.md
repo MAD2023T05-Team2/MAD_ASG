@@ -1,4 +1,4 @@
-![ss1](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/1da95edf-92ac-4c77-8936-bb05d3466e9f)# MAD_ASG
+# MAD_ASG
 
 # Team Members:
 * Avendano Kiara Kemuel Nacasas S10219186A
