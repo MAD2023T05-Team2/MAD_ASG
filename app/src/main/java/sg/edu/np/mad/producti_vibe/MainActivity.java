@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.os.Build;
@@ -91,9 +92,10 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
-
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("UserId", null);
         // Load tasks from the database
-        taskList.addAll(taskDatabase.getAllTasks());
+        taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
         adapter.notifyDataSetChanged();
 
         // Implementation of swipe gesture for editing/deletion of tasks
@@ -190,11 +192,13 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
 
                 // Validate user input
                 if (validateInput(taskName, taskDesc, taskDateD, taskDueDateD, taskDurationString)) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    String userId = sharedPreferences.getString("UserId", null);
                     // Create a new Task object
                     Task newTask = new Task(
                             taskList.size() + 1, "Pending", taskName, taskDesc, taskDateD,
                             taskDueDateD, Integer.parseInt(taskDurationString), "Type",
-                            "Repeat", 0, "", 1
+                            "Repeat", 0, "", Integer.parseInt(userId)
                     );
 
                     // Add the new task to the list and database

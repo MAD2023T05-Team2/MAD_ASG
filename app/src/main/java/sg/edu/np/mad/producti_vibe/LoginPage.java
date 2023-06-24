@@ -80,6 +80,7 @@ public class LoginPage extends AppCompatActivity {
                         SharedPreferences.Editor RNeditor = rememberName.edit();
                         RNeditor.putString("Name", userData.getName());
                         RNeditor.putString("Username", userData.getUserName());
+                        RNeditor.putString("UserId", userData.getUserId());
                         RNeditor.apply();
 
                         boolean isChecked = rememberMe.isChecked();
