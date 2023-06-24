@@ -19,10 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SignUpPage extends AppCompatActivity {
-
     private TaskDatabase db;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

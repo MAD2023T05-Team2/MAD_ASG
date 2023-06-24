@@ -21,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/baseline_drive_file_rename_outline_24"
-            android:drawablePadding="7dp" />
+            android:drawablePadding="7dp"
+            android:singleLine="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/baseline_drive_file_rename_outline_24"
-            android:drawablePadding="7dp" />
+            android:drawablePadding="7dp"
+            android:singleLine="true"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -47,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/baseline_calendar_month_24"
-            android:drawablePadding="7dp" />
+            android:drawablePadding="7dp"
+            android:singleLine="true"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -60,7 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/baseline_calendar_month_24"
-            android:drawablePadding="7dp" />
+            android:drawablePadding="7dp"
+            android:singleLine="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -73,7 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/baseline_access_time_24"
-            android:drawablePadding="7dp"/>
+            android:drawablePadding="7dp"
+            android:singleLine="true" />
 
 <!--        <CheckBox-->
 <!--            android:id="@+id/onTaskNotifications"-->
