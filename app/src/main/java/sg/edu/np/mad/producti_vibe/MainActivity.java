@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         adapter.setOnItemClickListener(this); // Set item click listener
         adapter.setOnEditClickListener(this); // Set edit click listener
         recyclerView.setAdapter(adapter);
+        // Task divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);

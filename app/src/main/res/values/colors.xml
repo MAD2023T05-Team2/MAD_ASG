@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="selected_item_background">#FBFCFC</color>
+    <color name="selected_item_background">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="teal">#68B2A0</color>
     <color name="lighter_teal">#7ed6c1</color>
-    <color name="homepage_card">#F2F2F2</color>
-    <color name="orange">#FF5F1F</color>
+    <color name="homepage_card">#DBF4E8</color>
 
 </resources>

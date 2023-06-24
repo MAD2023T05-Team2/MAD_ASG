@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/selected_item_background">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -60,9 +60,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calendarTaskView"
             android:layout_width="322dp"
-            android:layout_height="167dp"
+            android:layout_height="215dp"
             android:layout_marginStart="1dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="45dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.575"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,9 +81,9 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="0dp"
             android:text="DUE TODAY:"
-            android:textSize="17sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
