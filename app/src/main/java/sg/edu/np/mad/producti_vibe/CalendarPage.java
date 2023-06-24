@@ -1,6 +1,7 @@
 package sg.edu.np.mad.producti_vibe;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CalendarView;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -72,11 +74,13 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         // Initialize the database
         taskDatabase = TaskDatabase.getInstance(this);
         // Load tasks from the database
-        filteredTaskList = taskDatabase.getAllTasks();
-        for (Task t: filteredTaskList){
-            Log.d("LIST",t.getTaskDueDateTime().toString());
-        }
-        filteredTaskList.clear();
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("UserId", null);
+        filteredTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
+        //for (Task t: filteredTaskList){
+        //    Log.d("LIST",t.getTaskDueDateTime().toString());
+        //}
+        //filteredTaskList.clear();
         adapter = new TaskAdapter(filteredTaskList, this::onItemClick, this::onEditClick);
         filteredRecyclerView.setAdapter(adapter);
 
@@ -92,7 +96,9 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 // filter out recycler view
                 Log.i(TITLE, strDate);
                 // retrieving the filtered values
-                filteredTaskList = filterListDate(taskDatabase.getAllTasks(),strDate);
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String userId = sharedPreferences.getString("UserId", null);
+                filteredTaskList = filterListDate(taskDatabase.getAllTasksFromUser(userId),strDate);
                 //List<Task> filteredTasksList = taskDatabase.getFilteredTasks("due_date","date",strDate);
                 if (filteredTaskList.isEmpty()){
                     //filteredTasksList.clear();
@@ -138,6 +144,24 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             String comparedDate = format.format(t.getTaskDueDateTime());
             Log.d("FILTERING",comparedDate);
             Log.d("FILTERING",strDate);
+            if (comparedDate.equals(strDate)){
+                temp.add(t);
+            }
+        }
+        return temp;
+    }
+
+    public List<Task> filterCurrentDate(List<Task> filteredTaskList){
+        // filter out tasks based on due data
+        List<Task> temp = new ArrayList<>();
+        // convert date object to a string with a nicer format
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        //get current date
+        Date currentDate = new Date();
+        String strDate = format.format(currentDate);
+        for (Task t : filteredTaskList){
+            // check if it contains the date
+            String comparedDate = format.format(t.getTaskDueDateTime());
             if (comparedDate.equals(strDate)){
                 temp.add(t);
             }
