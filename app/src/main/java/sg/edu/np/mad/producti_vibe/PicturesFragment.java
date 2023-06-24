@@ -32,6 +32,7 @@ public class PicturesFragment extends Fragment {
         pictureList.add(R.drawable.study);
         pictureList.add(R.drawable.waiting);
         pictureList.add(R.drawable.working);
+        pictureList.add(R.drawable.guilty);
         // Add more pictures as needed
 
         // Create and set the adapter
