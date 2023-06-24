@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        taskList = new ArrayList<>();
+        taskList = new ArrayList<>(); //holds data for tasks displayed in recycler view
         adapter = new TaskAdapter(taskList, this, this);
         adapter.setOnItemClickListener(this); // Set item click listener
         adapter.setOnEditClickListener(this); // Set edit click listener
@@ -140,15 +140,15 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
     };
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int position) {     // called whenever item in recycler view is clicked
         if (adapter.getSelectedPosition() == position){
             position = RecyclerView.NO_POSITION;
         }
-        adapter.setSelectedPosition(position);
+        adapter.setSelectedPosition(position); //updates selected position
     }
 
     @Override
-    public void onEditClick(int position) {
+    public void onEditClick(int position) { //called when edit button of an item is clicked
         showEditTaskDialog(position);
     }
 
@@ -162,10 +162,13 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         final EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
         final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
 
+        // constructing the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Task");
         builder.setView(dialogView);
+
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            // user input from editTextViews is retrieved, validated and used to crate Task object
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String taskName = taskNameEditText.getText().toString().trim();
@@ -228,17 +231,21 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskNameEditText.setText(task.getTaskName());
         taskDescEditText.setText(task.getTaskDesc());
         taskDurationEditText.setText(String.valueOf(task.getTaskDuration()));
+
         // Convert the date objects to string representations
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         String taskDateTime = dateFormat.format(task.getTaskDateTime());
         String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
-
         taskDateTimeEditText.setText(taskDateTime);
         taskDueDateTimeEditText.setText(taskDueDateTime);
+
+        // constructing dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Task");
         builder.setView(dialogView);
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+
+            // edited values from EditText views are retrieved
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Get the edited values from the EditText fields
@@ -283,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                adapter.notifyItemChanged(position);
+                adapter.notifyItemChanged(position); // ensure reflects correct information
             }
         });
         builder.create().show();
