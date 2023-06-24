@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,7 +54,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task task = taskList.get(position);
         holder.taskNameTextView.setText(task.getTaskName());
         holder.taskDescriptionTextView.setText(task.getTaskDesc());
-        holder.taskStatusTextView.setText(task.getStatus());
+        holder.taskStatusButton.setText(task.getStatus());
+
         holder.taskDurationTextView.setText(String.valueOf(task.getTaskDuration()));
 
         // format datetime nicely
@@ -64,12 +66,33 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDateTimeTextView.setText(taskDateTime);
         holder.taskDueDateTimeTextView.setText(taskDueDateTime);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int adapterPosition = holder.getAdapterPosition();
+//                if (adapterPosition != RecyclerView.NO_POSITION) {
+//                    listener.onItemClick(adapterPosition);
+//                    // pending FFF67777
+//                    // done FF62D2FD
+//                }
+//            }
+//        });
+        if(holder.taskStatusButton.getText().equals("Pending")){
+            holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
+        }
+        else{
+            holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
+        }
+        holder.taskStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int adapterPosition = holder.getAdapterPosition();
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(adapterPosition);
+                if(holder.taskStatusButton.getText().equals("Pending")){
+                    holder.taskStatusButton.setText("Done");
+                    holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
+                }
+                else{
+                    holder.taskStatusButton.setText("Pending");
+                    holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
                 }
             }
         });
@@ -123,20 +146,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         // CheckBox check_box;
         public TextView taskNameTextView;
         public TextView taskDescriptionTextView;
-        public TextView taskStatusTextView;
+        //public TextView taskStatusTextView;
         public TextView taskDurationTextView;
         public TextView taskDateTimeTextView;
         public TextView taskDueDateTimeTextView;
+
+        public Button   taskStatusButton;
 
         public TaskViewHolder(View view) {
             super(view);
             taskNameTextView = view.findViewById(R.id.taskNameTextView);
             taskDescriptionTextView = view.findViewById(R.id.taskDescriptionTextView);
-            taskStatusTextView = view.findViewById(R.id.taskStatusTextView);
+            //taskStatusTextView = view.findViewById(R.id.taskStatusTextView);
+            taskStatusButton = view.findViewById(R.id.taskStatusButton);
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
             taskDateTimeTextView = view.findViewById(R.id.taskDateTimeTextView);
             taskDueDateTimeTextView = view.findViewById(R.id.taskDueDateTimeTextView);
             // check_box =  view.findViewById(R.id.checkBox);
         }
+
     }
 }

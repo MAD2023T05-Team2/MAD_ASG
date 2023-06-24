@@ -16,11 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/taskStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="italic" />
+    <Button
+        android:id="@+id/taskStatusButton"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:backgroundTint="#62D2FD"
+        android:text="Pending" />
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,6 +69,7 @@
             android:id="@+id/taskDurationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 </LinearLayout>
