@@ -86,13 +86,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TaskDatabase taskDatabase = TaskDatabase.getInstance(v.getContext());
                 if(holder.taskStatusButton.getText().equals("Pending")){
                     holder.taskStatusButton.setText("Done");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
+                    task.setStatus("Done");
+                    taskDatabase.updateTask(task);
+
                 }
                 else{
                     holder.taskStatusButton.setText("Pending");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
+                    task.setStatus("Pending");
+                    taskDatabase.updateTask(task);
                 }
             }
         });

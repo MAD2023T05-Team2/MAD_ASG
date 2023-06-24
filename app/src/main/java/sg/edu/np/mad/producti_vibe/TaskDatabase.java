@@ -114,6 +114,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         values.put(COLUMN_TASK_DATE_TIME, task.getTaskDateTime().getTime());
         values.put(COLUMN_TASK_DUE_DATE_TIME, task.getTaskDueDateTime().getTime());
         values.put(COLUMN_TASK_DURATION, task.getTaskDuration());
+        values.put(COLUMN_STATUS, task.getStatus());
         // Add other fields to be updated if needed !!!
 
         String selection = COLUMN_ID + " = ?";

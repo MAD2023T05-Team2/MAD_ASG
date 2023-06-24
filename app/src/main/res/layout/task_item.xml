@@ -5,24 +5,35 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:id="@+id/taskNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/taskNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/taskStatusButton"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_weight="0"
+            android:backgroundTint="#62D2FD"
+            android:text="Pending"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/taskDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/taskStatusButton"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:backgroundTint="#62D2FD"
-        android:text="Pending" />
 
 
     <LinearLayout
