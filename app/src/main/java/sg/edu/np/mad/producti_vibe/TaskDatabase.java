@@ -224,6 +224,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         return taskList;
     }
 
+    // Add new user data to the database
     public void addUser(User userData){
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, userData.getName());
@@ -234,6 +235,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Find the username from the database and retrieve the relevant user object
     public User findUserData(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);

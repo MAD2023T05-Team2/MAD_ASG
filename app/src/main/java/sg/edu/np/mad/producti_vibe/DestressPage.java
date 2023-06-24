@@ -71,6 +71,7 @@ public class DestressPage extends AppCompatActivity {
                 countDownTimer();
             }
             replaceFragment(new PicturesFragment());
+            Log.v(TITLE, "Picture fragment");
         });
 
         // When video button is pressed, video fragment is displayed
@@ -79,6 +80,7 @@ public class DestressPage extends AppCompatActivity {
                 countDownTimer();
             }
             replaceFragment(new VideosFragment());
+            Log.v(TITLE, "Video fragment");
         });
     }
 
