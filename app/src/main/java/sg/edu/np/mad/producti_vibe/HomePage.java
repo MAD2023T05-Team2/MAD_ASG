@@ -71,7 +71,8 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         taskDatabase = TaskDatabase.getInstance(this);
         // Load tasks from the database
         //homeTaskList = taskDatabase.getAllTasks();
-        List<Task> homeTaskList = filterCurrentDate(taskDatabase.getAllTasks());
+        String userId = sharedPreferences.getString("UserId", null);
+        List<Task> homeTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
         // recyclerview
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
         homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
