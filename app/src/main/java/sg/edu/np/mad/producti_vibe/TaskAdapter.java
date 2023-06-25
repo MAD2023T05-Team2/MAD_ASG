@@ -164,7 +164,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TextView taskDateTimeTextView;
         public TextView taskDueDateTimeTextView;
 
-        public Button   taskStatusButton;
+        public Button taskStatusButton;
 
         public TaskViewHolder(View view) {
             super(view);

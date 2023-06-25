@@ -64,7 +64,7 @@ public class SignUpPage extends AppCompatActivity {
                     Log.v(TITLE, "Empty Fields");
                 }
                 else if (db.findUserData(signUpUser) == null) { // No existing username, allow for account creation
-                    if (cfmPass.equals(signUpPass))// Check if password and confirmed password matches
+                    if (cfmPass.equals(signUpPass)) // Check if password and confirmed password matches
                     {
                         User userData = new User();
                         userData.setName(signUpN);
@@ -72,13 +72,13 @@ public class SignUpPage extends AppCompatActivity {
                         userData.setPassWord(signUpPass);
                         db.addUser(userData);
 
-                        // Remember the UserId
+                        // Remember the UserId (Value obtained after registration)
                         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor UNeditor = sharedPreferences.edit();
-                        UNeditor.putString("UserId", userData.getUserId()); // userId is the value you obtained after registration
+                        UNeditor.putString("UserId", userData.getUserId());
                         UNeditor.apply();
                         Intent toDB = new Intent(SignUpPage.this, Database.class);
-                        toDB.putExtra("userId", userData.getUserId()); // userId is the value you obtained after registration
+                        toDB.putExtra("userId", userData.getUserId());
                         startActivity(toDB);
 
                         // Bring to login page to login after successful sign up

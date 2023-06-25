@@ -48,7 +48,6 @@ public class ProfilePage extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
 
-
         // Initialize button
         Button logOutButton = findViewById(R.id.logOutButton);
 

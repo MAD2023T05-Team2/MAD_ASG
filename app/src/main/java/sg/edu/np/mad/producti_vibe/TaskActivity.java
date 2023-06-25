@@ -53,6 +53,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         setContentView(R.layout.activity_main);
         Log.v(TITLE, "Main Activity");
 
+        // Setting bottom navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_tasks);
 
@@ -88,6 +89,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         adapter.setOnItemClickListener(this); // Set item click listener
         adapter.setOnEditClickListener(this); // Set edit click listener
         recyclerView.setAdapter(adapter);
+
         // Task divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
@@ -130,6 +132,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 showEditTaskDialog(position); // Swipe right to edit task
             }
         }
+
 //            @Override
 //            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 //                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -167,13 +170,13 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         final EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
         final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
 
-        // constructing the dialog
+        // Constructing the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Task");
         builder.setView(dialogView);
 
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            // user input from editTextViews is retrieved, validated and used to crate Task object
+            // User input from editTextViews is retrieved, validated and used to crate Task object
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String taskName = taskNameEditText.getText().toString().trim();
@@ -297,7 +300,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                adapter.notifyItemChanged(position); // ensure reflects correct information
+                adapter.notifyItemChanged(position); // When cancelled, position remains so it stays on the tasks page
             }
         });
         builder.create().show();
@@ -316,7 +319,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                adapter.notifyItemChanged(position);
+                adapter.notifyItemChanged(position); // When cancelled, position remains so it stays on the tasks page
             }
         });
         builder.create().show();
@@ -353,14 +356,14 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         Calendar currentTime = Calendar.getInstance(); // Retrieve current time
         long milliDiff = deadline.getTimeInMillis() - currentTime.getTimeInMillis();
         double days = milliDiff / (24 * 60 * 60 * 1000);
-        int daysDiff = (int) Math.round(days); // Calculate days till deadline
+        int daysDiff = (int) Math.round(days); // Calculate days till deadline rounded to nearest whole
 
         if (daysDiff<=14) {
-            int interval4days = 259200000; // Once every 3 days until it hits
+            int interval4days = 259200000; // Once every 3 days until it hits | Intervals are in milliseconds
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval4days, pendingIntent);
         }
         else {
-            int interval1week = 604800000; // Once every week
+            int interval1week = 604800000; // Once every week | Intervals are in milliseconds
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval1week, pendingIntent);
         }
     }

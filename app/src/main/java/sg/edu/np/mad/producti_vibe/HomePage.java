@@ -32,7 +32,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
 
-        // Bottom navigation bar
+        // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
 
@@ -89,7 +89,6 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
             position = homeTaskRecyclerView.NO_POSITION;
         }
             homeTaskadapter.setSelectedPosition(position);
-
     }
 
     @Override
@@ -114,6 +113,4 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         }
         return temp;
     }
-
-
 }

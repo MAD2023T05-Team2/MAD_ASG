@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    Leading to Picture and Video fragments (Will try to change to TabLayout in stage 2)-->
     <Button
         android:id="@+id/pictures"
         android:layout_width="wrap_content"

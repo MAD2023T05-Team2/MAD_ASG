@@ -47,6 +47,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+<!--    Layout for recycler view of tasks due on that day-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="356dp"
         android:layout_height="317dp"

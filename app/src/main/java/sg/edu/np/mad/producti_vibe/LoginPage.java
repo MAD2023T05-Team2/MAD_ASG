@@ -17,13 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// The login page allows users to login with an existing account.
-// There is a remember me feature that will not prompt user for login details when they exit the app
-
+// Login page allows users to login with an existing account
+// Remember me feature is available, it will not prompt the user for login details the next time they enter the app unless they had chose to log out previously
 public class LoginPage extends AppCompatActivity {
-
     private Database db;
-
     String TITLE = "Login Page";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +32,6 @@ public class LoginPage extends AppCompatActivity {
         spannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 21, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.BLUE), 23, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         memberYN.setText(spannable);
-
     }
 
     @Override
@@ -51,7 +47,6 @@ public class LoginPage extends AppCompatActivity {
             startActivity(intent);
         }
         Log.v(TITLE, remember);
-
 
         // Initialize UI elements
         TextView signup = findViewById(R.id.signup);

@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-// The destress page allows users to destress for 1 minute by viewing funny pictures and watch and listen to relaxing videos
+// Destress page allows users to view a minute of funny pictures and relaxing videos
 public class DestressPage extends AppCompatActivity {
     private static final String TITLE = "Destress Page";
     private Button picturesButton;
@@ -37,7 +37,7 @@ public class DestressPage extends AppCompatActivity {
         // Show fragment with the destress message
         replaceFragment(new DestressMessage());
 
-        // Bottom navigation bar
+        // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_timer);
 

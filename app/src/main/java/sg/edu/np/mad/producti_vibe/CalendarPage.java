@@ -22,13 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 // The calendar page allows users to view the different tasks due by dates in a more organised manner
 public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
-
     String TITLE = "Calendar Page";
-
     private List<Task> filteredTaskList;
     private TaskAdapter adapter;
     private Database taskDatabase;
-
     private RecyclerView filteredRecyclerView;
 
     @Override
@@ -37,7 +34,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         setContentView(R.layout.activity_calendar_view);
         Log.v(TITLE,"Created the page !");
 
-
+        // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_calendar);
 
@@ -60,8 +57,6 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             }
             return false;
         });
-
-
     }
 
     @Override
@@ -107,7 +102,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                     //adapter.notifyDataSetChanged();
                     Log.d("FILTERED","List is empty");
                 }
-                else{
+                else {
                     //adapter.clearList();
                     adapter.updateList(filteredTaskList);
                     adapter.notifyItemRangeChanged(0,filteredTaskList.size());
@@ -116,9 +111,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 Log.v("AFTER FILTERING",filteredTaskList.toString());
             }
         });
-
     }
-
 
     @Override
     public void onItemClick(int position) {
@@ -126,7 +119,6 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             position = filteredRecyclerView.NO_POSITION;
         }
         adapter.setSelectedPosition(position);
-
     }
 
     @Override
