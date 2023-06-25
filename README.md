@@ -19,7 +19,7 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 
 
 | Feature | Description | Concept | In-charge |
-| :------ | :---------- | :-------- | 
+| :------ | :---------- | :-------- | :-------- | 
 | Responsive layout | UI changes according to display size | Responsive Layout | Kiara |
 | Videos/Pictures to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Fragments, Media (photos, videos, gif), Recycler view, Event handling | Gwyneth |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | Database, Shared preferences, Event handling | Sherylyn |
