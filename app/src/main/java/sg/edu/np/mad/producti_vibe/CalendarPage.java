@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-
+// The calendar page allows users to view the different tasks due by dates in a more organised manner
 public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
     String TITLE = "Calendar Page";

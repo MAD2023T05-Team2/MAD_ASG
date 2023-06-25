@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+// The sign up page allows users to sign up for a new account with a unique username
 public class SignUpPage extends AppCompatActivity {
     private TaskDatabase db;
     String TITLE = "Sign Up Page";
