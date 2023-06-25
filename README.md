@@ -18,14 +18,15 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 ### Stage 1
 
 
-| Feature | Description | In-charge |
+| Feature | Description | Concept | In-charge |
 | :------ | :---------- | :-------- | 
-| Responsive layout | UI changes according to display size | Kiara |
-| Videos/Pictures to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Gwyneth |
-| Checklist / To-do list | Viewing and checking tasks for users to know what to do | Sherylyn |
-| CRED Tasks | Creating, Reading, Editing, Deleting of  tasks | Xin Le |x
-| Calendar View | Displaying tasks in another format | Kiara |
-| Push Notifications | Send notifications when nearing the tasks' deadline | Alethea |
+| Responsive layout | UI changes according to display size | Responsive Layout | Kiara |
+| Videos/Pictures to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Fragments, Media (photos, videos, gif), Recycler view, Event handling | Gwyneth |
+| Checklist / To-do list | Viewing and checking tasks for users to know what to do | Database, Shared preferences, Event handling | Sherylyn |
+| CRED Tasks | Creating, Reading, Editing, Deleting of  tasks | Database, Event handling, Recycler view | Xin Le |x
+| Calendar View | Displaying tasks in another format | Recycler view, Event handling | Kiara |
+| Push Notifications | Send notifications when nearing the tasks' deadline | Push notifications | Alethea |
+| Login/Signup | Allows users to login with an existing account or signup with a new account | Database, Shared preferences, Event handling | Gwyneth |
 
 
 ### Stage 2
@@ -35,13 +36,12 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | Mood Dialogs | Prompt users their feelings that day (Dynamic Layout) | - |
 | Splash Screen | Opening App | - |
 | Task Sorting | Sort them into user-defined categories | - |
-| Timer / Stopwatch | Track how long the user has been productive | - |
+| Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | - |
 | ++ Music | Selected Music will play as the timer goes on | - |
 | Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
 | Background Music | Can opt in or out of such music | - |
 | Language Pack | - | - |
 | Friends! | Study with friends | - | 
-| User login | Login and sign up with Remember me function | - |
 | Statistics | Displays charts (mood/study hours) | - |
 | Reward System | Points earned based on productiveness and reflected on a leaderboard | - |
 | You're not alone! | Study with cartoon characters / videos of celebrities | - |
