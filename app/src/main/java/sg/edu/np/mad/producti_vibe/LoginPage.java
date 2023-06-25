@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 public class LoginPage extends AppCompatActivity {
 
-    private TaskDatabase db;
+    private Database db;
 
     String TITLE = "Login Page";
     @Override
@@ -61,7 +61,7 @@ public class LoginPage extends AppCompatActivity {
         CheckBox rememberMe = findViewById(R.id.rememberMe);
 
         // Initialize the database
-        db = TaskDatabase.getInstance(this);
+        db = Database.getInstance(this);
 
         // Event handler for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {

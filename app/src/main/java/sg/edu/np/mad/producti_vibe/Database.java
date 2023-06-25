@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TaskDatabase extends SQLiteOpenHelper {
+public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "task_database";
     private static final int DATABASE_VERSION = 1;
     public static final String SHARED_PREFS = "sharedPrefs";
@@ -38,15 +38,15 @@ public class TaskDatabase extends SQLiteOpenHelper {
 
 
 
-    private static TaskDatabase sInstance;
-    public static synchronized TaskDatabase getInstance(Context context){
+    private static Database sInstance;
+    public static synchronized Database getInstance(Context context){
         // uses the app's context, ensuring no accidental data / activity's context leakage
         if (sInstance == null){
-            sInstance = new TaskDatabase(context.getApplicationContext());
+            sInstance = new Database(context.getApplicationContext());
         }
         return sInstance;
     }
-    private TaskDatabase(Context context) {
+    private Database(Context context) {
         // private instead of public to force usage of getInstance()
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -123,6 +123,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    // function is to delete the task
     public void deleteTask(int taskId) {
         SQLiteDatabase db = getWritableDatabase();
         String selection = COLUMN_ID + " = ?";
@@ -131,13 +132,14 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    // getAllTasksFromUser grabs the task for the user based on the user ID
     public List<Task> getAllTasksFromUser(String userId) {
         List<Task> taskList = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM tasks where "+COLUMN_TASK_USER_ID+"='" +userId+"'", null);
         // Cursor cursor = db.query("tasks", null, null, null, null, null, null);
+        // SQL query fixed so it retrieves based on the unique user ID
         if (cursor != null) {
-
             int idIndex = cursor.getColumnIndex(COLUMN_ID);
             int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
             int taskNameIndex = cursor.getColumnIndex(COLUMN_TASK_NAME);
@@ -192,6 +194,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
     // Find the username from the database and retrieve the relevant user object
     public User findUserData(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
+        // SQL query fixed so it retrieves based on the unique user ID
         Cursor cursor = db.rawQuery("SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
         User queryUserData = new User();
 
@@ -210,7 +213,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
     }
 }
 
-
+// guys!!! CODE BELOW NOT USED ANYMORE cuz it grabs all tasks from database instead of only the userID
+// use the getAllTasksFromUser instead to retrieve
 //    public List<Task> getAllTasks() {
 //        List<Task> taskList = new ArrayList<>();
 //        SQLiteDatabase db = getReadableDatabase();

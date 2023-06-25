@@ -27,7 +27,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
 
     private List<Task> filteredTaskList;
     private TaskAdapter adapter;
-    private TaskDatabase taskDatabase;
+    private Database taskDatabase;
 
     private RecyclerView filteredRecyclerView;
 
@@ -72,10 +72,11 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the database
-        taskDatabase = TaskDatabase.getInstance(this);
+        taskDatabase = Database.getInstance(this);
         // Load tasks from the database
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserId", null);
+        // uses the function that retrieves task from the current user's user ID
         filteredTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
         //for (Task t: filteredTaskList){
         //    Log.d("LIST",t.getTaskDueDateTime().toString());

@@ -67,6 +67,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDateTimeTextView.setText(taskDateTime);
         holder.taskDueDateTimeTextView.setText(taskDueDateTime);
 
+//       Idk what this code is for cuz it's like useless so I comment out erm
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -78,6 +79,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //                }
 //            }
 //        });
+
+        //  setting default colours for the button depending on status message
         if(holder.taskStatusButton.getText().equals("Pending")){
             holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
         }
@@ -85,14 +88,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
         }
         holder.taskStatusButton.setOnClickListener(new View.OnClickListener() {
+
+            // Updates the status button colour and message after clicking
             @Override
             public void onClick(View v) {
-                TaskDatabase taskDatabase = TaskDatabase.getInstance(v.getContext());
+                Database taskDatabase = Database.getInstance(v.getContext());
                 if(holder.taskStatusButton.getText().equals("Pending")){
                     holder.taskStatusButton.setText("Done");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
                     task.setStatus("Done");
-                    taskDatabase.updateTask(task);
+                    taskDatabase.updateTask(task); //updates the status in database
 
                 }
                 else{

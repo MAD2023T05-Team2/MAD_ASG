@@ -42,7 +42,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
     private RecyclerView recyclerView;
     public TaskAdapter adapter;
     private List<Task> taskList;
-    private TaskDatabase taskDatabase;
+    private Database taskDatabase;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
     String TITLE = "Task Activity";
@@ -94,7 +94,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Initialize the database
-        taskDatabase = TaskDatabase.getInstance(this);
+        taskDatabase = Database.getInstance(this);
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserId", null);
         // Load tasks from the database
@@ -201,7 +201,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
                     Task newTask = new Task(
                             taskList.size() + 1, "Pending", taskName, taskDesc, taskDateD,
                             taskDueDateD, Integer.parseInt(taskDurationString), "Type",
-                            "Repeat", 0, "", Integer.parseInt(userId)
+                            "Repeat", 0, "", Integer.parseInt(userId) //saves the userID
                     );
 
                     // Add the new task to the list and database
@@ -327,7 +327,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskList.remove(position); // Remove the task from the list
         adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
-        TaskDatabase taskDatabase = TaskDatabase.getInstance(this); // Get the TaskDatabase instance
+        Database taskDatabase = Database.getInstance(this); // Get the TaskDatabase instance
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
         if (pendingIntent != null && alarmManager != null) {

@@ -22,7 +22,7 @@ import java.util.Locale;
 public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
     private RecyclerView homeTaskRecyclerView;
-    private TaskDatabase taskDatabase;
+    private Database db;
     private TaskAdapter homeTaskadapter;
     final String TITLE = "HomePage";
 
@@ -70,11 +70,11 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
 
         // Initialize the database
-        taskDatabase = TaskDatabase.getInstance(this);
+        db = Database.getInstance(this);
 
         // Load tasks from the database
         String userId = sharedPreferences.getString("UserId", null);
-        List<Task> homeTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
+        List<Task> homeTaskList = filterCurrentDate(db.getAllTasksFromUser(userId));
 
         // Recyclerview to show tasks on homepage
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);

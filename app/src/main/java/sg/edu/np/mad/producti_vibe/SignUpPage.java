@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 // The sign up page allows users to sign up for a new account with a unique username
 public class SignUpPage extends AppCompatActivity {
-    private TaskDatabase db;
+    private Database db;
     String TITLE = "Sign Up Page";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class SignUpPage extends AppCompatActivity {
         Button createAccountButton = findViewById(R.id.createAccountButton);
 
         // Initialize the database
-        db = TaskDatabase.getInstance(this);
+        db = Database.getInstance(this);
 
         // Event handler for the create account button
         createAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +77,7 @@ public class SignUpPage extends AppCompatActivity {
                         SharedPreferences.Editor UNeditor = sharedPreferences.edit();
                         UNeditor.putString("UserId", userData.getUserId()); // userId is the value you obtained after registration
                         UNeditor.apply();
-                        Intent toDB = new Intent(SignUpPage.this, TaskDatabase.class);
+                        Intent toDB = new Intent(SignUpPage.this, Database.class);
                         toDB.putExtra("userId", userData.getUserId()); // userId is the value you obtained after registration
                         startActivity(toDB);
 
