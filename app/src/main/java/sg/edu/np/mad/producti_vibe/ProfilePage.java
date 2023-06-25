@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+// As of now, the profile page only has a sign out button
 public class ProfilePage extends AppCompatActivity {
 
     String TITLE = "Profile Page";

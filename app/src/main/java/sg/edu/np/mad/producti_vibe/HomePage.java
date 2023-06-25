@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+// As of now, the homepage shows the tasks that are due that day
 public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
     private RecyclerView homeTaskRecyclerView;

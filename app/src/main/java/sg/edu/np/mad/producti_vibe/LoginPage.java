@@ -17,6 +17,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+// The login page allows users to login with an existing account.
+// There is a remember me feature that will not prompt user for login details when they exit the app
+
 public class LoginPage extends AppCompatActivity {
 
     private TaskDatabase db;
