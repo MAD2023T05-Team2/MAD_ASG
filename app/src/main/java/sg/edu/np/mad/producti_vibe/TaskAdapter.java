@@ -22,10 +22,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private int selectedPosition = RecyclerView.NO_POSITION;
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position); //provide position of clicked item
     }
     public interface OnEditClickListener {
-        void onEditClick(int position);
+        void onEditClick(int position); //provide position of item when edit button clicked
     }
     public TaskAdapter(List<Task> taskList, OnItemClickListener listener, OnEditClickListener editListener) {
         this.taskList = taskList;
@@ -41,16 +41,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         this.editListener = listener;
     }
 
+
     @NonNull
     @Override
-    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {     // called by recycler  view when new taskViewHolder instance is needed
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_item, parent, false);
-        return new TaskViewHolder(itemView);
+        return new TaskViewHolder(itemView); //returns new taskViewHolder instance
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) { //bind data to views within taskViewHolder
         Task task = taskList.get(position);
         holder.taskNameTextView.setText(task.getTaskName());
         holder.taskDescriptionTextView.setText(task.getTaskDesc());
@@ -106,9 +107,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         if (selectedPosition == position) {
             // Apply your desired styling or visual indication for the selected item
             int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.lighter_teal);
-            holder.itemView.setBackgroundColor(selectedColor);
+            holder.itemView.setBackgroundColor(selectedColor); //sets colour when clicked
         } else {
-            // Reset the styling for other items
+            // Reset the styling for non-selected items
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
         }
     }
@@ -116,11 +117,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public int getItemCount() {
         return taskList.size();
-    }
+    } //returns no.of items in taskList
 
     public void setSelectedPosition(int position) {
+        // updates deselection of the previous item and selection of the new iem
         int previousPosition = selectedPosition;
-        selectedPosition = position;
+        selectedPosition = position; //updates new selected position
 
         // Notify the adapter about item changes to update the UI
         if (previousPosition != RecyclerView.NO_POSITION) {
@@ -147,7 +149,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+    public static class TaskViewHolder extends RecyclerView.ViewHolder { //view holder for recyclerview items
 
         // CheckBox check_box;
         public TextView taskNameTextView;

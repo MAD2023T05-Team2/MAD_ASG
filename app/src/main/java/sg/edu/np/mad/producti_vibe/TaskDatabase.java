@@ -1,13 +1,10 @@
 package sg.edu.np.mad.producti_vibe;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.icu.text.CaseMap;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +85,7 @@ public class TaskDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    // adds task to database when user creates a task
     public void addTask(Task task) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -106,8 +104,9 @@ public class TaskDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    // updates and existing task in the database
     public void updateTask(Task task) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase(); //obtains writable instance of database
         ContentValues values = new ContentValues();
         values.put(COLUMN_TASK_NAME, task.getTaskName());
         values.put(COLUMN_TASK_DESC, task.getTaskDesc());
@@ -117,8 +116,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
         values.put(COLUMN_STATUS, task.getStatus());
         // Add other fields to be updated if needed !!!
 
-        String selection = COLUMN_ID + " = ?";
-        String[] selectionArgs = {String.valueOf(task.getId())};
+        String selection = COLUMN_ID + " = ?"; //update applied to row with matchingID
+        String[] selectionArgs = {String.valueOf(task.getId())}; //values to be substitued into selection criteria
 
         int rowsAffected = db.update("tasks", values, selection, selectionArgs);
         db.close();
@@ -128,53 +127,8 @@ public class TaskDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(taskId)};
-        db.delete("tasks", selection, selectionArgs);
+        db.delete("tasks", selection, selectionArgs); //performs the delete operation
         db.close();
-    }
-
-    public List<Task> getAllTasks() {
-        List<Task> taskList = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query("tasks", null, null, null, null, null, null);
-        if (cursor != null) {
-            int idIndex = cursor.getColumnIndex(COLUMN_ID);
-            int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
-            int taskNameIndex = cursor.getColumnIndex(COLUMN_TASK_NAME);
-            int taskDescIndex = cursor.getColumnIndex(COLUMN_TASK_DESC);
-            int taskDateTimeIndex = cursor.getColumnIndex(COLUMN_TASK_DATE_TIME);
-            int taskDueDateTimeIndex = cursor.getColumnIndex(COLUMN_TASK_DUE_DATE_TIME);
-            int taskDurationIndex = cursor.getColumnIndex(COLUMN_TASK_DURATION);
-            int taskTypeIndex = cursor.getColumnIndex(COLUMN_TASK_TYPE);
-            int repeatIndex = cursor.getColumnIndex(COLUMN_REPEAT);
-            int recurringIdIndex = cursor.getColumnIndex(COLUMN_RECURRING_ID);
-            int recurringDurationIndex = cursor.getColumnIndex(COLUMN_RECURRING_DURATION);
-            int taskUserIdIndex = cursor.getColumnIndex(COLUMN_TASK_USER_ID);
-
-            while (cursor.moveToNext()) {
-                int id = cursor.getInt(idIndex);
-                String status = cursor.getString(statusIndex);
-                String taskName = cursor.getString(taskNameIndex);
-                String taskDesc = cursor.getString(taskDescIndex);
-                long taskDateTimeMillis = cursor.getLong(taskDateTimeIndex);
-                Date taskDateTime = new Date(taskDateTimeMillis);
-                long taskDueDateTimeMillis = cursor.getLong(taskDueDateTimeIndex);
-                Date taskDueDateTime = new Date(taskDueDateTimeMillis);
-                long taskDuration = cursor.getLong(taskDurationIndex);
-                String taskType = cursor.getString(taskTypeIndex);
-                String repeat = cursor.getString(repeatIndex);
-                int recurringId = cursor.getInt(recurringIdIndex);
-                String recurringDuration = cursor.getString(recurringDurationIndex);
-                int taskUserID = cursor.getInt(taskUserIdIndex);
-
-                Task task = new Task(id, status, taskName, taskDesc, taskDateTime,
-                        taskDueDateTime, taskDuration, taskType,
-                        repeat, recurringId, recurringDuration, taskUserID);
-                taskList.add(task);
-            }
-            cursor.close();
-        }
-        db.close();
-        return taskList;
     }
 
     public List<Task> getAllTasksFromUser(String userId) {
@@ -256,4 +210,49 @@ public class TaskDatabase extends SQLiteOpenHelper {
     }
 }
 
+
+//    public List<Task> getAllTasks() {
+//        List<Task> taskList = new ArrayList<>();
+//        SQLiteDatabase db = getReadableDatabase();
+//        Cursor cursor = db.query("tasks", null, null, null, null, null, null);
+//        if (cursor != null) {
+//            int idIndex = cursor.getColumnIndex(COLUMN_ID);
+//            int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
+//            int taskNameIndex = cursor.getColumnIndex(COLUMN_TASK_NAME);
+//            int taskDescIndex = cursor.getColumnIndex(COLUMN_TASK_DESC);
+//            int taskDateTimeIndex = cursor.getColumnIndex(COLUMN_TASK_DATE_TIME);
+//            int taskDueDateTimeIndex = cursor.getColumnIndex(COLUMN_TASK_DUE_DATE_TIME);
+//            int taskDurationIndex = cursor.getColumnIndex(COLUMN_TASK_DURATION);
+//            int taskTypeIndex = cursor.getColumnIndex(COLUMN_TASK_TYPE);
+//            int repeatIndex = cursor.getColumnIndex(COLUMN_REPEAT);
+//            int recurringIdIndex = cursor.getColumnIndex(COLUMN_RECURRING_ID);
+//            int recurringDurationIndex = cursor.getColumnIndex(COLUMN_RECURRING_DURATION);
+//            int taskUserIdIndex = cursor.getColumnIndex(COLUMN_TASK_USER_ID);
+//
+//            while (cursor.moveToNext()) {
+//                int id = cursor.getInt(idIndex);
+//                String status = cursor.getString(statusIndex);
+//                String taskName = cursor.getString(taskNameIndex);
+//                String taskDesc = cursor.getString(taskDescIndex);
+//                long taskDateTimeMillis = cursor.getLong(taskDateTimeIndex);
+//                Date taskDateTime = new Date(taskDateTimeMillis);
+//                long taskDueDateTimeMillis = cursor.getLong(taskDueDateTimeIndex);
+//                Date taskDueDateTime = new Date(taskDueDateTimeMillis);
+//                long taskDuration = cursor.getLong(taskDurationIndex);
+//                String taskType = cursor.getString(taskTypeIndex);
+//                String repeat = cursor.getString(repeatIndex);
+//                int recurringId = cursor.getInt(recurringIdIndex);
+//                String recurringDuration = cursor.getString(recurringDurationIndex);
+//                int taskUserID = cursor.getInt(taskUserIdIndex);
+//
+//                Task task = new Task(id, status, taskName, taskDesc, taskDateTime,
+//                        taskDueDateTime, taskDuration, taskType,
+//                        repeat, recurringId, recurringDuration, taskUserID);
+//                taskList.add(task);
+//            }
+//            cursor.close();
+//        }
+//        db.close();
+//        return taskList;
+//    }
 
