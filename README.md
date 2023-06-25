@@ -92,6 +92,7 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 
 ### Destress Page
 * Select between Photos and Videos to look at for destressing
+* Users have one minute to destress before being prompted to start work again
    
 ![ss5](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/e86b2428-3d30-4fc8-9597-5365dd0014b4)
 
