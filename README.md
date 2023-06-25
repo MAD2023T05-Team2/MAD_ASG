@@ -21,7 +21,7 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | Feature | Description | Concept | In-charge |
 | :------ | :---------- | :-------- | :-------- | 
 | Responsive layout | UI changes according to display size | Responsive Layout | Kiara |
-| Videos/Pictures to watch to destress |  For a period of time after studying for X time e.g. lock them out of this feature | Fragments, Media (photos, videos, gif), Recycler view, Event handling | Gwyneth |
+| Destress |  Videos/pictures to view for a 1 minute to help to destress | Fragments, Media (photos, videos, gif), Recycler view, Event handling | Gwyneth |
 | Checklist / To-do list | Viewing and checking tasks for users to know what to do | Database, Shared preferences, Event handling | Sherylyn |
 | CRED Tasks | Creating, Reading, Editing, Deleting of  tasks | Database, Event handling, Recycler view | Xin Le |x
 | Calendar View | Displaying tasks in another format | Recycler view, Event handling | Kiara |
@@ -37,6 +37,7 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 | Splash Screen | Opening App | - |
 | Task Sorting | Sort them into user-defined categories | - |
 | Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | - |
+| Prompt to destress page | After each timer/stopwatch session, if the user has been productive for at least 1 hour, they will be prompted to visit the destress page to relax and unwind | - |
 | ++ Music | Selected Music will play as the timer goes on | - |
 | Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
 | Background Music | Can opt in or out of such music | - |
