@@ -22,10 +22,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private int selectedPosition = RecyclerView.NO_POSITION;
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position); //provide position of clicked item
     }
     public interface OnEditClickListener {
-        void onEditClick(int position);
+        void onEditClick(int position); //provide position of item when edit button clicked
     }
     public TaskAdapter(List<Task> taskList, OnItemClickListener listener, OnEditClickListener editListener) {
         this.taskList = taskList;
@@ -41,16 +41,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         this.editListener = listener;
     }
 
+
     @NonNull
     @Override
-    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {     // called by recycler  view when new taskViewHolder instance is needed
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_item, parent, false);
-        return new TaskViewHolder(itemView);
+        return new TaskViewHolder(itemView); //returns new taskViewHolder instance
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) { //bind data to views within taskViewHolder
         Task task = taskList.get(position);
         holder.taskNameTextView.setText(task.getTaskName());
         holder.taskDescriptionTextView.setText(task.getTaskDesc());
@@ -66,6 +67,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDateTimeTextView.setText(taskDateTime);
         holder.taskDueDateTimeTextView.setText(taskDueDateTime);
 
+//       Idk what this code is for cuz it's like useless so I comment out erm
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -77,6 +79,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //                }
 //            }
 //        });
+
+        //  setting default colours for the button depending on status message
         if(holder.taskStatusButton.getText().equals("Pending")){
             holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
         }
@@ -84,14 +88,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
         }
         holder.taskStatusButton.setOnClickListener(new View.OnClickListener() {
+
+            // Updates the status button colour and message after clicking
             @Override
             public void onClick(View v) {
-                TaskDatabase taskDatabase = TaskDatabase.getInstance(v.getContext());
+                Database taskDatabase = Database.getInstance(v.getContext());
                 if(holder.taskStatusButton.getText().equals("Pending")){
                     holder.taskStatusButton.setText("Done");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
                     task.setStatus("Done");
-                    taskDatabase.updateTask(task);
+                    taskDatabase.updateTask(task); //updates the status in database
 
                 }
                 else{
@@ -106,9 +112,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         if (selectedPosition == position) {
             // Apply your desired styling or visual indication for the selected item
             int selectedColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.lighter_teal);
-            holder.itemView.setBackgroundColor(selectedColor);
+            holder.itemView.setBackgroundColor(selectedColor); //sets colour when clicked
         } else {
-            // Reset the styling for other items
+            // Reset the styling for non-selected items
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
         }
     }
@@ -116,11 +122,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public int getItemCount() {
         return taskList.size();
-    }
+    } //returns no.of items in taskList
 
     public void setSelectedPosition(int position) {
+        // updates deselection of the previous item and selection of the new iem
         int previousPosition = selectedPosition;
-        selectedPosition = position;
+        selectedPosition = position; //updates new selected position
 
         // Notify the adapter about item changes to update the UI
         if (previousPosition != RecyclerView.NO_POSITION) {
@@ -147,7 +154,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+    public static class TaskViewHolder extends RecyclerView.ViewHolder { //view holder for recyclerview items
 
         // CheckBox check_box;
         public TextView taskNameTextView;
@@ -157,7 +164,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TextView taskDateTimeTextView;
         public TextView taskDueDateTimeTextView;
 
-        public Button   taskStatusButton;
+        public Button taskStatusButton;
 
         public TaskViewHolder(View view) {
             super(view);

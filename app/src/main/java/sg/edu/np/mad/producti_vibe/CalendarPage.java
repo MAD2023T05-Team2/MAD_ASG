@@ -20,15 +20,12 @@ import java.util.Locale;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-
+// The calendar page allows users to view the different tasks due by dates in a more organised manner
 public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
-
     String TITLE = "Calendar Page";
-
     private List<Task> filteredTaskList;
     private TaskAdapter adapter;
-    private TaskDatabase taskDatabase;
-
+    private Database taskDatabase;
     private RecyclerView filteredRecyclerView;
 
     @Override
@@ -37,7 +34,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         setContentView(R.layout.activity_calendar_view);
         Log.v(TITLE,"Created the page !");
 
-
+        // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_calendar);
 
@@ -60,8 +57,6 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             }
             return false;
         });
-
-
     }
 
     @Override
@@ -72,10 +67,11 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the database
-        taskDatabase = TaskDatabase.getInstance(this);
+        taskDatabase = Database.getInstance(this);
         // Load tasks from the database
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserId", null);
+        // uses the function that retrieves task from the current user's user ID
         filteredTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
         //for (Task t: filteredTaskList){
         //    Log.d("LIST",t.getTaskDueDateTime().toString());
@@ -106,7 +102,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                     //adapter.notifyDataSetChanged();
                     Log.d("FILTERED","List is empty");
                 }
-                else{
+                else {
                     //adapter.clearList();
                     adapter.updateList(filteredTaskList);
                     adapter.notifyItemRangeChanged(0,filteredTaskList.size());
@@ -115,9 +111,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 Log.v("AFTER FILTERING",filteredTaskList.toString());
             }
         });
-
     }
-
 
     @Override
     public void onItemClick(int position) {
@@ -125,7 +119,6 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
             position = filteredRecyclerView.NO_POSITION;
         }
         adapter.setSelectedPosition(position);
-
     }
 
     @Override

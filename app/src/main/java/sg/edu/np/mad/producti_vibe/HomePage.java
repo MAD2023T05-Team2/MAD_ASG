@@ -18,13 +18,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+// As of now, the homepage shows the tasks that are due that day
 public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
 
     private RecyclerView homeTaskRecyclerView;
-    private TaskDatabase taskDatabase;
+    private Database db;
     private TaskAdapter homeTaskadapter;
     final String TITLE = "HomePage";
-    String recvName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
 
+        // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
 
@@ -60,34 +61,34 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
     protected void onStart() {
         super.onStart();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String recvName = sharedPreferences.getString("Name", null);
+        // Showing of "Hello, [name] on homepage
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Retrieve the SharedPreferences object named "MyPrefs" with private access mode
+        String recvName = sharedPreferences.getString("Name", null); // Get the value associated with the key "Name" from the SharedPreferences, defaulting to null if not found
         Log.d(TITLE, "Received name from SharedPreferences: " + recvName);
 
         TextView myMessage = findViewById(R.id.textView);
-        myMessage.setText("Hello, " + recvName);
+        myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
 
         // Initialize the database
-        taskDatabase = TaskDatabase.getInstance(this);
+        db = Database.getInstance(this);
+
         // Load tasks from the database
-        //homeTaskList = taskDatabase.getAllTasks();
         String userId = sharedPreferences.getString("UserId", null);
-        List<Task> homeTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
-        // recyclerview
+        List<Task> homeTaskList = filterCurrentDate(db.getAllTasksFromUser(userId));
+
+        // Recyclerview to show tasks on homepage
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
         homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         homeTaskadapter = new TaskAdapter(homeTaskList, this::onItemClick, this::onEditClick);
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
     }
-
     @Override
     public void onItemClick(int position) {
         if (homeTaskadapter.getSelectedPosition() == position){
             position = homeTaskRecyclerView.NO_POSITION;
         }
             homeTaskadapter.setSelectedPosition(position);
-
     }
 
     @Override
@@ -112,6 +113,4 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         }
         return temp;
     }
-
-
 }

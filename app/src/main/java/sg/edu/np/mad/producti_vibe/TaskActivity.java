@@ -8,15 +8,12 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,12 +37,12 @@ import java.util.Locale;
 
 //import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-
+// The task page allows users to create, edit, delete and view all their tasks at a glance
 public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
     private RecyclerView recyclerView;
     public TaskAdapter adapter;
     private List<Task> taskList;
-    private TaskDatabase taskDatabase;
+    private Database taskDatabase;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
     String TITLE = "Task Activity";
@@ -56,6 +53,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         setContentView(R.layout.activity_main);
         Log.v(TITLE, "Main Activity");
 
+        // Setting bottom navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_tasks);
 
@@ -91,13 +89,14 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         adapter.setOnItemClickListener(this); // Set item click listener
         adapter.setOnEditClickListener(this); // Set edit click listener
         recyclerView.setAdapter(adapter);
+
         // Task divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Initialize the database
-        taskDatabase = TaskDatabase.getInstance(this);
+        taskDatabase = Database.getInstance(this);
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserId", null);
         // Load tasks from the database
@@ -133,6 +132,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
                 showEditTaskDialog(position); // Swipe right to edit task
             }
         }
+
 //            @Override
 //            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 //                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -170,13 +170,13 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         final EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
         final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
 
-        // constructing the dialog
+        // Constructing the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Task");
         builder.setView(dialogView);
 
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            // user input from editTextViews is retrieved, validated and used to crate Task object
+            // User input from editTextViews is retrieved, validated and used to crate Task object
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String taskName = taskNameEditText.getText().toString().trim();
@@ -204,7 +204,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
                     Task newTask = new Task(
                             taskList.size() + 1, "Pending", taskName, taskDesc, taskDateD,
                             taskDueDateD, Integer.parseInt(taskDurationString), "Type",
-                            "Repeat", 0, "", Integer.parseInt(userId)
+                            "Repeat", 0, "", Integer.parseInt(userId) //saves the userID
                     );
 
                     // Add the new task to the list and database
@@ -300,7 +300,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                adapter.notifyItemChanged(position); // ensure reflects correct information
+                adapter.notifyItemChanged(position); // When cancelled, position remains so it stays on the tasks page
             }
         });
         builder.create().show();
@@ -313,13 +313,13 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteTask(position);
+                deleteTask(position); //delete task from database
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                adapter.notifyItemChanged(position);
+                adapter.notifyItemChanged(position); // When cancelled, position remains so it stays on the tasks page
             }
         });
         builder.create().show();
@@ -330,7 +330,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         taskList.remove(position); // Remove the task from the list
         adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
-        TaskDatabase taskDatabase = TaskDatabase.getInstance(this); // Get the TaskDatabase instance
+        Database taskDatabase = Database.getInstance(this); // Get the TaskDatabase instance
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
         if (pendingIntent != null && alarmManager != null) {
@@ -356,14 +356,14 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         Calendar currentTime = Calendar.getInstance(); // Retrieve current time
         long milliDiff = deadline.getTimeInMillis() - currentTime.getTimeInMillis();
         double days = milliDiff / (24 * 60 * 60 * 1000);
-        int daysDiff = (int) Math.round(days); // Calculate days till deadline
+        int daysDiff = (int) Math.round(days); // Calculate days till deadline rounded to nearest whole
 
         if (daysDiff<=14) {
-            int interval4days = 259200000; // Once every 3 days until it hits
+            int interval4days = 259200000; // Once every 3 days until it hits | Intervals are in milliseconds
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval4days, pendingIntent);
         }
         else {
-            int interval1week = 604800000; // Once every week
+            int interval1week = 604800000; // Once every week | Intervals are in milliseconds
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, currentTime.getTimeInMillis(), interval1week, pendingIntent);
         }
     }

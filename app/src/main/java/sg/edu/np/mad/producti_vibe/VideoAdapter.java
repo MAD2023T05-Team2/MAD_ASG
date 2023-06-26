@@ -13,10 +13,13 @@ import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
     private List<Integer> videoList;
+
+    // Constructor to initialize the video list
     public VideoAdapter(List<Integer> videoList) {
         this.videoList = videoList;
     }
 
+    // Creates and inflates the layout for each item in the RecyclerView
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -24,6 +27,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         return new VideoViewHolder(view);
     }
 
+    // Binds the data to the views in each item of the RecyclerView
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         int videoResId = videoList.get(position);
@@ -41,18 +45,23 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.itemView.setLayoutParams(layoutParams);
     }
 
+    // Returns the total number of items in the RecyclerView
     @Override
     public int getItemCount() {
         return videoList.size();
     }
 
+    // ViewHolder class for holding the views of each item
     public class VideoViewHolder extends RecyclerView.ViewHolder {
         private VideoView videoView;
+
+        // Constructor to initialize the VideoViewHolder
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.videoView);
         }
 
+        // Binds the video resource to the VideoView and sets up media controller
         public void bindVideo(int videoResId) {
             Context context = itemView.getContext();
             // Set the video resource for the VideoView
