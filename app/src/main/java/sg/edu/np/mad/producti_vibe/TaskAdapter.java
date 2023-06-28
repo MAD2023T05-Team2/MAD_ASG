@@ -94,23 +94,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.size();
     } //returns no.of items in taskList
 
-    public void setSelectedPosition(int position) {
-        // updates deselection of the previous item and selection of the new iem
-        int previousPosition = selectedPosition;
-        selectedPosition = position; //updates new selected position
-
-        // Notify the adapter about item changes to update the UI
-        if (previousPosition != RecyclerView.NO_POSITION) {
-            notifyItemChanged(previousPosition);
-        }
-        if (selectedPosition != RecyclerView.NO_POSITION) {
-            notifyItemChanged(selectedPosition);
-        }
-    }
-
-    public int getSelectedPosition() {
-        return selectedPosition;
-    }
 
     // update the dataset used for adapter
     public void updateList(List<Task> updatedList){
@@ -130,7 +113,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         public TextView taskNameTextView;
         public TextView taskDescriptionTextView;
-        //public TextView taskStatusTextView;
         public TextView taskDurationTextView;
         public TextView taskDateTimeTextView;
         public TextView taskDueDateTimeTextView;
