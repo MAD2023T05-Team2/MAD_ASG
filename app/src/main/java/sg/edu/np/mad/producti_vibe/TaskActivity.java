@@ -35,8 +35,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-//import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
-
 // The task page allows users to create, edit, delete and view all their tasks at a glance
 public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
     private RecyclerView recyclerView;

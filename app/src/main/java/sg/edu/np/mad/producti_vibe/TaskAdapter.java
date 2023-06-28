@@ -67,18 +67,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDateTimeTextView.setText(taskDateTime);
         holder.taskDueDateTimeTextView.setText(taskDueDateTime);
 
-//       Idk what this code is for cuz it's like useless so I comment out erm
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int adapterPosition = holder.getAdapterPosition();
-//                if (adapterPosition != RecyclerView.NO_POSITION) {
-//                    listener.onItemClick(adapterPosition);
-//                    // pending FFF67777
-//                    // done FF62D2FD
-//                }
-//            }
-//        });
 
         //  setting default colours for the button depending on status message
         if(holder.taskStatusButton.getText().equals("Pending")){
@@ -156,7 +144,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder { //view holder for recyclerview items
 
-        // CheckBox check_box;
         public TextView taskNameTextView;
         public TextView taskDescriptionTextView;
         //public TextView taskStatusTextView;
@@ -170,12 +157,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(view);
             taskNameTextView = view.findViewById(R.id.taskNameTextView);
             taskDescriptionTextView = view.findViewById(R.id.taskDescriptionTextView);
-            //taskStatusTextView = view.findViewById(R.id.taskStatusTextView);
             taskStatusButton = view.findViewById(R.id.taskStatusButton);
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
             taskDateTimeTextView = view.findViewById(R.id.taskDateTimeTextView);
             taskDueDateTimeTextView = view.findViewById(R.id.taskDueDateTimeTextView);
-            // check_box =  view.findViewById(R.id.checkBox);
         }
 
     }

@@ -1,7 +1,6 @@
 package sg.edu.np.mad.producti_vibe;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -114,10 +113,9 @@ public class Database extends SQLiteOpenHelper {
         values.put(COLUMN_TASK_DUE_DATE_TIME, task.getTaskDueDateTime().getTime());
         values.put(COLUMN_TASK_DURATION, task.getTaskDuration());
         values.put(COLUMN_STATUS, task.getStatus());
-        // Add other fields to be updated if needed !!!
 
         String selection = COLUMN_ID + " = ?"; //update applied to row with matchingID
-        String[] selectionArgs = {String.valueOf(task.getId())}; //values to be substitued into selection criteria
+        String[] selectionArgs = {String.valueOf(task.getId())}; //values to be substituted into selection criteria
 
         int rowsAffected = db.update("tasks", values, selection, selectionArgs);
         db.close();
@@ -213,7 +211,7 @@ public class Database extends SQLiteOpenHelper {
     }
 }
 
-// guys!!! CODE BELOW NOT USED ANYMORE cuz it grabs all tasks from database instead of only the userID
+// CODE BELOW NOT USED ANYMORE cuz it grabs all tasks from database instead of only the userID
 // use the getAllTasksFromUser instead to retrieve
 //    public List<Task> getAllTasks() {
 //        List<Task> taskList = new ArrayList<>();
