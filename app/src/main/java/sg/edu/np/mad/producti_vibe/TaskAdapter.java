@@ -17,30 +17,12 @@ import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
-    private OnItemClickListener listener;
-    private OnEditClickListener editListener;
+
     private int selectedPosition = RecyclerView.NO_POSITION;
 
-    public interface OnItemClickListener {
-        void onItemClick(int position); //provide position of clicked item
-    }
-    public interface OnEditClickListener {
-        void onEditClick(int position); //provide position of item when edit button clicked
-    }
-    public TaskAdapter(List<Task> taskList, OnItemClickListener listener, OnEditClickListener editListener) {
+    public TaskAdapter(List<Task> taskList) {
         this.taskList = taskList;
-        this.listener = listener;
-        this.editListener = editListener;
     }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
-    public void setOnEditClickListener(OnEditClickListener listener) {
-        this.editListener = listener;
-    }
-
 
     @NonNull
     @Override
@@ -141,7 +123,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         notifyItemRangeRemoved(0,size);
 
     }
-
+    //making it a static class, it can be accessed directly without the need for an instance of the
+    // outer class (TaskAdapter)- improves performance and avoids unnecessary memory usage
+    // holds references to the views within each item of the recyclerview
     public static class TaskViewHolder extends RecyclerView.ViewHolder { //view holder for recyclerview items
 
         public TextView taskNameTextView;

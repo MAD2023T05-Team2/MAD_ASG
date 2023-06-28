@@ -16,6 +16,8 @@ public class Database extends SQLiteOpenHelper {
 
     // for tasks
     //private static final String TABLE_NAME = "tasks";
+
+    // Columns names used in the database tables
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_STATUS = "status";
     private static final String COLUMN_TASK_NAME = "task_name";
@@ -36,7 +38,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String COLUMN_PASSWORD = "password";
 
 
-
+    //ensures that only one instance of the database is created
     private static Database sInstance;
     public static synchronized Database getInstance(Context context){
         // uses the app's context, ensuring no accidental data / activity's context leakage
@@ -121,7 +123,7 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
-    // function is to delete the task
+    // deleting task
     public void deleteTask(int taskId) {
         SQLiteDatabase db = getWritableDatabase();
         String selection = COLUMN_ID + " = ?";
