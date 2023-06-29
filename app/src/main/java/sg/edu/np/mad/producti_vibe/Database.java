@@ -194,7 +194,7 @@ public class Database extends SQLiteOpenHelper {
     // Find the username from the database and retrieve the relevant user object
     public User findUserData(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-        // SQL query fixed so it retrieves based on the unique user ID
+        // SQL query fixed so it retrieves based on the unique username
         Cursor cursor = db.rawQuery("SELECT * FROM user_accounts WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
         User queryUserData = new User();
 
