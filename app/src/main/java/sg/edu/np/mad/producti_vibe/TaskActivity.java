@@ -35,10 +35,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-//import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
-
 // The task page allows users to create, edit, delete and view all their tasks at a glance
-public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
+public class TaskActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     public TaskAdapter adapter;
     private List<Task> taskList;
@@ -53,7 +51,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         setContentView(R.layout.activity_main);
         Log.v(TITLE, "Main Activity");
 
-        // Setting bottom navigation bar
+        // Setting up bottom navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_tasks);
 
@@ -85,9 +83,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         taskList = new ArrayList<>(); //holds data for tasks displayed in recycler view
-        adapter = new TaskAdapter(taskList, this, this);
-        adapter.setOnItemClickListener(this); // Set item click listener
-        adapter.setOnEditClickListener(this); // Set edit click listener
+        adapter = new TaskAdapter(taskList);
         recyclerView.setAdapter(adapter);
 
         // Task divider
@@ -147,19 +143,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
 //            }
     };
 
-    @Override
-    public void onItemClick(int position) {     // called whenever item in recycler view is clicked
-        if (adapter.getSelectedPosition() == position){
-            position = RecyclerView.NO_POSITION;
-        }
-        adapter.setSelectedPosition(position); //updates selected position
-    }
-
-    @Override
-    public void onEditClick(int position) { //called when edit button of an item is clicked
-        showEditTaskDialog(position);
-    }
-
+    // displays a dialog for creating a new task when create button is clicked
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
@@ -226,6 +210,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.create().show();
     }
 
+    // displays a dialog to edit a task when swiped right
     private void showEditTaskDialog(final int position) {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_edit_task, null);
@@ -306,6 +291,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.create().show();
     }
 
+    // displays a dialog to confirm the deletion of a task when swiped left
     private void showDeleteConfirmationDialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete Task");
@@ -325,6 +311,7 @@ public class TaskActivity extends AppCompatActivity implements TaskAdapter.OnIte
         builder.create().show();
     }
 
+    // actual deletion of the task from the list and the database
     private void deleteTask(int position) {
         Task task = taskList.get(position); // Retrieve the task to be deleted
         taskList.remove(position); // Remove the task from the list

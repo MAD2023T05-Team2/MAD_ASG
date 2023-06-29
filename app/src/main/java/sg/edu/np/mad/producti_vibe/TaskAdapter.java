@@ -17,30 +17,12 @@ import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
-    private OnItemClickListener listener;
-    private OnEditClickListener editListener;
+
     private int selectedPosition = RecyclerView.NO_POSITION;
 
-    public interface OnItemClickListener {
-        void onItemClick(int position); //provide position of clicked item
-    }
-    public interface OnEditClickListener {
-        void onEditClick(int position); //provide position of item when edit button clicked
-    }
-    public TaskAdapter(List<Task> taskList, OnItemClickListener listener, OnEditClickListener editListener) {
+    public TaskAdapter(List<Task> taskList) {
         this.taskList = taskList;
-        this.listener = listener;
-        this.editListener = editListener;
     }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
-    public void setOnEditClickListener(OnEditClickListener listener) {
-        this.editListener = listener;
-    }
-
 
     @NonNull
     @Override
@@ -67,18 +49,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDateTimeTextView.setText(taskDateTime);
         holder.taskDueDateTimeTextView.setText(taskDueDateTime);
 
-//       Idk what this code is for cuz it's like useless so I comment out erm
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int adapterPosition = holder.getAdapterPosition();
-//                if (adapterPosition != RecyclerView.NO_POSITION) {
-//                    listener.onItemClick(adapterPosition);
-//                    // pending FFF67777
-//                    // done FF62D2FD
-//                }
-//            }
-//        });
 
         //  setting default colours for the button depending on status message
         if(holder.taskStatusButton.getText().equals("Pending")){
@@ -124,23 +94,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.size();
     } //returns no.of items in taskList
 
-    public void setSelectedPosition(int position) {
-        // updates deselection of the previous item and selection of the new iem
-        int previousPosition = selectedPosition;
-        selectedPosition = position; //updates new selected position
-
-        // Notify the adapter about item changes to update the UI
-        if (previousPosition != RecyclerView.NO_POSITION) {
-            notifyItemChanged(previousPosition);
-        }
-        if (selectedPosition != RecyclerView.NO_POSITION) {
-            notifyItemChanged(selectedPosition);
-        }
-    }
-
-    public int getSelectedPosition() {
-        return selectedPosition;
-    }
 
     // update the dataset used for adapter
     public void updateList(List<Task> updatedList){
@@ -153,13 +106,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         notifyItemRangeRemoved(0,size);
 
     }
-
+    //making it a static class, it can be accessed directly without the need for an instance of the
+    // outer class (TaskAdapter)- improves performance and avoids unnecessary memory usage
+    // holds references to the views within each item of the recyclerview
     public static class TaskViewHolder extends RecyclerView.ViewHolder { //view holder for recyclerview items
 
-        // CheckBox check_box;
         public TextView taskNameTextView;
         public TextView taskDescriptionTextView;
-        //public TextView taskStatusTextView;
         public TextView taskDurationTextView;
         public TextView taskDateTimeTextView;
         public TextView taskDueDateTimeTextView;
@@ -170,12 +123,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(view);
             taskNameTextView = view.findViewById(R.id.taskNameTextView);
             taskDescriptionTextView = view.findViewById(R.id.taskDescriptionTextView);
-            //taskStatusTextView = view.findViewById(R.id.taskStatusTextView);
             taskStatusButton = view.findViewById(R.id.taskStatusButton);
             taskDurationTextView = view.findViewById(R.id.taskDurationTextView);
             taskDateTimeTextView = view.findViewById(R.id.taskDateTimeTextView);
             taskDueDateTimeTextView = view.findViewById(R.id.taskDueDateTimeTextView);
-            // check_box =  view.findViewById(R.id.checkBox);
         }
 
     }

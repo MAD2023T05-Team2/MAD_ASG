@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 // As of now, the homepage shows the tasks that are due that day
-public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
+public class HomePage extends AppCompatActivity {
 
     private RecyclerView homeTaskRecyclerView;
     private Database db;
@@ -79,21 +79,9 @@ public class HomePage extends AppCompatActivity implements TaskAdapter.OnItemCli
         // Recyclerview to show tasks on homepage
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
         homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        homeTaskadapter = new TaskAdapter(homeTaskList, this::onItemClick, this::onEditClick);
+        homeTaskadapter = new TaskAdapter(homeTaskList);
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
-    }
-    @Override
-    public void onItemClick(int position) {
-        if (homeTaskadapter.getSelectedPosition() == position){
-            position = homeTaskRecyclerView.NO_POSITION;
-        }
-            homeTaskadapter.setSelectedPosition(position);
-    }
-
-    @Override
-    public void onEditClick(int position) {
-        Log.i(TITLE,"Trying to edit click?????");
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){

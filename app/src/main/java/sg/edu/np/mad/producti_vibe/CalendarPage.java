@@ -21,7 +21,7 @@ import java.util.Locale;
 import androidx.recyclerview.widget.RecyclerView;
 
 // The calendar page allows users to view the different tasks due by dates in a more organised manner
-public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnItemClickListener, TaskAdapter.OnEditClickListener {
+public class CalendarPage extends AppCompatActivity {
     String TITLE = "Calendar Page";
     private List<Task> filteredTaskList;
     private TaskAdapter adapter;
@@ -77,7 +77,7 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
         //    Log.d("LIST",t.getTaskDueDateTime().toString());
         //}
         //filteredTaskList.clear();
-        adapter = new TaskAdapter(filteredTaskList, this::onItemClick, this::onEditClick);
+        adapter = new TaskAdapter(filteredTaskList);
         filteredRecyclerView.setAdapter(adapter);
 
         // recyclerview
@@ -111,19 +111,6 @@ public class CalendarPage extends AppCompatActivity implements TaskAdapter.OnIte
                 Log.v("AFTER FILTERING",filteredTaskList.toString());
             }
         });
-    }
-
-    @Override
-    public void onItemClick(int position) {
-        if (adapter.getSelectedPosition() == position){
-            position = filteredRecyclerView.NO_POSITION;
-        }
-        adapter.setSelectedPosition(position);
-    }
-
-    @Override
-    public void onEditClick(int position) {
-        Log.i(TITLE,"Trying to edit click?????");
     }
 
     public List<Task> filterListDate(List<Task> filteredTaskList, String strDate){
