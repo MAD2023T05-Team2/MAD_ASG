@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -148,66 +149,87 @@ public class TaskActivity extends AppCompatActivity{
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
 
-        final EditText taskNameEditText = dialogView.findViewById(R.id.taskNameEditText);
-        final EditText taskDescEditText = dialogView.findViewById(R.id.taskDescriptionEditText);
-        final EditText taskDurationEditText = dialogView.findViewById(R.id.taskDurationEditText);
-        final EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
-        final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
+        EditText taskNameEditText = dialogView.findViewById(R.id.taskNameEditText);
+        EditText taskDescEditText = dialogView.findViewById(R.id.taskDescriptionEditText);
+        EditText taskDurationEditText = dialogView.findViewById(R.id.taskDurationEditText);
+        EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
+        EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
 
         // Constructing the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Task");
         builder.setView(dialogView);
 
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            // User input from editTextViews is retrieved, validated and used to crate Task object
+        builder.setPositiveButton("Create", null); // Set initially disabled
+        builder.setNegativeButton("Cancel", null);
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String taskName = taskNameEditText.getText().toString().trim();
-                String taskDesc = taskDescEditText.getText().toString().trim();
-                String taskDurationString = taskDurationEditText.getText().toString().trim();
-                String taskDateTime = taskDateTimeEditText.getText().toString().trim();
-                String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
+            public void onShow(DialogInterface dialogInterface) {
+                Button createButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                createButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Validate user input
+                        boolean isValidInput = validateInput(taskNameEditText, taskDescEditText, taskDateTimeEditText, taskDueDateTimeEditText, taskDurationEditText);
+                        if (isValidInput) {
+                            String taskName = taskNameEditText.getText().toString().trim();
+                            String taskDesc = taskDescEditText.getText().toString().trim();
+                            String taskDurationString = taskDurationEditText.getText().toString().trim();
+                            String taskDateTime = taskDateTimeEditText.getText().toString().trim();
+                            String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
 
-                // Convert the edited date strings to Date objects
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                Date taskDateD = null;
-                Date taskDueDateD = null;
-                try {
-                    taskDateD = dateFormat.parse(taskDateTime);
-                    taskDueDateD = dateFormat.parse(taskDueDateTime);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                            // Convert the edited date strings to Date objects
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                            Date taskDateTimed = null;
+                            Date taskDueDateTimed = null;
+                            try {
+                                taskDateTimed = dateFormat.parse(taskDateTime);
+                                taskDueDateTimed = dateFormat.parse(taskDueDateTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
 
-                // Validate user input
-                if (validateInput(taskName, taskDesc, taskDateD, taskDueDateD, taskDurationString)) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                    String userId = sharedPreferences.getString("UserId", null);
-                    // Create a new Task object
-                    Task newTask = new Task(
-                            taskList.size() + 1, "Pending", taskName, taskDesc, taskDateD,
-                            taskDueDateD, Integer.parseInt(taskDurationString), "Type",
-                            "Repeat", 0, "", Integer.parseInt(userId) //saves the userID
-                    );
+                            // Create a new Task object
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                            String userId = sharedPreferences.getString("UserId", null);
+                            Task newTask = new Task(
+                                    taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
+                                    taskDueDateTimed, Integer.parseInt(taskDurationString), "Type",
+                                    "Repeat", 0, "", 1 // saves the userID
+                            );
 
-                    // Add the new task to the list and database
-                    taskList.add(newTask);
-                    taskDatabase.addTask(newTask);
+                            // Add the new task to the list and database
+                            taskList.add(newTask);
+                            taskDatabase.addTask(newTask);
 
-                    // Notify the adapter of the new task
-                    adapter.notifyItemInserted(taskList.size() - 1);
+                            // Notify the adapter of the new task
+                            adapter.notifyItemInserted(taskList.size() - 1);
 
-                    // Trigger Notification Scheduling
-                    notificationChannel();
-                    pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(TaskActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
-                    alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    sendPushNotification(newTask);
-                }
+                            // Trigger Notification Scheduling
+                            notificationChannel();
+                            pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(TaskActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
+                            alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            sendPushNotification(newTask);
+
+                            // Dismiss dialog
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                Button cancelButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
-        builder.setNegativeButton("Cancel", null);
-        builder.create().show();
+
+        dialog.show();
     }
 
     // displays a dialog to edit a task when swiped right
@@ -369,89 +391,177 @@ public class TaskActivity extends AppCompatActivity{
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
 
-    private boolean validateInput(String taskName, String taskDesc, Date taskDateTime, Date taskDueDateTime, String taskDurationString) {
+    private boolean validateInput(EditText taskNameEditText, EditText taskDescEditText, EditText taskDateTimeEditText, EditText taskDueDateTimeEditText, EditText taskDurationEditText) {
         boolean isValidInput = true;
-        StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
 
-        // check if empty or not
+        String taskName = taskNameEditText.getText().toString().trim();
+        String taskDesc = taskDescEditText.getText().toString().trim();
+        String taskDurationString = taskDurationEditText.getText().toString().trim();
+        String taskDateTime = taskDateTimeEditText.getText().toString().trim();
+        String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
+
         if (taskName.isEmpty()) {
             isValidInput = false;
-            errorMessage.append("\n- Task name is required");
+            taskNameEditText.setError("Task name is required");
         }
+
         if (taskDesc.isEmpty()) {
             isValidInput = false;
-            errorMessage.append("\n- Task description is required");
+            taskDescEditText.setError("Task description is required");
         }
 
-        // check to ensure not null and is in a valid datetime format
-        // also checks if date is in the past
-        if (taskDateTime == null || !isValidDateTimeFormat(taskDateTime)) {
+        if (taskDateTime.isEmpty() || !isValidDateTimeFormat(taskDateTime)) {
             isValidInput = false;
-            errorMessage.append("\n- Task start date and time are in an invalid format (dd/MM/yy HH:mm)");
+            taskDateTimeEditText.setError("Invalid date and time format");
         } else {
-            if (taskDateTime.before(new Date())) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+            Date taskDateD = null;
+            try {
+                taskDateD = dateFormat.parse(taskDateTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (taskDateD != null && taskDateD.before(new Date())) {
                 isValidInput = false;
-                errorMessage.append("\n- Task start date and time cannot be in the past");
+                taskDateTimeEditText.setError("Task start date and time cannot be in the past");
+            } else {
+                taskDateTimeEditText.setError(null);
             }
         }
 
-        if (taskDueDateTime == null || !isValidDateTimeFormat(taskDueDateTime)) {
+        if (taskDueDateTime.isEmpty() || !isValidDateTimeFormat(taskDueDateTime)) {
             isValidInput = false;
-            errorMessage.append("\n- Task due date and time are in an invalid format (dd/MM/yy HH:mm)");
+            taskDueDateTimeEditText.setError("Invalid due date and time format");
         } else {
-            if (taskDueDateTime.before(taskDateTime)) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+            Date taskDueDateD = null;
+            try {
+                taskDueDateD = dateFormat.parse(taskDueDateTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (taskDueDateD != null && taskDueDateD.before(new Date())) {
                 isValidInput = false;
-                errorMessage.append("\n- Task due date and time cannot be earlier than the start date and time");
+                taskDueDateTimeEditText.setError("Task due date and time cannot be in the past");
+            } else {
+                taskDueDateTimeEditText.setError(null);
             }
         }
 
-        // check if not not null and not a integer
-        // negative values are parsed into positive numbers
         if (taskDurationString.isEmpty()) {
             isValidInput = false;
-            errorMessage.append("\n- Task duration is required");
+            taskDurationEditText.setError("Task duration is required");
         } else {
             try {
                 int taskDuration = Integer.parseInt(taskDurationString);
                 if (taskDuration <= 0) {
                     isValidInput = false;
-                    errorMessage.append("\n- Task duration should be a positive number");
+                    taskDurationEditText.setError("Duration must be a positive number");
+                } else {
+                    taskDurationEditText.setError(null);
                 }
             } catch (NumberFormatException e) {
                 isValidInput = false;
-                errorMessage.append("\n- Task duration should be a valid number");
+                taskDurationEditText.setError("Duration should be a valid number");
             }
         }
 
-        if (!isValidInput) {
-            // Display error message for invalid input
-            AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(TaskActivity.this);
-            errorDialogBuilder.setTitle("Invalid Input");
-            errorDialogBuilder.setMessage(errorMessage.toString());
-            errorDialogBuilder.setPositiveButton("OK", null);
-            errorDialogBuilder.create().show();
-        }
         return isValidInput;
     }
 
-    private boolean isValidDateTimeFormat(Date date) {
-        // Define the desired date and time format
+    private boolean isValidDateTimeFormat(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-
-        // Format the date object to a string in the desired format
-        String dateString = dateFormat.format(date);
-
-        // Parse the formatted string back to a date object
-        Date parsedDate;
         try {
-            parsedDate = dateFormat.parse(dateString);
+            dateFormat.parse(date);
+            return true;
         } catch (ParseException e) {
             return false;
         }
-        // Check if the parsed date object matches the original date object
-        return parsedDate.equals(date);
-    }
-}
+    }}
+
+//    private boolean validateInput(String taskName, String taskDesc, Date taskDateTime, Date taskDueDateTime, String taskDurationString) {
+//        boolean isValidInput = true;
+//        StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
+//
+//        // check if empty or not
+//        if (taskName.isEmpty()) {
+//            isValidInput = false;
+//            errorMessage.append("\n- Task name is required");
+//        }
+//        if (taskDesc.isEmpty()) {
+//            isValidInput = false;
+//            errorMessage.append("\n- Task description is required");
+//        }
+//
+//        // check to ensure not null and is in a valid datetime format
+//        // also checks if date is in the past
+//        if (taskDateTime == null || !isValidDateTimeFormat(taskDateTime)) {
+//            isValidInput = false;
+//            errorMessage.append("\n- Task start date and time are in an invalid format (dd/MM/yy HH:mm)");
+//        } else {
+//            if (taskDateTime.before(new Date())) {
+//                isValidInput = false;
+//                errorMessage.append("\n- Task start date and time cannot be in the past");
+//            }
+//        }
+//
+//        if (taskDueDateTime == null || !isValidDateTimeFormat(taskDueDateTime)) {
+//            isValidInput = false;
+//            errorMessage.append("\n- Task due date and time are in an invalid format (dd/MM/yy HH:mm)");
+//        } else {
+//            if (taskDueDateTime.before(taskDateTime)) {
+//                isValidInput = false;
+//                errorMessage.append("\n- Task due date and time cannot be earlier than the start date and time");
+//            }
+//        }
+//
+//        // check if not not null and not a integer
+//        // negative values are parsed into positive numbers
+//        if (taskDurationString.isEmpty()) {
+//            isValidInput = false;
+//            errorMessage.append("\n- Task duration is required");
+//        } else {
+//            try {
+//                int taskDuration = Integer.parseInt(taskDurationString);
+//                if (taskDuration <= 0) {
+//                    isValidInput = false;
+//                    errorMessage.append("\n- Task duration should be a positive number");
+//                }
+//            } catch (NumberFormatException e) {
+//                isValidInput = false;
+//                errorMessage.append("\n- Task duration should be a valid number");
+//            }
+//        }
+//
+//        if (!isValidInput) {
+//            // Display error message for invalid input
+//            AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(TaskActivity.this);
+//            errorDialogBuilder.setTitle("Invalid Input");
+//            errorDialogBuilder.setMessage(errorMessage.toString());
+//            errorDialogBuilder.setPositiveButton("OK", null);
+//            errorDialogBuilder.create().show();
+//        }
+//        return isValidInput;
+//    }
+//
+//    private boolean isValidDateTimeFormat(Date date) {
+//        // Define the desired date and time format
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+//
+//        // Format the date object to a string in the desired format
+//        String dateString = dateFormat.format(date);
+//
+//        // Parse the formatted string back to a date object
+//        Date parsedDate;
+//        try {
+//            parsedDate = dateFormat.parse(dateString);
+//        } catch (ParseException e) {
+//            return false;
+//        }
+//        // Check if the parsed date object matches the original date object
+//        return parsedDate.equals(date);
+//    }
+//}
 
 
 
