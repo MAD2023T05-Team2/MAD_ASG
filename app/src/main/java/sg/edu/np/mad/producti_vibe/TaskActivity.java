@@ -237,11 +237,11 @@ public class TaskActivity extends AppCompatActivity{
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_edit_task, null);
 
-        final EditText taskNameEditText = dialogView.findViewById(R.id.editTaskNameEditText);
-        final EditText taskDescEditText = dialogView.findViewById(R.id.editTaskDescriptionEditText);
-        final EditText taskDurationEditText = dialogView.findViewById(R.id.editTaskDurationEditText);
-        final EditText taskDateTimeEditText = dialogView.findViewById(R.id.editTaskDateTimeEditText);
-        final EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.editTaskDueDateTimeEditText);
+        EditText taskNameEditText = dialogView.findViewById(R.id.editTaskNameEditText);
+        EditText taskDescEditText = dialogView.findViewById(R.id.editTaskDescriptionEditText);
+        EditText taskDurationEditText = dialogView.findViewById(R.id.editTaskDurationEditText);
+        EditText taskDateTimeEditText = dialogView.findViewById(R.id.editTaskDateTimeEditText);
+        EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.editTaskDueDateTimeEditText);
 
         // Populate the EditText fields with the existing task data
         Task task = taskList.get(position);
@@ -256,61 +256,81 @@ public class TaskActivity extends AppCompatActivity{
         taskDateTimeEditText.setText(taskDateTime);
         taskDueDateTimeEditText.setText(taskDueDateTime);
 
-        // constructing dialog
+        // Constructing the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Task");
         builder.setView(dialogView);
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 
-            // edited values from EditText views are retrieved
+        builder.setPositiveButton("Save", null); // Set initially disabled
+        builder.setNegativeButton("Cancel", null);
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Get the edited values from the EditText fields
-                String editedTaskName = taskNameEditText.getText().toString().trim();
-                String editedTaskDesc = taskDescEditText.getText().toString().trim();
-                int editedTaskDuration = Integer.parseInt(taskDurationEditText.getText().toString().trim());
-                String editedTaskDate = taskDateTimeEditText.getText().toString().trim();
-                String editedTaskDueDate = taskDueDateTimeEditText.getText().toString().trim();
+            public void onShow(DialogInterface dialogInterface) {
+                Button createButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                createButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Validate user input
+                        boolean isValidInput = validateInput(taskNameEditText, taskDescEditText, taskDateTimeEditText, taskDueDateTimeEditText, taskDurationEditText);
+                        if (isValidInput) {
+                        // Get the edited values from the EditText fields
+                        String editedTaskName = taskNameEditText.getText().toString().trim();
+                        String editedTaskDesc = taskDescEditText.getText().toString().trim();
+                        int editedTaskDuration = Integer.parseInt(taskDurationEditText.getText().toString().trim());
+                        String editedTaskDate = taskDateTimeEditText.getText().toString().trim();
+                        String editedTaskDueDate = taskDueDateTimeEditText.getText().toString().trim();
 
-                // Convert the edited date strings to Date objects
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                Date editedDate = null;
-                Date editedDueDate = null;
-                try {
-                    editedDate = dateFormat.parse(editedTaskDate);
-                    editedDueDate = dateFormat.parse(editedTaskDueDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                        // Convert the edited date strings to Date objects
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                        Date editedDate = null;
+                        Date editedDueDate = null;
+                        try {
+                            editedDate = dateFormat.parse(editedTaskDate);
+                            editedDueDate = dateFormat.parse(editedTaskDueDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
-                // Update the task in the list and database
-                Task task = taskList.get(position);
-                task.setTaskName(editedTaskName);
-                task.setTaskDesc(editedTaskDesc);
-                task.setTaskDuration(editedTaskDuration);
-                task.setTaskDateTime(editedDate);
-                task.setTaskDueDateTime(editedDueDate);
+                        // Update the task in the list and database
+                        Task task = taskList.get(position);
+                        task.setTaskName(editedTaskName);
+                        task.setTaskDesc(editedTaskDesc);
+                        task.setTaskDuration(editedTaskDuration);
+                        task.setTaskDateTime(editedDate);
+                        task.setTaskDueDateTime(editedDueDate);
 
-                taskDatabase.updateTask(task);
-                // Notify the adapter of the updated task
-                adapter.notifyItemChanged(position);
+                        taskDatabase.updateTask(task);
+                        // Notify the adapter of the updated task
+                        adapter.notifyItemChanged(position);
 
-                // Trigger Notification Scheduling
-                notificationChannel();
-                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(TaskActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                // Cancel & Push Notification again
-                cancelNotification();
-                sendPushNotification(task);
+                        // Trigger Notification Scheduling
+                        notificationChannel();
+                        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(TaskActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
+                        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                        // Cancel & Push Notification again
+                        cancelNotification();
+                        sendPushNotification(task);
+
+                        //Dismiss dialog
+                        dialog.dismiss();
+
+                        }
+                    }
+                });
+
+                Button cancelButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        adapter.notifyItemChanged(position);
+                        dialog.dismiss();
+                    }
+                });
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                adapter.notifyItemChanged(position); // When cancelled, position remains so it stays on the tasks page
-            }
-        });
-        builder.create().show();
+
+        dialog.show();
     }
 
     // displays a dialog to confirm the deletion of a task when swiped left
