@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -110,6 +111,40 @@ public class TaskActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 showCreateTaskDialog();
+            }
+        });
+
+        // Search button and search view
+        FloatingActionButton searchTask = findViewById(R.id.searchTask);
+        SearchView searchView = findViewById(R.id.searchView);
+        searchTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setVisibility(View.VISIBLE);
+                searchView.setIconified(false);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                performSearch(newText);
+                return true;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                searchView.setVisibility(View.GONE);
+                adapter.setTasks(taskList); // Show all tasks again when search is closed
+                adapter.notifyDataSetChanged();
+                return false;
             }
         });
     }
@@ -379,6 +414,39 @@ public class TaskActivity extends AppCompatActivity{
                 }) .show();
     }
 
+    private void performSearch(String query) {
+        List<Task> filteredTasks = new ArrayList<>();
+        if (query.isEmpty()) {
+            // If the query is empty, show all tasks
+            filteredTasks.addAll(taskList);
+        } else {
+            // Perform the search based on the query
+            String lowerCaseQuery = query.toLowerCase();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+
+            for (Task task : taskList) {
+                String taskName = task.getTaskName().toLowerCase();
+                String taskDesc = task.getTaskDesc().toLowerCase();
+                String taskDateTime = dateFormat.format(task.getTaskDateTime()).toLowerCase();
+                String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime()).toLowerCase();
+                String taskDuration = String.valueOf(task.getTaskDuration());
+
+                if (taskName.contains(lowerCaseQuery) || taskDesc.contains(lowerCaseQuery) ||
+                        taskDateTime.contains(lowerCaseQuery) || taskDueDateTime.contains(lowerCaseQuery) ||
+                        taskDuration.contains(lowerCaseQuery)) {
+                    filteredTasks.add(task);
+                }
+            }
+        }
+
+        adapter.setTasks(filteredTasks); // Update the adapter with filtered tasks
+        adapter.notifyDataSetChanged();
+    }
+
+
+
+
+
     public void sendPushNotification(Task task) {
         Calendar deadline = Calendar.getInstance();
         deadline.setTime(task.getTaskDateTime()); // Set deadline based on user input
@@ -499,89 +567,6 @@ public class TaskActivity extends AppCompatActivity{
         }
     }}
 
-//    private boolean validateInput(String taskName, String taskDesc, Date taskDateTime, Date taskDueDateTime, String taskDurationString) {
-//        boolean isValidInput = true;
-//        StringBuilder errorMessage = new StringBuilder("Invalid input. Please correct the following:");
-//
-//        // check if empty or not
-//        if (taskName.isEmpty()) {
-//            isValidInput = false;
-//            errorMessage.append("\n- Task name is required");
-//        }
-//        if (taskDesc.isEmpty()) {
-//            isValidInput = false;
-//            errorMessage.append("\n- Task description is required");
-//        }
-//
-//        // check to ensure not null and is in a valid datetime format
-//        // also checks if date is in the past
-//        if (taskDateTime == null || !isValidDateTimeFormat(taskDateTime)) {
-//            isValidInput = false;
-//            errorMessage.append("\n- Task start date and time are in an invalid format (dd/MM/yy HH:mm)");
-//        } else {
-//            if (taskDateTime.before(new Date())) {
-//                isValidInput = false;
-//                errorMessage.append("\n- Task start date and time cannot be in the past");
-//            }
-//        }
-//
-//        if (taskDueDateTime == null || !isValidDateTimeFormat(taskDueDateTime)) {
-//            isValidInput = false;
-//            errorMessage.append("\n- Task due date and time are in an invalid format (dd/MM/yy HH:mm)");
-//        } else {
-//            if (taskDueDateTime.before(taskDateTime)) {
-//                isValidInput = false;
-//                errorMessage.append("\n- Task due date and time cannot be earlier than the start date and time");
-//            }
-//        }
-//
-//        // check if not not null and not a integer
-//        // negative values are parsed into positive numbers
-//        if (taskDurationString.isEmpty()) {
-//            isValidInput = false;
-//            errorMessage.append("\n- Task duration is required");
-//        } else {
-//            try {
-//                int taskDuration = Integer.parseInt(taskDurationString);
-//                if (taskDuration <= 0) {
-//                    isValidInput = false;
-//                    errorMessage.append("\n- Task duration should be a positive number");
-//                }
-//            } catch (NumberFormatException e) {
-//                isValidInput = false;
-//                errorMessage.append("\n- Task duration should be a valid number");
-//            }
-//        }
-//
-//        if (!isValidInput) {
-//            // Display error message for invalid input
-//            AlertDialog.Builder errorDialogBuilder = new AlertDialog.Builder(TaskActivity.this);
-//            errorDialogBuilder.setTitle("Invalid Input");
-//            errorDialogBuilder.setMessage(errorMessage.toString());
-//            errorDialogBuilder.setPositiveButton("OK", null);
-//            errorDialogBuilder.create().show();
-//        }
-//        return isValidInput;
-//    }
-//
-//    private boolean isValidDateTimeFormat(Date date) {
-//        // Define the desired date and time format
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-//
-//        // Format the date object to a string in the desired format
-//        String dateString = dateFormat.format(date);
-//
-//        // Parse the formatted string back to a date object
-//        Date parsedDate;
-//        try {
-//            parsedDate = dateFormat.parse(dateString);
-//        } catch (ParseException e) {
-//            return false;
-//        }
-//        // Check if the parsed date object matches the original date object
-//        return parsedDate.equals(date);
-//    }
-//}
 
 
 

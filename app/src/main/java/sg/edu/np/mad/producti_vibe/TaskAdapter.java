@@ -106,6 +106,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         notifyItemRangeRemoved(0,size);
 
     }
+
+    public void setTasks(List<Task> tasks) {
+        this.taskList = tasks;
+    }
+
     //making it a static class, it can be accessed directly without the need for an instance of the
     // outer class (TaskAdapter)- improves performance and avoids unnecessary memory usage
     // holds references to the views within each item of the recyclerview

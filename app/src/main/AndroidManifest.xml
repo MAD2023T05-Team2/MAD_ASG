@@ -44,6 +44,7 @@
 <!--            android:exported="false" />-->
         <activity
             android:name=".TaskActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".CalendarPage"
