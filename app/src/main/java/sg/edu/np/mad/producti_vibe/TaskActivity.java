@@ -71,7 +71,7 @@ public class TaskActivity extends AppCompatActivity{
                 startActivity(new Intent(TaskActivity.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
-                startActivity(new Intent(TaskActivity.this, ProfilePage.class));
+                startActivity(new Intent(TaskActivity.this, StatisticsPage.class));
                 return true;
             }
             return false;
@@ -438,14 +438,9 @@ public class TaskActivity extends AppCompatActivity{
                 }
             }
         }
-
         adapter.setTasks(filteredTasks); // Update the adapter with filtered tasks
         adapter.notifyDataSetChanged();
     }
-
-
-
-
 
     public void sendPushNotification(Task task) {
         Calendar deadline = Calendar.getInstance();
@@ -553,7 +548,6 @@ public class TaskActivity extends AppCompatActivity{
                 taskDurationEditText.setError("Duration should be a valid number");
             }
         }
-
         return isValidInput;
     }
 

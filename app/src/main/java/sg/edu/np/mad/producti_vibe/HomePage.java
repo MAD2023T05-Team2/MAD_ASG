@@ -8,9 +8,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,8 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-// As of now, the homepage shows the tasks that are due that day
-public class HomePage extends AppCompatActivity {
+// Homepage showcases the tasks due on that specific day, as well as prompts for user's current mood
+public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private RecyclerView homeTaskRecyclerView;
     private Database db;
@@ -50,7 +56,7 @@ public class HomePage extends AppCompatActivity {
                 startActivity(new Intent(HomePage.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_profile) {
-                startActivity(new Intent(HomePage.this, ProfilePage.class));
+                startActivity(new Intent(HomePage.this, StatisticsPage.class));
                 return true;
             }
             return false;
@@ -82,6 +88,46 @@ public class HomePage extends AppCompatActivity {
         homeTaskadapter = new TaskAdapter(homeTaskList);
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
+
+        // FAB dropdown list
+        FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
+        dropdownList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(HomePage.this, v);
+                popupMenu.setOnMenuItemClickListener(HomePage.this);
+                popupMenu.inflate(R.menu.homepage_dropdown_menu);
+                popupMenu.show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_edit_profile:
+                // To user profile edit page
+                startActivity(new Intent(HomePage.this, EditProfilePage.class));
+                return true;
+
+            case R.id.menu_music_settings:
+                // To music settings page
+                startActivity(new Intent(HomePage.this, MusicSettingsPage.class));
+                return true;
+
+            case R.id.logOutSelection:
+                // To log out
+                SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Updates remember option to "False"
+                SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+                RUDeditor.putString("Remember", "False");
+                RUDeditor.apply();
+                // Back to login page
+                startActivity(new Intent(HomePage.this, LoginPage.class));
+                Log.v(TITLE, "Logging out");
+                return true;
+            default:
+                return false;
+        }
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){

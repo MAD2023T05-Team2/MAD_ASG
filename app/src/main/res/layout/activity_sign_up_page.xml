@@ -113,7 +113,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="165dp"
             android:background="@drawable/custom_edit_text"
-            android:drawableLeft="@drawable/baseline_password_24"
+            android:drawableLeft="@drawable/baseline_lock_24"
             android:drawablePadding="10dp"
             android:hint="Confirm Password"
             android:inputType="textPassword"
