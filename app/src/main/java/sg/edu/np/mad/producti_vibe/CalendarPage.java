@@ -51,7 +51,7 @@ public class CalendarPage extends AppCompatActivity {
             } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(CalendarPage.this, DestressPage.class));
                 return true;
-            } else if (itemId == R.id.bottom_profile) {
+            } else if (itemId == R.id.bottom_statistics) {
                 startActivity(new Intent(CalendarPage.this, StatisticsPage.class));
                 return true;
             }

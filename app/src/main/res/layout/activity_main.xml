@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="27dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="18dp"
         android:text="All Tasks: "
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="51dp"
         android:text="Swipe right to edit,  Left to delete"
         android:textSize="13sp" />
 

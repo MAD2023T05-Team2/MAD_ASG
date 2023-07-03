@@ -3,7 +3,6 @@ package sg.edu.np.mad.producti_vibe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,16 +13,16 @@ public class StatisticsPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_page);
+        setContentView(R.layout.activity_statistics_page);
         Log.v(TITLE, "Navigation Buttons");
 
         // Bottom navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_profile);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_statistics);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.bottom_profile) {
+            if (itemId == R.id.bottom_statistics) {
                 return true;
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(StatisticsPage.this, HomePage.class));

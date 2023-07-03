@@ -51,6 +51,12 @@
             android:name=".CalendarPage"
             android:exported="false" />
         <activity
+            android:name=".EditProfilePage"
+            android:exported="false" />
+        <activity
+            android:name=".MusicSettingsPage"
+            android:exported="false" />
+        <activity
             android:name=".PicturesFragment"
             android:exported="false" />
 

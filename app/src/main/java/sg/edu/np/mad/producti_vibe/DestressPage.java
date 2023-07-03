@@ -54,7 +54,7 @@ public class DestressPage extends AppCompatActivity {
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(DestressPage.this, TaskActivity.class));
                 return true;
-            } else if (itemId == R.id.bottom_profile) {
+            } else if (itemId == R.id.bottom_statistics) {
                 startActivity(new Intent(DestressPage.this, StatisticsPage.class));
                 return true;
             }

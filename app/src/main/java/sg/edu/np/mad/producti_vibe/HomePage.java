@@ -55,7 +55,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(HomePage.this, DestressPage.class));
                 return true;
-            } else if (itemId == R.id.bottom_profile) {
+            } else if (itemId == R.id.bottom_statistics) {
                 startActivity(new Intent(HomePage.this, StatisticsPage.class));
                 return true;
             }
@@ -94,6 +94,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         dropdownList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Inflates the list of options
                 PopupMenu popupMenu = new PopupMenu(HomePage.this, v);
                 popupMenu.setOnMenuItemClickListener(HomePage.this);
                 popupMenu.inflate(R.menu.homepage_dropdown_menu);
@@ -104,30 +105,29 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_edit_profile:
-                // To user profile edit page
-                startActivity(new Intent(HomePage.this, EditProfilePage.class));
-                return true;
-
-            case R.id.menu_music_settings:
-                // To music settings page
-                startActivity(new Intent(HomePage.this, MusicSettingsPage.class));
-                return true;
-
-            case R.id.logOutSelection:
-                // To log out
-                SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Updates remember option to "False"
-                SharedPreferences.Editor RUDeditor = rememberUserData.edit();
-                RUDeditor.putString("Remember", "False");
-                RUDeditor.apply();
-                // Back to login page
-                startActivity(new Intent(HomePage.this, LoginPage.class));
-                Log.v(TITLE, "Logging out");
-                return true;
-            default:
-                return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_edit_profile) {
+            // To edit user's profile details
+            startActivity(new Intent(HomePage.this, EditProfilePage.class));
+            return true;
         }
+        else if (itemId == R.id.menu_music_settings) {
+            // To music settings
+            startActivity(new Intent(HomePage.this, MusicSettingsPage.class));
+            return true;
+        }
+        else if (itemId == R.id.menu_logout) {
+            // To log out
+            SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Updates remember option to "False"
+            SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+            RUDeditor.putString("Remember", "False");
+            RUDeditor.apply();
+            // Back to login page
+            startActivity(new Intent(HomePage.this, LoginPage.class));
+            Log.v(TITLE, "Logging out");
+            return true;
+        }
+        return false;
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){
