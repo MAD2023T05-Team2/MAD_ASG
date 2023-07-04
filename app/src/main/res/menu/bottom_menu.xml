@@ -11,11 +11,11 @@
         android:title="Tasks"/>
     <item
         android:id="@+id/bottom_calendar"
-        android:icon="@drawable/baseline_calendar_month_24"
+        android:icon="@drawable/baseline_timer_24"
         android:title="Calendar"/>
     <item
         android:id="@+id/bottom_timer"
-        android:icon="@drawable/baseline_timer_24"
+        android:icon="@drawable/img"
         android:title="Timer"/>
     <item
         android:id="@+id/bottom_statistics"
