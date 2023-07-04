@@ -1,4 +1,4 @@
-package sg.edu.np.mad.producti_vibe;
+package sg.edu.np.mad.productivibe;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 // In the settings page, users can edit their personal information, ++
 public class SettingsPage extends AppCompatActivity {

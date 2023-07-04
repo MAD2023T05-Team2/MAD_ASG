@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'sg.edu.np.mad.producti_vibe'
+    namespace 'sg.edu.np.mad.productivibe'
     compileSdk 33
 
     defaultConfig {
-        applicationId "sg.edu.np.mad.producti_vibe"
+        applicationId "sg.edu.np.mad.productivibe"
         minSdk 21
         targetSdk 33
         versionCode 4

@@ -1,6 +1,5 @@
-package sg.edu.np.mad.producti_vibe;
+package sg.edu.np.mad.productivibe;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;

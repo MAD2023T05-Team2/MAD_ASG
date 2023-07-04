@@ -1,4 +1,4 @@
-package sg.edu.np.mad.producti_vibe;
+package sg.edu.np.mad.productivibe;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
