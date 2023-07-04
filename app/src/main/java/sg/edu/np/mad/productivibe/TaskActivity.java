@@ -114,17 +114,17 @@ public class TaskActivity extends AppCompatActivity{
             }
         });
 
-        // Search button and search view
-        FloatingActionButton searchTask = findViewById(R.id.searchTask);
-        SearchView searchView = findViewById(R.id.searchView);
+        // Calendar button
+        FloatingActionButton searchTask = findViewById(R.id.CalendarButton);
         searchTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchView.setVisibility(View.VISIBLE);
-                searchView.setIconified(false);
+                startActivity(new Intent(TaskActivity.this, CalendarPage.class));
             }
         });
 
+        // Search view
+        SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -141,7 +141,6 @@ public class TaskActivity extends AppCompatActivity{
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                searchView.setVisibility(View.GONE);
                 adapter.setTasks(taskList); // Show all tasks again when search is closed
                 adapter.notifyDataSetChanged();
                 return false;

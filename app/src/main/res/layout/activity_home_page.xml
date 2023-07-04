@@ -93,44 +93,55 @@
 
             <ImageView
                 android:id="@+id/moodIcon1"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="38dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="87dp"
+                android:layout_marginTop="42dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/moodPrompt"
                 app:srcCompat="@drawable/happy_mood" />
 
             <ImageView
                 android:id="@+id/moodIcon2"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="105dp"
-                android:layout_marginTop="38dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="149dp"
+                android:layout_marginTop="42dp"
                 app:layout_constraintStart_toEndOf="@id/moodIcon1"
                 app:layout_constraintTop_toBottomOf="@id/moodPrompt"
                 app:srcCompat="@drawable/neutral_mood" />
 
             <ImageView
                 android:id="@+id/moodIcon3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="185dp"
-                android:layout_marginTop="38dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="211dp"
+                android:layout_marginTop="42dp"
                 app:layout_constraintStart_toEndOf="@id/moodIcon2"
                 app:layout_constraintTop_toBottomOf="@id/moodPrompt"
                 app:srcCompat="@drawable/sad_mood" />
 
             <ImageView
                 android:id="@+id/moodIcon4"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="270dp"
-                android:layout_marginTop="38dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="273dp"
+                android:layout_marginTop="42dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/moodPrompt"
                 app:srcCompat="@drawable/angry_mood" />
+
+            <ImageView
+                android:id="@+id/moodIcon5"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="42dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/moodPrompt"
+                app:srcCompat="@drawable/party_mood" />
 
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

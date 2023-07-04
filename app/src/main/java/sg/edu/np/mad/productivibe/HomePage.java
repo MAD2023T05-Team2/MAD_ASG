@@ -4,14 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -99,7 +103,36 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 popupMenu.show();
             }
         });
+
+        // Add click listeners to mood icons
+        ImageView happyIcon = findViewById(R.id.moodIcon1);
+        ImageView sadIcon = findViewById(R.id.moodIcon2);
+        ImageView neutralIcon = findViewById(R.id.moodIcon3);
+        ImageView angryIcon = findViewById(R.id.moodIcon4);
+        ImageView partyIcon = findViewById(R.id.moodIcon5);
+
+
+        happyIcon.setOnClickListener(v -> saveMood("happy"));
+        sadIcon.setOnClickListener(v -> saveMood("sad"));
+        neutralIcon.setOnClickListener(v -> saveMood("neutral"));
+        angryIcon.setOnClickListener(v -> saveMood("angry"));
+        partyIcon.setOnClickListener(v -> saveMood("party"));
     }
+
+    private void saveMood(String moodValue) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("UserId", null);
+        Date timestamp = new Date();
+
+        // Create a new Mood object
+        Mood mood = new Mood(userId, moodValue, timestamp);
+
+        // Add the mood to the database
+        db.addMood(mood);
+
+        Toast.makeText(this, "Mood saved: " + moodValue, Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

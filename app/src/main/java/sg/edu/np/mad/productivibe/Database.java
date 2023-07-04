@@ -37,6 +37,14 @@ public class Database extends SQLiteOpenHelper {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
 
+    private static final String COLUMN_MOOD_ID = "mood_id";
+    private static final String COLUMN_MOOD_USER_ID = "mood_user_id";
+    private static final String COLUMN_MOOD_MOOD = "mood_mood";
+    private static final String COLUMN_MOOD_TIMESTAMP = "mood_timestamp";
+
+
+    // ...
+
 
     //ensures that only one instance of the database is created
     private static Database sInstance;
@@ -83,6 +91,15 @@ public class Database extends SQLiteOpenHelper {
                 COLUMN_PASSWORD + " TEXT"+
                 ")";
         db.execSQL(createUserAccountsTable);
+
+        String createMoodsTable = "CREATE TABLE " + "moods" + " (" +
+                COLUMN_MOOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_MOOD_USER_ID + " INTEGER, " +
+                COLUMN_MOOD_MOOD + " TEXT, " +
+                COLUMN_MOOD_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+                "FOREIGN KEY (" + COLUMN_MOOD_USER_ID + ") REFERENCES " + "user_accounts" + "(" + COLUMN_USERID + ")" +
+                ")";
+        db.execSQL(createMoodsTable);
     }
 
     @Override
@@ -217,52 +234,21 @@ public class Database extends SQLiteOpenHelper {
         db.close();
         return queryUserData;
     }
-}
 
-// CODE BELOW NOT USED ANYMORE cuz it grabs all tasks from database instead of only the userID
-// use the getAllTasksFromUser instead to retrieve
-//    public List<Task> getAllTasks() {
-//        List<Task> taskList = new ArrayList<>();
-//        SQLiteDatabase db = getReadableDatabase();
-//        Cursor cursor = db.query("tasks", null, null, null, null, null, null);
-//        if (cursor != null) {
-//            int idIndex = cursor.getColumnIndex(COLUMN_ID);
-//            int statusIndex = cursor.getColumnIndex(COLUMN_STATUS);
-//            int taskNameIndex = cursor.getColumnIndex(COLUMN_TASK_NAME);
-//            int taskDescIndex = cursor.getColumnIndex(COLUMN_TASK_DESC);
-//            int taskDateTimeIndex = cursor.getColumnIndex(COLUMN_TASK_DATE_TIME);
-//            int taskDueDateTimeIndex = cursor.getColumnIndex(COLUMN_TASK_DUE_DATE_TIME);
-//            int taskDurationIndex = cursor.getColumnIndex(COLUMN_TASK_DURATION);
-//            int taskTypeIndex = cursor.getColumnIndex(COLUMN_TASK_TYPE);
-//            int repeatIndex = cursor.getColumnIndex(COLUMN_REPEAT);
-//            int recurringIdIndex = cursor.getColumnIndex(COLUMN_RECURRING_ID);
-//            int recurringDurationIndex = cursor.getColumnIndex(COLUMN_RECURRING_DURATION);
-//            int taskUserIdIndex = cursor.getColumnIndex(COLUMN_TASK_USER_ID);
-//
-//            while (cursor.moveToNext()) {
-//                int id = cursor.getInt(idIndex);
-//                String status = cursor.getString(statusIndex);
-//                String taskName = cursor.getString(taskNameIndex);
-//                String taskDesc = cursor.getString(taskDescIndex);
-//                long taskDateTimeMillis = cursor.getLong(taskDateTimeIndex);
-//                Date taskDateTime = new Date(taskDateTimeMillis);
-//                long taskDueDateTimeMillis = cursor.getLong(taskDueDateTimeIndex);
-//                Date taskDueDateTime = new Date(taskDueDateTimeMillis);
-//                long taskDuration = cursor.getLong(taskDurationIndex);
-//                String taskType = cursor.getString(taskTypeIndex);
-//                String repeat = cursor.getString(repeatIndex);
-//                int recurringId = cursor.getInt(recurringIdIndex);
-//                String recurringDuration = cursor.getString(recurringDurationIndex);
-//                int taskUserID = cursor.getInt(taskUserIdIndex);
-//
-//                Task task = new Task(id, status, taskName, taskDesc, taskDateTime,
-//                        taskDueDateTime, taskDuration, taskType,
-//                        repeat, recurringId, recurringDuration, taskUserID);
-//                taskList.add(task);
-//            }
-//            cursor.close();
-//        }
-//        db.close();
-//        return taskList;
-//    }
+    // adds mood to the database
+    public void addMood(Mood mood) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_MOOD_USER_ID, mood.getUserId());
+        values.put(COLUMN_MOOD_MOOD, mood.getMood());
+        values.put(COLUMN_MOOD_TIMESTAMP, mood.getTimestamp().getTime());
+        db.insert("moods", null, values);
+        db.close();
+    }
+
+
+
+
+
+}
 
