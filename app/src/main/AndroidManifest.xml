@@ -59,9 +59,6 @@
         <activity
             android:name=".PicturesFragment"
             android:exported="false" />
-        <activity
-            android:name=".Statistics"
-            android:exported="false" />
 
         <receiver
             android:name=".BroadcastReceiver"
