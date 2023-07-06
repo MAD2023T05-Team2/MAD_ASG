@@ -42,7 +42,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/productivityCard"
-        android:layout_width="347dp"
+        android:layout_width="380dp"
         android:layout_height="250dp"
         android:layout_marginStart="18dp"
         android:layout_marginTop="10dp"
@@ -66,7 +66,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/moodCard"
-        android:layout_width="347dp"
+        android:layout_width="380dp"
         android:layout_height="250dp"
         android:layout_marginStart="18dp"
         android:layout_marginTop="10dp"
