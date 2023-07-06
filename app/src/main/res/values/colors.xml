@@ -6,5 +6,9 @@
     <color name="teal">#68B2A0</color>
     <color name="lighter_teal">#7ed6c1</color>
     <color name="homepage_card">#DBF4E8</color>
+    <color name="chart_circle_color">#FF0000</color>
+    <color name="chart_grid_color">#66999999</color>
+
+
 
 </resources>

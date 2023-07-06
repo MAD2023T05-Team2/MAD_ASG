@@ -5,9 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "task_database";
@@ -241,10 +244,54 @@ public class Database extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_MOOD_USER_ID, mood.getUserId());
         values.put(COLUMN_MOOD_MOOD, mood.getMood());
-        values.put(COLUMN_MOOD_TIMESTAMP, mood.getTimestamp().getTime());
+        values.put(COLUMN_MOOD_TIMESTAMP, mood.getTimestamp());
         db.insert("moods", null, values);
         db.close();
     }
+
+    public List<Mood> getMoodsForLastMonth(String userId) {
+        List<Mood> moodList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Calculate the date one month ago from the current date
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        Date lastMonthDate = calendar.getTime();
+
+        // Format the last month date to a string
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String lastMonthDateString = dateFormat.format(lastMonthDate);
+
+        String selection = COLUMN_MOOD_USER_ID + " = ? AND " + COLUMN_MOOD_TIMESTAMP + " >= ?";
+        String[] selectionArgs = {userId, lastMonthDateString};
+
+        Cursor cursor = db.query("moods", null, selection, selectionArgs, null, null, null);
+
+        if (cursor != null) {
+            int idIndex = cursor.getColumnIndex(COLUMN_MOOD_ID);
+            int moodIndex = cursor.getColumnIndex(COLUMN_MOOD_MOOD);
+            int timestampIndex = cursor.getColumnIndex(COLUMN_MOOD_TIMESTAMP);
+
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(idIndex);
+                String mood = cursor.getString(moodIndex);
+                String timestamp = cursor.getString(timestampIndex);
+
+                Mood moodObj = new Mood(id, mood, timestamp);
+                moodList.add(moodObj);
+            }
+
+            cursor.close();
+        }
+
+        db.close();
+        return moodList;
+    }
+
+
+
+
+
 
 
 

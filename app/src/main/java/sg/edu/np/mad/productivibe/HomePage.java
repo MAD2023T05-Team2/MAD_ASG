@@ -117,6 +117,19 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         neutralIcon.setOnClickListener(v -> saveMood("neutral"));
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
+
+//        Mood mood1 = new Mood(userId, "Happy", "2023-06-28 10:30:00");
+//        Mood mood2 = new Mood(userId, "Neutral", "2023-06-29 15:45:00");
+//        Mood mood3 = new Mood(userId, "Sad", "2023-07-01 09:00:00");
+//        Mood mood4 = new Mood(userId, "Party", "2023-07-03 19:20:00");
+//        Mood mood5 = new Mood(userId, "Angry", "2023-07-05 12:10:00");
+//        db.addMood(mood1);
+//        db.addMood(mood2);
+//        db.addMood(mood3);
+//        db.addMood(mood4);
+//        db.addMood(mood5);
+
+
     }
 
     private void saveMood(String moodValue) {
@@ -124,14 +137,19 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         String userId = sharedPreferences.getString("UserId", null);
         Date timestamp = new Date();
 
+        // Convert the timestamp to a string
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestampString = dateFormat.format(timestamp);
+
         // Create a new Mood object
-        Mood mood = new Mood(userId, moodValue, timestamp);
+        Mood mood = new Mood(userId, moodValue, timestampString);
 
         // Add the mood to the database
         db.addMood(mood);
 
         Toast.makeText(this, "Mood saved: " + moodValue, Toast.LENGTH_SHORT).show();
     }
+
 
 
     @Override
