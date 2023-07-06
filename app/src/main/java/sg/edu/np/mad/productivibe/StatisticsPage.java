@@ -3,6 +3,7 @@ package sg.edu.np.mad.productivibe;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,11 +21,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.renderer.YAxisRenderer;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -85,6 +88,19 @@ public class StatisticsPage extends AppCompatActivity {
             moodsList.add(mood.getMood());
         }
 
+        // Sort the dates in ascending order
+        Collections.sort(dates, (date1, date2) -> {
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM", Locale.getDefault());
+            try {
+                Date d1 = format.parse(date1);
+                Date d2 = format.parse(date2);
+                return d1.compareTo(d2);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        });
+
         // Create entries for the line chart
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < moodsList.size(); i++) {
@@ -110,6 +126,7 @@ public class StatisticsPage extends AppCompatActivity {
         moodChart.setTouchEnabled(false); // Disable touch interactions
         moodChart.setPinchZoom(false); // Disable pinch zoom
         moodChart.setScaleEnabled(false); // Disable scaling
+        moodChart.setExtraTopOffset(-50f); // Adjust the value as needed to move the chart up
 
         // Customize the X-axis
         XAxis xAxis = moodChart.getXAxis();
@@ -131,10 +148,17 @@ public class StatisticsPage extends AppCompatActivity {
                 return "";
             }
         });
+        xAxis.setTextSize(12f); // Set X-axis label text size
+        xAxis.setTextColor(Color.BLACK); // Set X-axis label text color
+        xAxis.setDrawAxisLine(false); // Hide X-axis line
+        xAxis.setDrawGridLines(false); // Hide X-axis grid lines
+        xAxis.setYOffset(-10f); // Move X-axis labels higher
+        moodChart.setExtraRightOffset(20f); // shift the last label to the left
 
         // Customize the Y-axis
         YAxis yAxis = moodChart.getAxisLeft(); // Get reference to the left axis
         yAxis.setGranularity(1f); // Set Y-axis granularity
+        yAxis.setDrawAxisLine(false); // Hide X-axis line
         yAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
@@ -148,17 +172,21 @@ public class StatisticsPage extends AppCompatActivity {
             }
         });
 
+
+        // Enable grid lines for all rows on the Y-axis
+        moodChart.getAxisLeft().setDrawGridLines(true);
+        moodChart.getAxisRight().setDrawGridLines(true);
+
+        // Set grid line properties
+        moodChart.getAxisLeft().setGridLineWidth(1f);
+        moodChart.getAxisRight().setGridLineWidth(1f);
+        moodChart.getAxisLeft().setGridColor(Color.parseColor("#66999999"));
+        moodChart.getAxisRight().setGridColor(Color.parseColor("#66999999"));
+        moodChart.getAxisLeft().enableGridDashedLine(10f, 10f, 0f);
+        moodChart.getAxisRight().enableGridDashedLine(10f, 10f, 0f);
+
         // Remove numerical values on the secondary Y-axis
         moodChart.getAxisRight().setEnabled(false); // Disable right axis
-
-        // Customize the grid lines
-        moodChart.getAxisLeft().setDrawGridLines(true); // Enable Y-axis grid lines
-        moodChart.getXAxis().setDrawGridLines(false); // Disable X-axis grid lines
-
-
-        // Set grid line color and style
-        yAxis.setGridColor(Color.parseColor("#80CCCCCC")); // Set grid line color
-        yAxis.enableGridDashedLine(10f, 10f, 0f); // Enable dashed grid lines
 
         // Refresh the chart
         moodChart.invalidate();
