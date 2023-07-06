@@ -114,9 +114,9 @@ public class TaskActivity extends AppCompatActivity{
             }
         });
 
-        // Calendar button
-        FloatingActionButton searchTask = findViewById(R.id.CalendarButton);
-        searchTask.setOnClickListener(new View.OnClickListener() {
+        // To Calendar view button
+        FloatingActionButton toCalendar = findViewById(R.id.CalendarButton);
+        toCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(TaskActivity.this, CalendarPage.class));

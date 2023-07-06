@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CalendarView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 //import sg.edu.np.mad.producti_vibe.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,6 +111,15 @@ public class CalendarPage extends AppCompatActivity {
                     Log.d("FILTERED", "List should not be empty");
                 }
                 Log.v("AFTER FILTERING",filteredTaskList.toString());
+            }
+        });
+
+        // Switching back from calendar to all tasks view
+        FloatingActionButton toAllTasks = findViewById(R.id.toAllTasks);
+        toAllTasks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CalendarPage.this, TaskActivity.class));
             }
         });
     }

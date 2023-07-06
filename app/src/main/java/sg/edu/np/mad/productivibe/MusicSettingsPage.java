@@ -12,4 +12,17 @@ public class MusicSettingsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_settings);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void whenConnected() {
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

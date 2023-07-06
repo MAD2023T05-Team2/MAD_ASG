@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="410dp"
         android:layout_above="@+id/bottomNavigationView"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="145dp"
         android:orientation="horizontal"
         android:padding="13dp" />
 
@@ -59,8 +59,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/recyclerView"
-        android:layout_marginTop="55dp"
-        android:layout_marginBottom="-20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="-23dp"
+        android:paddingStart="10dp"
         android:visibility="visible" />
 
     <ImageView
@@ -79,8 +80,6 @@
         android:layout_marginTop="471dp"
         android:src="@drawable/taskpageimage2"
         android:visibility="visible" />
-
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
