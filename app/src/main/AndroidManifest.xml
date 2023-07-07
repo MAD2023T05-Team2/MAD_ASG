@@ -55,9 +55,6 @@
             android:name=".EditProfilePage"
             android:exported="false" />
         <activity
-            android:name=".MusicSettingsPage"
-            android:exported="false" />
-        <activity
             android:name=".PicturesFragment"
             android:exported="false" />
 

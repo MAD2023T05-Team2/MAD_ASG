@@ -1,5 +1,6 @@
 package sg.edu.np.mad.productivibe;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureViewHolder> {
-
     private List<Integer> pictureList;
 
     public PictureAdapter(List<Integer> pictureList) {

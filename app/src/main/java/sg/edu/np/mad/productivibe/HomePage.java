@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private RecyclerView homeTaskRecyclerView;
     private Database db;
     private TaskAdapter homeTaskadapter;
+    MediaPlayer mediaPlayer;
+    boolean isMuted = false;
+    boolean isMediaPlayerStarted = false;
     final String TITLE = "HomePage";
 
     @Override
@@ -91,6 +95,19 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
 
+        // Start the BGM MediaPlayer upon app launch
+        // Check if BGM is already playing if user returns back to homepage
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
+        mediaPlayer.setMusicSource(this,R.raw.yihuik);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+//        if (!isMediaPlayerStarted) {
+//            mediaPlayer = MediaPlayer.create(this, R.raw.yihuik);
+//            mediaPlayer.setLooping(true); // Enable loop for continuous playing
+//            mediaPlayer.start();
+//            isMediaPlayerStarted = true;
+//        }
+
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
         dropdownList.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +128,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         ImageView angryIcon = findViewById(R.id.moodIcon4);
         ImageView partyIcon = findViewById(R.id.moodIcon5);
 
-
         happyIcon.setOnClickListener(v -> saveMood("happy"));
         sadIcon.setOnClickListener(v -> saveMood("sad"));
         neutralIcon.setOnClickListener(v -> saveMood("neutral"));
@@ -128,7 +144,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 //        db.addMood(mood3);
 //        db.addMood(mood4);
 //        db.addMood(mood5);
-
 
     }
 
@@ -150,10 +165,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         Toast.makeText(this, "Mood saved: " + moodValue, Toast.LENGTH_SHORT).show();
     }
 
-
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
         int itemId = item.getItemId();
         if (itemId == R.id.menu_edit_profile) {
             // To edit user's profile details
@@ -161,8 +175,14 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             return true;
         }
         else if (itemId == R.id.menu_music_settings) {
-            // To music settings
-            startActivity(new Intent(HomePage.this, MusicSettingsPage.class));
+            // Toggles between play/pause of BGM
+            if (isMuted) {
+                mediaPlayer.resume();
+                isMuted = false;
+            } else {
+                mediaPlayer.pause();
+                isMuted = true;
+            }
             return true;
         }
         else if (itemId == R.id.menu_logout) {
@@ -173,6 +193,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             RUDeditor.apply();
             // Back to login page
             startActivity(new Intent(HomePage.this, LoginPage.class));
+            // Release mediaPlayer when user logs out
+            mediaPlayer.onDestroy();
             Log.v(TITLE, "Logging out");
             return true;
         }
