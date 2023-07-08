@@ -113,11 +113,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         });
 
         // Add click listeners to mood icons
-        ImageView happyIcon = findViewById(R.id.moodIcon1);
-        ImageView sadIcon = findViewById(R.id.moodIcon2);
-        ImageView neutralIcon = findViewById(R.id.moodIcon3);
-        ImageView angryIcon = findViewById(R.id.moodIcon4);
-        ImageView partyIcon = findViewById(R.id.moodIcon5);
+        ImageView happyIcon = findViewById(R.id.happyIcon);
+        ImageView sadIcon = findViewById(R.id.sadIcon);
+        ImageView neutralIcon = findViewById(R.id.neutralIcon);
+        ImageView angryIcon = findViewById(R.id.angryIcon);
+        ImageView partyIcon = findViewById(R.id.partyIcon);
 
         happyIcon.setOnClickListener(v -> saveMood("happy"));
         sadIcon.setOnClickListener(v -> saveMood("sad"));
@@ -125,6 +125,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
 
+        //db.deleteAllMoods(userId);
 //        Mood mood1 = new Mood(userId, "Happy", "2023-06-28 10:30:00");
 //        Mood mood2 = new Mood(userId, "Neutral", "2023-06-29 15:45:00");
 //        Mood mood3 = new Mood(userId, "Sad", "2023-07-01 09:00:00");

@@ -288,6 +288,15 @@ public class Database extends SQLiteOpenHelper {
         return moodList;
     }
 
+    // Add this method to the Database class
+    public void deleteAllMoods(String userId) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = COLUMN_MOOD_USER_ID + " = ?";
+        String[] selectionArgs = {userId};
+        db.delete("moods", selection, selectionArgs); // Performs the delete operation
+        db.close();
+    }
+
 
 
 

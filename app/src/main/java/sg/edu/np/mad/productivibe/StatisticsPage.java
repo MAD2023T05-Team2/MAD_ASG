@@ -145,7 +145,6 @@ public class StatisticsPage extends AppCompatActivity {
         lineChart.setLayoutParams(layoutParams);
 
 
-
         // Customize the X-axis
         XAxis xAxis = moodChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Set X-axis position
@@ -160,25 +159,27 @@ public class StatisticsPage extends AppCompatActivity {
         xAxis.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
+                // Display only 4 evenly spaced dates
                 int index = Math.round(value);
                 if (index >= 0 && index < dates.size()) {
-                    // Calculate the interval based on the available dates
-                    int interval = Math.max((dates.size() - 1) / 3, 1);
+                    int interval = (dates.size() - 1) / 3;
                     if (index % interval == 0) {
                         return dates.get(index);
+                    } else {
+                        return "";
                     }
                 }
                 return "";
             }
         });
 
+
         // Customize the Y-axis
         String[] moodLabels = {"\uD83D\uDE21", "\uD83D\uDE41", "\uD83D\uDE10","\uD83D\uDE42", "\uD83E\uDD73"}; // Adjusted order
         YAxis yAxis = moodChart.getAxisLeft(); // Get reference to the left axis
         yAxis.setGranularity(1f); // Set Y-axis granularity
         yAxis.setLabelCount(moodLabels.length); // Set the number of Y-axis labels to the number of moods
-        yAxis.setTextSize(20f); // Set Y-axis label text size
-        yAxis.setTextColor(Color.BLACK); // Set Y-axis label text color
+        yAxis.setTextSize(22f); // Set Y-axis label text size
         yAxis.setDrawAxisLine(false); // Show Y-axis line
 
         // Provide the Y-axis labels directly
@@ -213,16 +214,16 @@ public class StatisticsPage extends AppCompatActivity {
     // Helper method to convert mood string to a numerical value
     private float convertMoodToValue(String mood) {
         switch (mood) {
-            case "Party":
-                return 0f;
-            case "Happy":
-                return 1f;
-            case "Neutral":
-                return 2f;
-            case "Sad":
-                return 3f;
-            case "Angry":
+            case "party":
                 return 4f;
+            case "happy":
+                return 3f;
+            case "neutral":
+                return 2f;
+            case "sad":
+                return 1f;
+            case "angry":
+                return 0f;
             default:
                 return 0f;
         }
