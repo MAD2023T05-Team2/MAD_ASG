@@ -68,6 +68,9 @@
         <activity
             android:name=".PicturesFragment"
             android:exported="false" />
+        <activity
+            android:name=".MediaPlayerManager"
+            android:exported="false" />
 
         <receiver
             android:name=".BroadcastReceiver"
