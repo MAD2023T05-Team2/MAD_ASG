@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.MAD_ASG.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_widget_background"
+    android:theme="@style/Theme.MAD_ASG.AppWidgetContainer">
+
+    <TextView
+        android:id="@+id/todayTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="18dp"
+        android:text="Tasks Due Today:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor = "@color/black"/>
+
+    <TextView
+        android:id="@+id/widgetTaskNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="0dp"
+        android:text="1"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor = "@color/black"/>
+
+</RelativeLayout>

@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -103,11 +105,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         });
 
         // Add click listeners to mood icons
-        ImageView happyIcon = findViewById(R.id.happyIcon);
-        ImageView sadIcon = findViewById(R.id.sadIcon);
-        ImageView neutralIcon = findViewById(R.id.neutralIcon);
-        ImageView angryIcon = findViewById(R.id.AngryIcon);
-        ImageView partyIcon = findViewById(R.id.partyIcon);
+        ImageView happyIcon = findViewById(R.id.moodIcon1);
+        ImageView sadIcon = findViewById(R.id.moodIcon2);
+        ImageView neutralIcon = findViewById(R.id.moodIcon3);
+        ImageView angryIcon = findViewById(R.id.moodIcon4);
+        ImageView partyIcon = findViewById(R.id.moodIcon5);
 
 
         happyIcon.setOnClickListener(v -> saveMood("happy"));
@@ -116,12 +118,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
 
-//        db.deleteAllMoods(userId); //testing purposes
-//        Mood mood1 = new Mood(userId, "happy", "2023-06-28 10:30:00");
-//        Mood mood2 = new Mood(userId, "neutral", "2023-06-29 15:45:00");
-//        Mood mood3 = new Mood(userId, "sad", "2023-07-01 09:00:00");
-//        Mood mood4 = new Mood(userId, "party", "2023-07-03 19:20:00");
-//        Mood mood5 = new Mood(userId, "angry", "2023-07-05 12:10:00");
+//        Mood mood1 = new Mood(userId, "Happy", "2023-06-28 10:30:00");
+//        Mood mood2 = new Mood(userId, "Neutral", "2023-06-29 15:45:00");
+//        Mood mood3 = new Mood(userId, "Sad", "2023-07-01 09:00:00");
+//        Mood mood4 = new Mood(userId, "Party", "2023-07-03 19:20:00");
+//        Mood mood5 = new Mood(userId, "Angry", "2023-07-05 12:10:00");
 //        db.addMood(mood1);
 //        db.addMood(mood2);
 //        db.addMood(mood3);

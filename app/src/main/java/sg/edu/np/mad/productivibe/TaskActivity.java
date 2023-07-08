@@ -262,7 +262,6 @@ public class TaskActivity extends AppCompatActivity{
                 });
             }
         });
-
         dialog.show();
     }
 
@@ -441,7 +440,7 @@ public class TaskActivity extends AppCompatActivity{
         adapter.notifyDataSetChanged();
     }
 
-    public void sendPushNotification(Task task) {
+        public void sendPushNotification(Task task) {
         Calendar deadline = Calendar.getInstance();
         deadline.setTime(task.getTaskDateTime()); // Set deadline based on user input
         Calendar currentTime = Calendar.getInstance(); // Retrieve current time

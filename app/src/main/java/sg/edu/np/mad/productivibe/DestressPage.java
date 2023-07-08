@@ -1,6 +1,7 @@
 package sg.edu.np.mad.productivibe;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -15,16 +16,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
-// Destress page allows users to view a minute of funny pictures and relaxing videos
+// The destress page allows users a 5 minute break from their tasks to view entertaining pictures and videos
 public class DestressPage extends AppCompatActivity {
     private static final String TITLE = "Destress Page";
     private Button picturesButton;
     private Button videosButton;
     private boolean isCountdownRunning = false;
+    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,8 @@ public class DestressPage extends AppCompatActivity {
             if (!isCountdownRunning) { //If countdown timer is not running yet, start countdown timer
                 countDownTimer();
             }
+            // If pictures fragment is accessed, music continues to play
+            mediaPlayer.resume();
             replaceFragment(new PicturesFragment());
             Log.v(TITLE, "Picture fragment");
         });
@@ -80,6 +86,8 @@ public class DestressPage extends AppCompatActivity {
             if (!isCountdownRunning) { // If countdown timer is not running yet, start countdown timer
                 countDownTimer();
             }
+            // Stop the BGM when entering the fragment
+            mediaPlayer.pause();
             replaceFragment(new VideosFragment());
             Log.v(TITLE, "Video fragment");
         });
@@ -98,7 +106,7 @@ public class DestressPage extends AppCompatActivity {
     private void countDownTimer() {
         isCountdownRunning = true; // Countdown timer is running
 
-        myCountdown = new CountDownTimer(60000, 1000) { // Set countdown timer of 60 seconds
+        myCountdown = new CountDownTimer(300000, 1000) { // Set countdown timer of 5 minutes
             @Override
             public void onTick(long millisUntilFinished) { // See time left until countdown is finished
                 Log.v(TITLE, "Countdown: " + millisUntilFinished / 1000);
@@ -117,12 +125,13 @@ public class DestressPage extends AppCompatActivity {
 
     private void lockedOut() { // Function to call alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("1 minute is up! Back to being productive!") // After countdown timer of one minute is finished, this message will pop up
+        builder.setMessage("5 minutes is up! Back to being productive!") // After countdown timer of one minute is finished, this message will pop up
                 .setCancelable(false)
                 .setPositiveButton("Let's go!", (dialog, which) -> { // User only have one button to accept
                     Log.v(TITLE, "User Accepts");
                     Intent intent = new Intent(DestressPage.this, TaskActivity.class); // Bring user back to the task page after pressing the button
                     startActivity(intent);
+                    mediaPlayer.resume();
                 });
 
         AlertDialog alert = builder.create(); // Create alert dialog
