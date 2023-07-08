@@ -34,6 +34,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private Database db;
     private TaskAdapter homeTaskadapter;
     boolean isMuted = false;
+    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
     final String TITLE = "HomePage";
 
     @Override
@@ -94,10 +95,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskadapter.notifyDataSetChanged();
 
         // Start the BGM MediaPlayer upon app launch
-        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
         mediaPlayer.setMusicSource(this,R.raw.yihuik);
-        mediaPlayer.setLooping(true);
         mediaPlayer.start();
+        mediaPlayer.setLooping(true);
 
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
@@ -196,8 +196,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     protected void onDestroy() {
         super.onDestroy();
         // Release mediaPlayer when the app is shutdown
-        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
-        mediaPlayer.releaseMediaPlayer();
+        onDestroy();
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){

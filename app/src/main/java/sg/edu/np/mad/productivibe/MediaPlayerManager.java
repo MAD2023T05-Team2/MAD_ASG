@@ -1,9 +1,12 @@
 package sg.edu.np.mad.productivibe;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.widget.Toast;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -16,6 +19,13 @@ public class MediaPlayerManager {
     private MediaPlayerManager() {
         // Initialize MediaPlayer instance
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                // Called when the MediaPlayer is prepared and ready to start playback
+                mediaPlayer.start();
+            }
+        });
     }
 
     public static synchronized MediaPlayerManager getInstance() {
@@ -47,7 +57,22 @@ public class MediaPlayerManager {
     }
 
     public void setLooping(boolean isLooping) {
-        mediaPlayer.setLooping(isLooping);
+        try {
+            if (mediaPlayer != null) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.setLooping(isLooping);
+                } else if (mediaPlayer.isPlaying() || mediaPlayer.getCurrentPosition() > 0) {
+                    mediaPlayer.setLooping(isLooping);
+                } else {
+                    Log.e(TAG, "MediaPlayer is not in a valid state for setting looping behavior.");
+                }
+            } else {
+                Log.e(TAG, "MediaPlayer is not initialized");
+            }
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "Error setting looping behavior: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void start() {
@@ -67,10 +92,27 @@ public class MediaPlayerManager {
         mediaPlayer.release();
     }
 
-    public void releaseMediaPlayer() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
+//    // To handle scenarios where another audio is playing within the app
+//    // Utilising audio focus management, this pauses the active mediaPlayer
+//    public void requestAudioFocus() {
+//        audioManager.requestAudioFocus(
+//                focusChangeListener,
+//                AudioManager.STREAM_MUSIC,
+//                AudioManager.AUDIOFOCUS_GAIN);
+//    }
+//
+//    public void MediaPlayer(Context context) {
+//        // Initialize AudioManager and MediaFocusChange
+//        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//        focusChangeListener = new MediaFocusChange(this);
+//    }
+//
+//    public void abandonAudioFocus() {
+//        audioManager.abandonAudioFocus(focusChangeListener);
+//    }
+//
+//    public void lowerVolume() {
+//        // Lower the volume of your MediaPlayer instance
+//        mediaPlayer.setVolume(0.5f, 0.5f);
+//    }
 }
