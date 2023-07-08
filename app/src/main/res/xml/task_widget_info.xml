@@ -3,7 +3,7 @@
     android:description="@string/app_widget_description"
     android:initialKeyguardLayout="@layout/task_widget"
     android:initialLayout="@layout/task_widget"
-    android:minWidth="250dp"
+    android:minWidth="300dp"
     android:minHeight="110dp"
     android:previewImage="@drawable/example_appwidget_preview"
     android:previewLayout="@layout/task_widget"
