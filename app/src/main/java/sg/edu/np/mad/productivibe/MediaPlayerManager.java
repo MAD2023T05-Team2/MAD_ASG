@@ -11,9 +11,10 @@ import java.io.IOException;
 public class MediaPlayerManager {
     private static MediaPlayerManager instance;
     private MediaPlayer mediaPlayer;
+    private String musicSource;
 
     private MediaPlayerManager() {
-        // Initialize your MediaPlayer instance here
+        // Initialize MediaPlayer instance
         mediaPlayer = new MediaPlayer();
     }
 
@@ -22,6 +23,31 @@ public class MediaPlayerManager {
             instance = new MediaPlayerManager();
         }
         return instance;
+    }
+
+    public void setMusicSource(Context context, int rawResourceId) {
+        String newMusicSource = context.getResources().getResourceName(rawResourceId);
+
+        // Check if the new track is the same as the current one
+        if (musicSource != null && musicSource.equals(newMusicSource)) {
+            return; // If same, skip setting the new track
+        }
+        try {
+            AssetFileDescriptor fileDescriptor = context.getResources().openRawResourceFd(rawResourceId);
+            if (fileDescriptor != null) {
+                mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(), fileDescriptor.getLength());
+                mediaPlayer.prepare();
+                fileDescriptor.close();
+                // Update current music source
+                musicSource = newMusicSource;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLooping(boolean isLooping) {
+        mediaPlayer.setLooping(isLooping);
     }
 
     public void start() {
@@ -39,45 +65,12 @@ public class MediaPlayerManager {
     public void onDestroy() {
         mediaPlayer.stop();
         mediaPlayer.release();
-        //isMediaPlayerStarted = false;
     }
 
-    public void setMusicSource(Context context, int rawResourceId) {
-        String newMusicSource = context.getResources().getResourceName(rawResourceId);
-
-//        // Check if the new music source is the same as the current one
-//        String musicSource = null;
-//        if (musicSource != null && musicSource.equals(newMusicSource)) {
-//            return; // Skip setting the new music source
-//        }
-//        try {
-//            AssetFileDescriptor fileDescriptor = context.getResources().openRawResourceFd(rawResourceId);
-//            if (fileDescriptor != null) {
-//                mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(), fileDescriptor.getLength());
-//                mediaPlayer.prepare();
-//                fileDescriptor.close();
-//
-//                // Update the current music source
-//                musicSource = newMusicSource;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-    
-        try {
-            AssetFileDescriptor fileDescriptor = context.getResources().openRawResourceFd(rawResourceId);
-            if (fileDescriptor != null) {
-                mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(), fileDescriptor.getLength());
-                mediaPlayer.prepare();
-                fileDescriptor.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void releaseMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
-    }
-
-    public void setLooping(boolean isLooping) {
-        mediaPlayer.setLooping(isLooping);
     }
 }

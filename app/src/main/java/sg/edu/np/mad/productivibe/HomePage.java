@@ -33,9 +33,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private RecyclerView homeTaskRecyclerView;
     private Database db;
     private TaskAdapter homeTaskadapter;
-    MediaPlayer mediaPlayer;
     boolean isMuted = false;
-    boolean isMediaPlayerStarted = false;
     final String TITLE = "HomePage";
 
     @Override
@@ -96,17 +94,10 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskadapter.notifyDataSetChanged();
 
         // Start the BGM MediaPlayer upon app launch
-        // Check if BGM is already playing if user returns back to homepage
         MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
         mediaPlayer.setMusicSource(this,R.raw.yihuik);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
-//        if (!isMediaPlayerStarted) {
-//            mediaPlayer = MediaPlayer.create(this, R.raw.yihuik);
-//            mediaPlayer.setLooping(true); // Enable loop for continuous playing
-//            mediaPlayer.start();
-//            isMediaPlayerStarted = true;
-//        }
 
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
@@ -199,6 +190,14 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Release mediaPlayer when the app is shutdown
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
+        mediaPlayer.releaseMediaPlayer();
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){
