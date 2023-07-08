@@ -122,7 +122,7 @@
                 app:srcCompat="@drawable/sad_mood" />
 
             <ImageView
-                android:id="@+id/AngryIcon"
+                android:id="@+id/angryIcon"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_marginStart="273dp"

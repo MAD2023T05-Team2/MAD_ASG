@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private RecyclerView homeTaskRecyclerView;
     private Database db;
     private TaskAdapter homeTaskadapter;
+    boolean isMuted = false;
+    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
     final String TITLE = "HomePage";
 
     @Override
@@ -91,6 +94,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
 
+        // Start the BGM MediaPlayer upon app launch
+        mediaPlayer.setMusicSource(this,R.raw.yihuik);
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
+
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
         dropdownList.setOnClickListener(new View.OnClickListener() {
@@ -105,12 +113,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         });
 
         // Add click listeners to mood icons
-        ImageView happyIcon = findViewById(R.id.moodIcon1);
-        ImageView sadIcon = findViewById(R.id.moodIcon2);
-        ImageView neutralIcon = findViewById(R.id.moodIcon3);
-        ImageView angryIcon = findViewById(R.id.moodIcon4);
-        ImageView partyIcon = findViewById(R.id.moodIcon5);
-
+        ImageView happyIcon = findViewById(R.id.happyIcon);
+        ImageView sadIcon = findViewById(R.id.sadIcon);
+        ImageView neutralIcon = findViewById(R.id.neutralIcon);
+        ImageView angryIcon = findViewById(R.id.angryIcon);
+        ImageView partyIcon = findViewById(R.id.partyIcon);
 
         happyIcon.setOnClickListener(v -> saveMood("happy"));
         sadIcon.setOnClickListener(v -> saveMood("sad"));
@@ -118,6 +125,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
 
+        //db.deleteAllMoods(userId);
 //        Mood mood1 = new Mood(userId, "Happy", "2023-06-28 10:30:00");
 //        Mood mood2 = new Mood(userId, "Neutral", "2023-06-29 15:45:00");
 //        Mood mood3 = new Mood(userId, "Sad", "2023-07-01 09:00:00");
@@ -128,7 +136,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 //        db.addMood(mood3);
 //        db.addMood(mood4);
 //        db.addMood(mood5);
-
 
     }
 
@@ -150,10 +157,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         Toast.makeText(this, "Mood saved: " + moodValue, Toast.LENGTH_SHORT).show();
     }
 
-
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
         int itemId = item.getItemId();
         if (itemId == R.id.menu_edit_profile) {
             // To edit user's profile details
@@ -161,8 +167,14 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             return true;
         }
         else if (itemId == R.id.menu_music_settings) {
-            // To music settings
-            startActivity(new Intent(HomePage.this, MusicSettingsPage.class));
+            // Toggles between play/pause of BGM
+            if (isMuted) {
+                mediaPlayer.resume();
+                isMuted = false;
+            } else {
+                mediaPlayer.pause();
+                isMuted = true;
+            }
             return true;
         }
         else if (itemId == R.id.menu_logout) {
@@ -173,10 +185,19 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             RUDeditor.apply();
             // Back to login page
             startActivity(new Intent(HomePage.this, LoginPage.class));
+            // Release mediaPlayer when user logs out
+            mediaPlayer.onDestroy();
             Log.v(TITLE, "Logging out");
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Release mediaPlayer when the app is shutdown
+        onDestroy();
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){
