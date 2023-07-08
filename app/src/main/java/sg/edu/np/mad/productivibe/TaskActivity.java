@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -36,6 +37,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 // The task page allows users to create, edit, delete and view all their tasks at a glance
 public class TaskActivity extends AppCompatActivity{
@@ -158,24 +161,25 @@ public class TaskActivity extends AppCompatActivity{
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
             if (direction == ItemTouchHelper.LEFT) {
-                showDeleteConfirmationDialog(position); // Swipe left to delete task
+                // Swipe left to delete task
+                showDeleteConfirmationDialog(position);
             } else if (direction == ItemTouchHelper.RIGHT) {
-                showEditTaskDialog(position); // Swipe right to edit task
+                // Swipe right to edit task
+                showEditTaskDialog(position);
             }
         }
-
-//            @Override
-//            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-//                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-//                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.orange))
-//                        .addSwipeRightBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.teal))
-//                        .addSwipeLeftActionIcon(R.drawable.baseline_delete_24)
-//                        .addSwipeRightActionIcon(R.drawable.baseline_edit_calendar_24)
-//                        .create()
-//                        .decorate();
-//
-//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-//            }
+        // Decorating the swipe gesture with colors and icons so users know that they have swiped correctly
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.chart_circle_color))
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(recyclerView.getContext(), R.color.teal))
+                    .addSwipeLeftActionIcon(R.drawable.baseline_delete_24)
+                    .addSwipeRightActionIcon(R.drawable.baseline_edit_calendar_24)
+                    .create()
+                    .decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
     };
 
     // displays a dialog for creating a new task when create button is clicked

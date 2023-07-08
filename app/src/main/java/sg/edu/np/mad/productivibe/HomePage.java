@@ -95,7 +95,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskadapter.notifyDataSetChanged();
 
         // Start the BGM MediaPlayer upon app launch
-        mediaPlayer.setMusicSource(this,R.raw.yihuik);
+        mediaPlayer.setMusicSource(this,R.raw.bgm);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 

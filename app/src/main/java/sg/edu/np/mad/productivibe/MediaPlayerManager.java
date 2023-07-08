@@ -4,13 +4,13 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.io.IOException;
 
-// Singleton design so that the MediaPlayer is accessible across the whole app
+// Implemented BGM into the app to help set a calming mood for the user
+// Singleton design so that the MediaPlayer is accessible across the whole app, increases scope so that the BGM plays outside of just 1 activity.
 public class MediaPlayerManager {
     private static MediaPlayerManager instance;
     private MediaPlayer mediaPlayer;
@@ -19,6 +19,7 @@ public class MediaPlayerManager {
     private MediaPlayerManager() {
         // Initialize MediaPlayer instance
         mediaPlayer = new MediaPlayer();
+
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -29,6 +30,7 @@ public class MediaPlayerManager {
     }
 
     public static synchronized MediaPlayerManager getInstance() {
+        // Get instance to be used throughout the whole application
         if (instance == null) {
             instance = new MediaPlayerManager();
         }
@@ -75,6 +77,7 @@ public class MediaPlayerManager {
         }
     }
 
+    // To control start/pause/ending of audio lifecycle
     public void start() {
         mediaPlayer.start();
     }
@@ -91,28 +94,4 @@ public class MediaPlayerManager {
         mediaPlayer.stop();
         mediaPlayer.release();
     }
-
-//    // To handle scenarios where another audio is playing within the app
-//    // Utilising audio focus management, this pauses the active mediaPlayer
-//    public void requestAudioFocus() {
-//        audioManager.requestAudioFocus(
-//                focusChangeListener,
-//                AudioManager.STREAM_MUSIC,
-//                AudioManager.AUDIOFOCUS_GAIN);
-//    }
-//
-//    public void MediaPlayer(Context context) {
-//        // Initialize AudioManager and MediaFocusChange
-//        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//        focusChangeListener = new MediaFocusChange(this);
-//    }
-//
-//    public void abandonAudioFocus() {
-//        audioManager.abandonAudioFocus(focusChangeListener);
-//    }
-//
-//    public void lowerVolume() {
-//        // Lower the volume of your MediaPlayer instance
-//        mediaPlayer.setVolume(0.5f, 0.5f);
-//    }
 }
