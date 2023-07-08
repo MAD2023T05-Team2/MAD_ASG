@@ -28,7 +28,7 @@ public class DestressPage extends AppCompatActivity {
     private Button picturesButton;
     private Button videosButton;
     private boolean isCountdownRunning = false;
-    MediaPlayer mediaPlayer;
+    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +75,19 @@ public class DestressPage extends AppCompatActivity {
             if (!isCountdownRunning) { //If countdown timer is not running yet, start countdown timer
                 countDownTimer();
             }
+            // If pictures fragment is accessed, music continues to play
+            mediaPlayer.resume();
             replaceFragment(new PicturesFragment());
             Log.v(TITLE, "Picture fragment");
         });
 
         // When video button is pressed, video fragment is displayed
         videosButton.setOnClickListener(v -> {
-            MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
-            mediaPlayer.pause();
             if (!isCountdownRunning) { // If countdown timer is not running yet, start countdown timer
                 countDownTimer();
             }
+            // Stop the BGM when entering the fragment
+            mediaPlayer.pause();
             replaceFragment(new VideosFragment());
             Log.v(TITLE, "Video fragment");
         });
@@ -129,6 +131,7 @@ public class DestressPage extends AppCompatActivity {
                     Log.v(TITLE, "User Accepts");
                     Intent intent = new Intent(DestressPage.this, TaskActivity.class); // Bring user back to the task page after pressing the button
                     startActivity(intent);
+                    mediaPlayer.resume();
                 });
 
         AlertDialog alert = builder.create(); // Create alert dialog
