@@ -9,22 +9,21 @@
 
     <!--    CardView for User Input     -->
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLoginView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
+        android:layout_width="296dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:backgroundTint="@color/selected_item_background"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/signup"
-        app:layout_constraintEnd_toStartOf="@id/right"
-        app:layout_constraintStart_toStartOf="@id/left">
+        app:layout_constraintEnd_toEndOf="@id/right"
+        app:layout_constraintTop_toBottomOf="@+id/landingHead">
 
         <EditText
             android:id="@+id/username"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="15dp"
@@ -37,7 +36,7 @@
 
         <EditText
             android:id="@+id/password"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="73dp"
@@ -61,8 +60,8 @@
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="330dp"
-            android:layout_height="55dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_marginTop="165dp"
             android:backgroundTint="@color/teal"
@@ -71,82 +70,32 @@
             android:text="LOG IN"
             android:textSize="16sp"
             app:cornerRadius="8dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/signup"
-        android:layout_width="413dp"
-        android:layout_height="30dp"
+        android:layout_width="258dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="24dp"
         android:text="Don't have an account? Sign up"
         android:textAlignment="center"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@id/bottomscreen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/right"
-        app:layout_constraintStart_toStartOf="@id/left"
-        app:layout_constraintTop_toTopOf="@id/top">
-
-        <TextView
-            android:id="@+id/landingDesc"
-            android:layout_width="324dp"
-            android:layout_height="73dp"
-            android:layout_marginTop="16dp"
-            android:text="You're about to discover a world of productivity and endless possibilities! Let us guide you through it."
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landingHead"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/landingHead"
-            android:layout_width="306dp"
-            android:layout_height="70dp"
-            android:text="The best time to start is now!"
-            android:textAlignment="center"
-            android:textColor="@color/teal"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <ImageView
-            android:id="@+id/landingImage"
-            android:layout_width="268dp"
-            android:layout_height="278dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/landingimage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landingDesc" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="left" />
+        app:layout_constraintTop_toBottomOf="@+id/cardLoginView" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.053240743" />
+        app:layout_constraintGuide_percent="0.05352798" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left"
@@ -168,6 +117,42 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.9" />
+
+    <ImageView
+        android:id="@+id/landingImage"
+        android:layout_width="233dp"
+        android:layout_height="201dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/landingimage"
+        app:layout_constraintStart_toStartOf="@id/left"
+        app:layout_constraintTop_toBottomOf="@+id/landingHead" />
+
+    <TextView
+        android:id="@+id/landingHead"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:text="The best time to start is now!"
+        android:textAlignment="center"
+        android:textColor="@color/teal"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/right"
+        app:layout_constraintStart_toStartOf="@id/left"
+        app:layout_constraintTop_toTopOf="@id/top"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/landingDesc"
+        android:layout_width="233dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="8dp"
+        android:text="You're about to discover a world of productivity and endless possibilities! Let us guide you through it."
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@id/left"
+        app:layout_constraintTop_toBottomOf="@+id/landingImage"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
