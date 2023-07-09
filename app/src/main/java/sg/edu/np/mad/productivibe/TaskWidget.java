@@ -5,14 +5,22 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class TaskWidget extends AppWidgetProvider {
 
+    private static Database db;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -22,6 +30,20 @@ public class TaskWidget extends AppWidgetProvider {
         RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
         widgetViews.setTextViewText(R.id.todayTask, taskNo);
         Log.v("Widget", taskNo);
+
+        // Initialize the database
+        db = Database.getInstance(context.getApplicationContext());
+        
+        // Get UserId from shared preferences and put today's tasks into a list
+        //SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
+        //String userId = sharedPreferences.getString("UserId", null);
+        //List<Task> widgetTaskList = filterCurrentDate(db.getAllTasksFromUser(userId));
+
+        //RemoteViews taskView = new RemoteViews(context.getPackageName(), R.layout.widget_today_task_item);
+
+        //taskView.setTextViewText(R.id., getTaskName());
+        //taskView.setTextViewText(R.id., getTaskDueDateTime());
+
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, widgetViews);
@@ -49,5 +71,23 @@ public class TaskWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    public static List<Task> filterCurrentDate(List<Task> filteredTaskList){
+        // filter out tasks based on due data
+        List<Task> temp = new ArrayList<>();
+        // convert date object to a string with a nicer format
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        //get current date
+        Date currentDate = new Date();
+        String strDate = format.format(currentDate);
+        for (Task t : filteredTaskList){
+            // check if it contains the date
+            String comparedDate = format.format(t.getTaskDueDateTime());
+            if (comparedDate.equals(strDate)){
+                temp.add(t);
+            }
+        }
+        return temp;
     }
 }
