@@ -232,10 +232,11 @@ public class TaskActivity extends AppCompatActivity{
                             // Create a new Task object
                             SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("UserId", null);
+                            Integer uId = Integer.parseInt(userId);
                             Task newTask = new Task(
                                     taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
                                     taskDueDateTimed, Integer.parseInt(taskDurationString), "Type",
-                                    "Repeat", 0, "", 1 // saves the userID
+                                    "Repeat", 0, "", uId // saves the userID
                             );
 
                             // Add the new task to the list and database

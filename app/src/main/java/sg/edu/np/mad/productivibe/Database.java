@@ -55,7 +55,7 @@ public class Database extends SQLiteOpenHelper {
             sInstance = new Database(context.getApplicationContext());
             // creates the admin user for Google
             if (sInstance.findUserData("admin") == null){
-                User admin = new User(0,"admin","admin","admin123");
+                User admin = new User(-1,"admin","admin","admin123");
                 sInstance.addUser(admin);
                 // so that it only get created once
             }
@@ -113,7 +113,7 @@ public class Database extends SQLiteOpenHelper {
 
     // adds task to database when user creates a task
     public void addTask(Task task) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_STATUS, task.getStatus());
         values.put(COLUMN_TASK_NAME, task.getTaskName());
@@ -132,7 +132,7 @@ public class Database extends SQLiteOpenHelper {
 
     // updates and existing task in the database
     public void updateTask(Task task) {
-        SQLiteDatabase db = getWritableDatabase(); //obtains writable instance of database
+        SQLiteDatabase db = this.getWritableDatabase(); //obtains writable instance of database
         ContentValues values = new ContentValues();
         values.put(COLUMN_TASK_NAME, task.getTaskName());
         values.put(COLUMN_TASK_DESC, task.getTaskDesc());
@@ -150,7 +150,7 @@ public class Database extends SQLiteOpenHelper {
 
     // deleting task
     public void deleteTask(int taskId) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {String.valueOf(taskId)};
         db.delete("tasks", selection, selectionArgs); //performs the delete operation
@@ -160,7 +160,7 @@ public class Database extends SQLiteOpenHelper {
     // getAllTasksFromUser grabs the task for the user based on the user ID
     public List<Task> getAllTasksFromUser(String userId) {
         List<Task> taskList = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = sInstance.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM tasks where "+COLUMN_TASK_USER_ID+"='" +userId+"'", null);
         // Cursor cursor = db.query("tasks", null, null, null, null, null, null);
         // SQL query fixed so it retrieves based on the unique user ID
@@ -239,7 +239,7 @@ public class Database extends SQLiteOpenHelper {
 
     // adds mood to the database
     public void addMood(Mood mood) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = sInstance.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_MOOD_USER_ID, mood.getUserId());
         values.put(COLUMN_MOOD_MOOD, mood.getMood());
@@ -250,7 +250,7 @@ public class Database extends SQLiteOpenHelper {
 
     public List<Mood> getMoodsForLastMonth(String userId) {
         List<Mood> moodList = new ArrayList<>();
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = sInstance.getReadableDatabase();
 
         // Calculate the date one month ago from the current date
         Calendar calendar = Calendar.getInstance();
@@ -289,7 +289,7 @@ public class Database extends SQLiteOpenHelper {
 
     // function only for testing purposes
     public void deleteAllMoods(String userId) {
-        SQLiteDatabase db = getWritableDatabase();
+        SQLiteDatabase db = sInstance.getWritableDatabase();
         String selection = COLUMN_MOOD_USER_ID + " = ?";
         String[] selectionArgs = {userId};
         db.delete("moods", selection, selectionArgs); // Performs the delete operation
