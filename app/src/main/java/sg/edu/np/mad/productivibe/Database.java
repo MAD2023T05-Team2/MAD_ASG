@@ -40,13 +40,11 @@ public class Database extends SQLiteOpenHelper {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
 
+    // for mood data
     private static final String COLUMN_MOOD_ID = "mood_id";
     private static final String COLUMN_MOOD_USER_ID = "mood_user_id";
     private static final String COLUMN_MOOD_MOOD = "mood_mood";
     private static final String COLUMN_MOOD_TIMESTAMP = "mood_timestamp";
-
-
-    // ...
 
 
     //ensures that only one instance of the database is created
@@ -109,6 +107,7 @@ public class Database extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + "tasks");
         db.execSQL("DROP TABLE IF EXISTS " + "user_accounts");
+        db.execSQL("DROP TABLE IF EXISTS " + "moods");
         onCreate(db);
     }
 
@@ -288,7 +287,7 @@ public class Database extends SQLiteOpenHelper {
         return moodList;
     }
 
-    // Add this method to the Database class
+    // function only for testing purposes
     public void deleteAllMoods(String userId) {
         SQLiteDatabase db = getWritableDatabase();
         String selection = COLUMN_MOOD_USER_ID + " = ?";

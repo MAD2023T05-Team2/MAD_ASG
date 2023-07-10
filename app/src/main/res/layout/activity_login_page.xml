@@ -11,20 +11,17 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLoginView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
         android:backgroundTint="@color/selected_item_background"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/signup"
+        app:layout_constraintBottom_toTopOf="@id/signup"
         app:layout_constraintEnd_toStartOf="@id/right"
         app:layout_constraintStart_toStartOf="@id/left">
 
         <EditText
             android:id="@+id/username"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="15dp"
@@ -37,7 +34,7 @@
 
         <EditText
             android:id="@+id/password"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="73dp"
@@ -61,7 +58,7 @@
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="165dp"
@@ -75,7 +72,7 @@
 
     <TextView
         android:id="@+id/signup"
-        android:layout_width="413dp"
+        android:layout_width="0dp"
         android:layout_height="30dp"
         android:text="Don't have an account? Sign up"
         android:textAlignment="center"
@@ -87,15 +84,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@id/cardLoginView"
         app:layout_constraintEnd_toEndOf="@id/right"
         app:layout_constraintStart_toStartOf="@id/left"
         app:layout_constraintTop_toTopOf="@id/top">
 
         <TextView
             android:id="@+id/landingDesc"
-            android:layout_width="324dp"
+            android:layout_width="0dp"
             android:layout_height="73dp"
             android:layout_marginTop="16dp"
             android:text="You're about to discover a world of productivity and endless possibilities! Let us guide you through it."
@@ -110,7 +109,7 @@
 
         <TextView
             android:id="@+id/landingHead"
-            android:layout_width="306dp"
+            android:layout_width="0dp"
             android:layout_height="70dp"
             android:text="The best time to start is now!"
             android:textAlignment="center"
@@ -125,10 +124,11 @@
 
         <ImageView
             android:id="@+id/landingImage"
-            android:layout_width="268dp"
-            android:layout_height="278dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/landingimage"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,7 +157,7 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/right"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9" />
@@ -167,7 +167,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.95" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

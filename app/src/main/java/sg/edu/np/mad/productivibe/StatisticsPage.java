@@ -2,18 +2,13 @@ package sg.edu.np.mad.productivibe;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.Drawable;
+
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -22,17 +17,13 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.renderer.YAxisRenderer;
+import com.github.mikephil.charting.model.GradientColor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -154,19 +145,28 @@ public class StatisticsPage extends AppCompatActivity {
         xAxis.setDrawAxisLine(false); // Hide X-axis line
         xAxis.setDrawGridLines(false); // Hide X-axis grid lines
         xAxis.setYOffset(-2f); // Move X-axis labels higher
-        moodChart.setExtraRightOffset(20f); // Shift the last label to the left
+        moodChart.setExtraRightOffset(25f); // Shift the last label to the left
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
-                // Display only 4 evenly spaced dates
-                int index = Math.round(value);
-                if (index >= 0 && index < dates.size()) {
-                    int interval = (dates.size() - 1) / 3;
-                    if (index % interval == 0) {
+                // Check if there are 5 or fewer dates
+                if (dates.size() <= 5) {
+                    int index = Math.round(value);
+                    if (index >= 0 && index < dates.size()) {
                         return dates.get(index);
-                    } else {
-                        return "";
+                    }
+                } else {
+                    // Display only 5 evenly spaced dates
+                    int index = Math.round(value);
+                    if (index >= 0 && index < dates.size()) {
+                        int maxInterval = Math.max((dates.size() - 1) / 4, 1);
+                        int interval = Math.min((dates.size() - 1) / 4, maxInterval);
+                        if (index % interval == 0) {
+                            return dates.get(index);
+                        } else {
+                            return "";
+                        }
                     }
                 }
                 return "";
@@ -184,8 +184,6 @@ public class StatisticsPage extends AppCompatActivity {
 
         // Provide the Y-axis labels directly
         yAxis.setValueFormatter(new IndexAxisValueFormatter(moodLabels));
-
-
 
 
         // Set the minimum and maximum values for the Y-axis
@@ -243,5 +241,7 @@ public class StatisticsPage extends AppCompatActivity {
 
         return "";
     }
+
+
 
 }

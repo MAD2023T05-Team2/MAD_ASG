@@ -125,17 +125,27 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
 
-        //db.deleteAllMoods(userId);
-//        Mood mood1 = new Mood(userId, "Happy", "2023-06-28 10:30:00");
-//        Mood mood2 = new Mood(userId, "Neutral", "2023-06-29 15:45:00");
-//        Mood mood3 = new Mood(userId, "Sad", "2023-07-01 09:00:00");
-//        Mood mood4 = new Mood(userId, "Party", "2023-07-03 19:20:00");
-//        Mood mood5 = new Mood(userId, "Angry", "2023-07-05 12:10:00");
+        //FOR TESTING WILL DELETE AFTER
+//        db.deleteAllMoods(userId);
+//        Mood mood1 = new Mood(userId, "happy", "2023-06-28 10:30:00");
+//        Mood mood2 = new Mood(userId, "neutral", "2023-06-29 15:45:00");
+//        Mood mood3 = new Mood(userId, "sad", "2023-07-01 09:00:00");
+//        Mood mood4 = new Mood(userId, "party", "2023-07-03 19:20:00");
+//        Mood mood5 = new Mood(userId, "angry", "2023-07-05 12:10:00");
+//        Mood mood6 = new Mood(userId, "party", "2023-07-05 12:10:00");
+//        Mood mood7 = new Mood(userId, "angry", "2023-07-05 12:10:00");
+//        Mood mood8 = new Mood(userId, "neutral", "2023-07-06 12:10:00");
+//        Mood mood9 = new Mood(userId, "happy", "2023-07-08 12:10:00");
 //        db.addMood(mood1);
 //        db.addMood(mood2);
 //        db.addMood(mood3);
 //        db.addMood(mood4);
 //        db.addMood(mood5);
+//        db.addMood(mood6);
+//        db.addMood(mood7);
+//        db.addMood(mood8);
+//        db.addMood(mood9);
+
 
     }
 
