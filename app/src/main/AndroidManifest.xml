@@ -38,14 +38,8 @@
             android:exported="false" />
         <activity
             android:name=".LoginPage"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".DestressPage"
             android:exported="false" />
@@ -71,7 +65,15 @@
         <activity
             android:name=".MediaPlayerManager"
             android:exported="false" />
-
+        <activity
+            android:name=".SplashScreen"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".BroadcastReceiver"
             android:enabled="true"
