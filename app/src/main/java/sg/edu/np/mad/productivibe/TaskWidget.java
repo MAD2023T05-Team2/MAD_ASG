@@ -19,31 +19,29 @@ import java.util.Locale;
  * Implementation of App Widget functionality.
  */
 public class TaskWidget extends AppWidgetProvider {
-
     private static Database db;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
+        // Initialize the database
+        db = Database.getInstance(context.getApplicationContext());
+
+        // Get UserId from shared preferences and put today's tasks into a list
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
+        String userId = sharedPreferences.getString("UserId", null);
+        ArrayList <Task> widgetTaskList = new ArrayList<>();
+        widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
+
         // Construct the RemoteViews object
-        int no = 30;
+        int no = widgetTaskList.size();
         String taskNo = no + " Tasks Due Today:";
         RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
         widgetViews.setTextViewText(R.id.todayTask, taskNo);
         Log.v("Widget", taskNo);
 
-        // Initialize the database
-        db = Database.getInstance(context.getApplicationContext());
-        
-        // Get UserId from shared preferences and put today's tasks into a list
-        //SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-        //String userId = sharedPreferences.getString("UserId", null);
-        //List<Task> widgetTaskList = filterCurrentDate(db.getAllTasksFromUser(userId));
-
         //RemoteViews taskView = new RemoteViews(context.getPackageName(), R.layout.widget_today_task_item);
-
         //taskView.setTextViewText(R.id., getTaskName());
         //taskView.setTextViewText(R.id., getTaskDueDateTime());
-
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, widgetViews);

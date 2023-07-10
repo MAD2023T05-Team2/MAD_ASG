@@ -9,4 +9,8 @@
         <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
+    <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">@color/teal</item>
+    </style>
 </resources>
