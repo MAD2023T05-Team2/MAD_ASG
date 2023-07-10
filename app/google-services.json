@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "716108194194",
+    "project_id": "np-mad-asg--23",
+    "storage_bucket": "np-mad-asg--23.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716108194194:android:a983ccb61298e61b5e614b",
+        "android_client_info": {
+          "package_name": "sg.edu.np.mad.productivibe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716108194194-emls8beqrr8hbr81ls9p40373sjc1nij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiB-OGJcRThSp0UFG95tkRRbZzA9lZT8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716108194194-emls8beqrr8hbr81ls9p40373sjc1nij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
