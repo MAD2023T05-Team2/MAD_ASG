@@ -9,8 +9,10 @@ import android.util.Log;
 
 import java.io.IOException;
 
-// Implemented BGM into the app to help set a calming mood for the user
-// Singleton design so that the MediaPlayer is accessible across the whole app, increases scope so that the BGM plays outside of just 1 activity.
+/*
+Implemented BGM into the app to help set a calming mood for the user. This uses a singleton design so that the
+MediaPlayer is accessible across the whole app, increases scope so that the BGM plays outside of just 1 activity.
+ */
 public class MediaPlayerManager {
     private static MediaPlayerManager instance;
     private MediaPlayer mediaPlayer;
