@@ -12,61 +12,62 @@
     <ImageView
         android:id="@+id/registrationImage"
         android:layout_width="0dp"
-        android:layout_height="253dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="0dp"
         android:src="@drawable/registrationimage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/half_signUp"
+        app:layout_constraintEnd_toStartOf="@id/half_signUp_landscape"
+        app:layout_constraintStart_toStartOf="@id/left_signUp"
         app:layout_constraintTop_toBottomOf="@+id/banner"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/registerDesc"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Create your account"
         android:textAlignment="center"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/half_signUp_landscape"
+        app:layout_constraintStart_toStartOf="@id/left_signUp"
         app:layout_constraintTop_toBottomOf="@+id/registerHead" />
 
     <ImageView
         android:id="@+id/banner"
-        android:layout_width="181dp"
+        android:layout_width="0dp"
         android:layout_height="32dp"
         android:src="@drawable/productivibe"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/half_signUp_landscape"
+        app:layout_constraintStart_toStartOf="@id/left_signUp"
         app:layout_constraintTop_toTopOf="@id/top_signUp"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/registerHead"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginTop="16dp"
         android:text="Get Started Now"
         android:textAlignment="center"
         android:textSize="27sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrationImage" />
+        app:layout_constraintEnd_toStartOf="@id/half_signUp_landscape"
+        app:layout_constraintStart_toStartOf="@id/left_signUp"
+        app:layout_constraintTop_toBottomOf="@id/half_signUp" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardSignUpView"
         android:layout_width="0dp"
-        android:layout_height="278dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/selected_item_background"
         android:singleLine="true"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="@id/right_signUp"
-        app:layout_constraintStart_toStartOf="@id/left_signUp"
-        app:layout_constraintTop_toBottomOf="@id/half_signUp">
+        app:layout_constraintStart_toEndOf="@id/half_signUp_landscape"
+        app:layout_constraintTop_toTopOf="@id/top_signUp">
 
         <EditText
             android:id="@+id/signUpName"
@@ -133,14 +134,15 @@
 
     <TextView
         android:id="@+id/toLogin"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:text="Already have an account? Log in"
         android:textAlignment="center"
-        android:textSize="15sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/bottom_page"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@id/right_signUp"
+        app:layout_constraintStart_toStartOf="@id/half_signUp_landscape"
+        app:layout_constraintTop_toBottomOf="@+id/cardSignUpView" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_page"
@@ -176,5 +178,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.55" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/half_signUp_landscape"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.500684" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
