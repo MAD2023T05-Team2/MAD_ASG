@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -21,16 +22,16 @@ import java.util.Locale;
 public class TaskWidget extends AppWidgetProvider {
     private static Database db;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                int appWidgetId, String myPrefs, Database db) {
 
         // Initialize the database
-        db = Database.getInstance(context.getApplicationContext());
+        TaskWidget.db = Database.getInstance(context.getApplicationContext());
 
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
         String userId = sharedPreferences.getString("UserId", null);
         ArrayList <Task> widgetTaskList = new ArrayList<>();
-        widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
+        widgetTaskList = (ArrayList<Task>) filterCurrentDate(TaskWidget.db.getAllTasksFromUser(userId));
 
         // Construct the RemoteViews object
         int no = widgetTaskList.size();
@@ -39,9 +40,12 @@ public class TaskWidget extends AppWidgetProvider {
         widgetViews.setTextViewText(R.id.todayTask, taskNo);
         Log.v("Widget", taskNo);
 
-        //RemoteViews taskView = new RemoteViews(context.getPackageName(), R.layout.widget_today_task_item);
-        //taskView.setTextViewText(R.id., getTaskName());
-        //taskView.setTextViewText(R.id., getTaskDueDateTime());
+        // To display tasks using list view
+        Intent serviceIntent = new Intent(context, TaskWidgetService.class);
+        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        widgetViews.setRemoteAdapter(R.id.widgetTaskView, serviceIntent);
+        widgetViews.setEmptyView(R.id.widgetTaskView, R.id.noTasks);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, widgetViews);
@@ -57,8 +61,15 @@ public class TaskWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            // update the views and content of the widget
+            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs", db);
+
+            // notify appWidgetManager that the data has changed for the task list view in the widget
+            // triggers the onDataSetChanged() method in the RemoteViewsService
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetTaskView);
         }
+        // ensures that the superclass implementation of the onUpdate() is also executed
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
