@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -254,6 +258,21 @@ public class TaskActivity extends AppCompatActivity{
 
                             // Dismiss dialog
                             dialog.dismiss();
+
+                            // Update the widget with the new task
+                            Context context = getApplicationContext();
+                            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                            ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+                            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+                            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
+
+                            RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+                            int no = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId)).size();
+                            String taskNo = no + " Tasks Due Today:";
+                            widgetViews.setTextViewText(R.id.todayTask, taskNo);
+
+                            appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+
                         }
                     }
                 });
@@ -353,6 +372,22 @@ public class TaskActivity extends AppCompatActivity{
                         //Dismiss dialog
                         dialog.dismiss();
 
+                        // Update the widget with the edited task
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        String userId = sharedPreferences.getString("UserId", null);
+                        Context context = getApplicationContext();
+                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+                        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
+
+                        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+                        int no = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId)).size();
+                        String taskNo = no + " Tasks Due Today:";
+                        widgetViews.setTextViewText(R.id.todayTask, taskNo);
+
+                        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+
                         }
                     }
                 });
@@ -415,6 +450,22 @@ public class TaskActivity extends AppCompatActivity{
                         recyclerView.scrollToPosition(position);
                     }
                 }) .show();
+
+        // Update the widget, removing the deleted task
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("UserId", null);
+        Context context = getApplicationContext();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
+
+        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+        int no = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId)).size();
+        String taskNo = no + " Tasks Due Today:";
+        widgetViews.setTextViewText(R.id.todayTask, taskNo);
+
+        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
     }
 
     private void performSearch(String query) {
@@ -473,6 +524,24 @@ public class TaskActivity extends AppCompatActivity{
 
     public void cancelNotification() {
         alarmManager.cancel(pendingIntent);
+    }
+
+    public static List<Task> filterCurrentDate(List<Task> filteredTaskList){
+        // filter out tasks based on due data
+        List<Task> temp = new ArrayList<>();
+        // convert date object to a string with a nicer format
+        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        //get current date
+        Date currentDate = new Date();
+        String strDate = format.format(currentDate);
+        for (Task t : filteredTaskList){
+            // check if it contains the date
+            String comparedDate = format.format(t.getTaskDueDateTime());
+            if (comparedDate.equals(strDate)){
+                temp.add(t);
+            }
+        }
+        return temp;
     }
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
@@ -562,7 +631,9 @@ public class TaskActivity extends AppCompatActivity{
         } catch (ParseException e) {
             return false;
         }
-    }}
+    }
+
+}
 
 
 
