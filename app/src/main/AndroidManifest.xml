@@ -27,6 +27,15 @@
                 android:resource="@xml/task_widget_info" />
         </receiver>
 
+        <service
+            android:name=".TaskWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" >
+            <intent-filter>
+                <action android:name="android.widget.RemoteViewsService" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".VideoAdapter"
             android:exported="false" />

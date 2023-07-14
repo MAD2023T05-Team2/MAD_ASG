@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/widgetTaskName"
         style="@style/TextAppearance.AppCompat.Headline"
-        android:layout_width="250dp"
+        android:layout_width="200dp"
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
