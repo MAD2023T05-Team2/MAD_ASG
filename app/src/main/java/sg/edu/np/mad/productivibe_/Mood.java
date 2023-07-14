@@ -1,6 +1,4 @@
-package sg.edu.np.mad.productivibe;
-
-import java.util.Date;
+package sg.edu.np.mad.productivibe_;
 
 public class Mood {
     private String userId;

@@ -1,11 +1,10 @@
-package sg.edu.np.mad.productivibe;
+package sg.edu.np.mad.productivibe_;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;

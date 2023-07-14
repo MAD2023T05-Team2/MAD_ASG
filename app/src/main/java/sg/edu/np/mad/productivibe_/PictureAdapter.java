@@ -1,6 +1,5 @@
-package sg.edu.np.mad.productivibe;
+package sg.edu.np.mad.productivibe_;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

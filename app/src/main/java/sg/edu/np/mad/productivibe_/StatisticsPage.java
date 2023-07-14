@@ -1,4 +1,4 @@
-package sg.edu.np.mad.productivibe;
+package sg.edu.np.mad.productivibe_;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.Drawable;
 
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -21,7 +19,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.mikephil.charting.model.GradientColor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.ParseException;
