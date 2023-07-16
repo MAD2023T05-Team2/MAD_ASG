@@ -17,9 +17,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
 // The sign up page allows users to sign up for a new account with a unique username
 public class SignUpPage extends AppCompatActivity {
     private Database db;
+    private DatabaseReference mDatabase;
     String TITLE = "Sign Up Page";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class SignUpPage extends AppCompatActivity {
 
         // Initialize the database
         db = Database.getInstance(this);
+        FirebaseRTS DBR =  new FirebaseRTS(mDatabase);
 
         // Event handler for the create account button
         createAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +75,8 @@ public class SignUpPage extends AppCompatActivity {
                         userData.setUserName(signUpUser);
                         userData.setPassWord(signUpPass);
                         db.addUser(userData);
+                        // add into firebase database
+                        DBR.writeNewUser(userData);
 
                         // Remember the UserId (Value obtained after registration)
                         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);

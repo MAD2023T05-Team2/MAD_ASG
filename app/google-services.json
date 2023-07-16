@@ -1,15 +1,16 @@
 {
   "project_info": {
     "project_number": "716108194194",
+    "firebase_url": "https://np-mad-asg--23-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "np-mad-asg--23",
     "storage_bucket": "np-mad-asg--23.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:716108194194:android:a983ccb61298e61b5e614b",
+        "mobilesdk_app_id": "1:716108194194:android:aa27325799ee99095e614b",
         "android_client_info": {
-          "package_name": "sg.edu.np.mad.productivibe"
+          "package_name": "sg.edu.np.mad.productivibe_"
         }
       },
       "oauth_client": [
