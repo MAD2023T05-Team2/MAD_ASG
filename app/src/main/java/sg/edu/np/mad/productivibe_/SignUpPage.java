@@ -28,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 
 // The sign up page allows users to sign up for a new account with a unique username
 public class SignUpPage extends AppCompatActivity {
-    private Database db;
     private DatabaseReference dbr;
     private FirebaseDatabase fdb;
     String TITLE = "Sign Up Page";
@@ -58,7 +57,6 @@ public class SignUpPage extends AppCompatActivity {
         Button createAccountButton = findViewById(R.id.createAccountButton);
 
         // Initialize the database
-        db = Database.getInstance(this);
         fdb = FirebaseDatabase.getInstance();
         dbr = fdb.getReference("users");
 
