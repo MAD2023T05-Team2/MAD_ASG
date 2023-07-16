@@ -18,12 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 // Login page allows users to login with an existing account
 // Remember me feature is available, it will not prompt the user for login details the next time they enter the app unless they had chose to log out previously
 public class LoginPage extends AppCompatActivity {
     private Database db;
-    private DatabaseReference mDatabase;
+    private DatabaseReference dbr;
+    private FirebaseDatabase fdb;
     String TITLE = "Login Page";
 
     @Override
@@ -61,7 +63,8 @@ public class LoginPage extends AppCompatActivity {
 
         // Initialize the database
         db = Database.getInstance(this);
-        FirebaseRTS DBR =  new FirebaseRTS(mDatabase);
+        fdb = FirebaseDatabase.getInstance();
+        dbr = fdb.getReference("users");
 
 
         // Event handler for the login button

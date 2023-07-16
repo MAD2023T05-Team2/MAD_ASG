@@ -53,12 +53,6 @@ public class Database extends SQLiteOpenHelper {
         // uses the app's context, ensuring no accidental data / activity's context leakage
         if (sInstance == null){
             sInstance = new Database(context.getApplicationContext());
-            // creates the admin user for Google
-            if (sInstance.findUserData("admin") == null){
-                User admin = new User(-1,"admin","admin","admin123");
-                sInstance.addUser(admin);
-                // so that it only get created once
-            }
         }
         return sInstance;
     }
