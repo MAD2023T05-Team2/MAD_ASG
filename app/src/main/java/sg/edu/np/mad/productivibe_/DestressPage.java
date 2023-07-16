@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class DestressPage extends AppCompatActivity {
             }
             return false;
         });
+
     }
 
     @Override
@@ -140,6 +142,16 @@ public class DestressPage extends AppCompatActivity {
         super.onDestroy();
         if (isCountdownRunning) {
             myCountdown.cancel(); // Cancel the countdown timer if it is running to prevent memory leaks
+        }
+    }
+
+    // cancel the countdown timer when going into another activity
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isCountdownRunning && myCountdown != null) {
+            myCountdown.cancel();
+            isCountdownRunning = false;
         }
     }
 

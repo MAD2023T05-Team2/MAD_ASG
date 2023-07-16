@@ -22,11 +22,13 @@
         android:id="@+id/pageHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="Wtv stats this page is for!!"
+        android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/timerTrackerStatsHeader"
+        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -44,13 +46,15 @@
         android:id="@+id/productivityCard"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="10dp"
         android:backgroundTint="@color/homepage_card"
         app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
         app:flow_verticalAlign="center"
+        app:layout_constraintBottom_toTopOf="@id/moodTrackerStatsHeader"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/timerTrackerStatsHeader" />
 
@@ -69,13 +73,15 @@
         android:id="@+id/moodCard"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="10dp"
         android:backgroundTint="@color/homepage_card"
         app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
         app:flow_verticalAlign="center"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/moodTrackerStatsHeader" />
 
@@ -83,9 +89,9 @@
         android:id="@+id/moodChart"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/moodCard"
-        app:layout_constraintEnd_toEndOf="@id/moodCard"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintStart_toStartOf="@id/moodCard"
+        app:layout_constraintTop_toBottomOf="@id/moodTrackerStatsHeader"
         app:layout_constraintTop_toTopOf="@id/moodCard" />
 
 
