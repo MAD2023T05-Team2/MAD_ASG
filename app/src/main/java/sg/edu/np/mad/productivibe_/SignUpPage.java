@@ -1,5 +1,6 @@
 package sg.edu.np.mad.productivibe_;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -17,9 +18,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 // The sign up page allows users to sign up for a new account with a unique username
 public class SignUpPage extends AppCompatActivity {
-    private Database db;
+    private DatabaseReference dbr;
+    private FirebaseDatabase fdb;
     String TITLE = "Sign Up Page";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +57,79 @@ public class SignUpPage extends AppCompatActivity {
         Button createAccountButton = findViewById(R.id.createAccountButton);
 
         // Initialize the database
-        db = Database.getInstance(this);
+        fdb = FirebaseDatabase.getInstance();
+        dbr = fdb.getReference("users");
 
         // Event handler for the create account button
         createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                                   @Override
+                                                   public void onClick(View v) {
 
-                String signUpN = signUpName.getText().toString();
-                String signUpUser = signUpUsername.getText().toString();
-                String signUpPass = signUpPassword.getText().toString();
-                String cfmPass = cfmPassword.getText().toString();
+                                                       String signUpN = signUpName.getText().toString();
+                                                       String signUpUser = signUpUsername.getText().toString();
+                                                       String signUpPass = signUpPassword.getText().toString();
+                                                       String cfmPass = cfmPassword.getText().toString();
+
+                                                       // rewrite of previous checks so that it relies on firebase
+                                                       if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("") || cfmPass.equals("")) { // Check if all fields are filled
+                                                           Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
+                                                           Log.v(TITLE, "Empty Fields");
+                                                       } else {
+                                                           // account should be able to be created
+                                                           dbr.orderByChild("userName").equalTo(signUpUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                               @Override
+                                                               public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                   if (dataSnapshot.exists()) {
+                                                                       //username exists in database
+                                                                       Toast.makeText(getApplicationContext(), "Username already exists! Please choose another username!", Toast.LENGTH_SHORT).show();
+                                                                       Log.v(TITLE, "username exists");
+                                                                   } else {
+                                                                       // username does not exist
+                                                                       // can create and write into database
+                                                                       // Check if password and confirmed password matches
+                                                                       if (cfmPass.equals(signUpPass)) // Check if password and confirmed password matches
+                                                                       {
+                                                                           User userData = new User();
+                                                                           userData.setName(signUpN);
+                                                                           userData.setUserName(signUpUser);
+                                                                           userData.setPassWord(signUpPass);
+                                                                           // add into firebase database
+                                                                           dbr.child(signUpUser).setValue(userData);
+                                                                           Log.d(TITLE,"added into firebase database");
+
+                                                                           // Remember the UserId (Value obtained after registration)
+                                                                           SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                                                                           SharedPreferences.Editor UNeditor = sharedPreferences.edit();
+                                                                           UNeditor.putString("UserId", userData.getUserId());
+                                                                           UNeditor.apply();
+
+                                                                           // Bring to login page to login after successful sign up
+                                                                           Intent signupToLogin = new Intent(SignUpPage.this, LoginPage.class);
+                                                                           startActivity(signupToLogin);
+                                                                           Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+                                                                           Log.v(TITLE, "Account creation successful");
+                                                                       }
+                                                                       else{
+                                                                           // confirm password do not match
+                                                                           Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                                                                           Log.v(TITLE, "Password: " + signUpPass + " Confirmed password: "+ cfmPass);
+                                                                       }
+                                                                   }
+                                                               }
+
+                                                               @Override
+                                                               public void onCancelled(@NonNull DatabaseError error) {
+                                                                   // if it doesnt work
+                                                                   Log.d(TITLE, error.getMessage());
+
+                                                               }
+                                                           });
+                                                       }
+                                                   }
+                                               });
+
+                /*
+                // using sqllitehelper
 
                 if (signUpN.equals("") || signUpUser.equals("") || signUpPass.equals("") || cfmPass.equals("")) { // Check if all fields are filled
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
@@ -71,6 +143,9 @@ public class SignUpPage extends AppCompatActivity {
                         userData.setUserName(signUpUser);
                         userData.setPassWord(signUpPass);
                         db.addUser(userData);
+                        // add into firebase database
+                        dbr.child(signUpUser).setValue(userData);
+                        Log.d(TITLE,"added into firebase database");
 
                         // Remember the UserId (Value obtained after registration)
                         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -98,6 +173,7 @@ public class SignUpPage extends AppCompatActivity {
                 }
             }
         });
+                 */
 
         // Event handler for the login text view
         toLogin.setOnClickListener(new View.OnClickListener(){
@@ -107,5 +183,4 @@ public class SignUpPage extends AppCompatActivity {
                 startActivity(signupToLogin);
             }
         });
-    }
-}
+}}
