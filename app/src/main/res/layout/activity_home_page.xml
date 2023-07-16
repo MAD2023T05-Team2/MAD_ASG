@@ -18,28 +18,19 @@
         app:backgroundTint="@color/selected_item_background"
         app:menu="@menu/bottom_menu" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="78dp"
-        android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.124"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="48dp"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/cardMoodView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="18dp"
-            android:textSize="34sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@id/dropdownList"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/dropdownList"
@@ -47,104 +38,94 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/baseline_more_horiz_24"
+        android:contentDescription="Edit Particulars and Music Settings"
         android:onClick="showPopup"
+        android:src="@drawable/baseline_more_horiz_24"
         app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="Edit Particulars and Music Settings" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="1dp"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardMoodView"
+        android:layout_width="347dp"
+        android:layout_height="103dp"
+        android:backgroundTint="@color/homepage_card"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@id/cardLoginView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintVertical_bias="0.175">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardMoodView"
-            android:layout_width="347dp"
-            android:layout_height="103dp"
-            android:backgroundTint="@color/homepage_card"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+        <TextView
+            android:id="@+id/moodPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="12dp"
+            android:text="How are you feeling today?"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/moodPrompt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="12dp"
-                android:text="How are you feeling today?"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/happyIcon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="87dp"
+            android:layout_marginTop="42dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moodPrompt"
+            app:srcCompat="@drawable/happy_mood" />
 
-            <ImageView
-                android:id="@+id/happyIcon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="87dp"
-                android:layout_marginTop="42dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/moodPrompt"
-                app:srcCompat="@drawable/happy_mood" />
+        <ImageView
+            android:id="@+id/neutralIcon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="149dp"
+            android:layout_marginTop="42dp"
+            app:layout_constraintStart_toEndOf="@id/happyIcon"
+            app:layout_constraintTop_toBottomOf="@id/moodPrompt"
+            app:srcCompat="@drawable/neutral_mood" />
 
-            <ImageView
-                android:id="@+id/neutralIcon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="149dp"
-                android:layout_marginTop="42dp"
-                app:layout_constraintStart_toEndOf="@id/happyIcon"
-                app:layout_constraintTop_toBottomOf="@id/moodPrompt"
-                app:srcCompat="@drawable/neutral_mood" />
+        <ImageView
+            android:id="@+id/sadIcon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="211dp"
+            android:layout_marginTop="42dp"
+            app:layout_constraintStart_toEndOf="@id/neutralIcon"
+            app:layout_constraintTop_toBottomOf="@id/moodPrompt"
+            app:srcCompat="@drawable/sad_mood" />
 
-            <ImageView
-                android:id="@+id/sadIcon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="211dp"
-                android:layout_marginTop="42dp"
-                app:layout_constraintStart_toEndOf="@id/neutralIcon"
-                app:layout_constraintTop_toBottomOf="@id/moodPrompt"
-                app:srcCompat="@drawable/sad_mood" />
+        <ImageView
+            android:id="@+id/angryIcon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="273dp"
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moodPrompt"
+            app:srcCompat="@drawable/angry_mood" />
 
-            <ImageView
-                android:id="@+id/angryIcon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="273dp"
-                android:layout_marginTop="42dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/moodPrompt"
-                app:srcCompat="@drawable/angry_mood" />
+        <ImageView
+            android:id="@+id/partyIcon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moodPrompt"
+            app:srcCompat="@drawable/party_mood" />
 
-            <ImageView
-                android:id="@+id/partyIcon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="42dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/moodPrompt"
-                app:srcCompat="@drawable/party_mood" />
-
-        </androidx.cardview.widget.CardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLoginView"
@@ -154,11 +135,11 @@
         android:backgroundTint="@color/homepage_card"
         app:cardCornerRadius="25dp"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardMoodView"
         app:layout_constraintVertical_bias="0.695">
 
         <TextView
