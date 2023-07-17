@@ -100,9 +100,9 @@ public class LoginPage extends AppCompatActivity {
                                     // Remember the name so that it will be displayed on the home page
                                     SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                                     SharedPreferences.Editor RNeditor = rememberName.edit();
-                                    RNeditor.putString("Name", sn.child("userName").getValue().toString());
-                                    RNeditor.putString("Username", sn.child("Name").getValue().toString());
-                                    //RNeditor.putString("UserId", userData.getUserId());
+                                    RNeditor.putString("Name", sn.child("name").getValue().toString());
+                                    RNeditor.putString("Username", sn.child("userName").getValue().toString());
+                                    RNeditor.putString("UserId", sn.child("userId").getValue().toString());
                                     RNeditor.apply();
 
                                     // Remember whether the user chose the app to remember their login details

@@ -37,6 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +56,8 @@ public class TaskActivity extends AppCompatActivity{
     public TaskAdapter adapter;
     private List<Task> taskList;
     private Database taskDatabase;
+    private DatabaseReference taskDBR;
+    private FirebaseDatabase fdb;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
     String TITLE = "Task Activity";
@@ -108,6 +112,10 @@ public class TaskActivity extends AppCompatActivity{
         taskDatabase = Database.getInstance(this);
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserId", null);
+
+        String userName = sharedPreferences.getString("Username", null);
+        fdb = FirebaseDatabase.getInstance();
+        taskDBR = fdb.getReference("tasks/" + userName);
         // Load tasks from the database
         taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
         adapter.notifyDataSetChanged();
@@ -251,6 +259,7 @@ public class TaskActivity extends AppCompatActivity{
 //                            taskList.add(newTask);
 //                            taskDatabase.addTask(newTask);
 
+    // create taak and add into the database
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
@@ -314,6 +323,7 @@ public class TaskActivity extends AppCompatActivity{
                             // Create a new Task object
                             SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("UserId", null);
+                            String userName = sharedPreferences.getString("Username", null);
                             Integer uId = Integer.parseInt(userId);
                             Task newTask = new Task(
                                     taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
@@ -323,6 +333,9 @@ public class TaskActivity extends AppCompatActivity{
 
                             // Add the new task to the list and database
                             taskList.add(newTask);
+                            // into firebase
+                            taskDBR.child(String.valueOf(newTask.getId())).setValue(newTask);
+
                             taskDatabase.addTask(newTask);
 
                             // Notify the adapter of the new task
