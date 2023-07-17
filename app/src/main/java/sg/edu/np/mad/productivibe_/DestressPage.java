@@ -51,7 +51,7 @@ public class DestressPage extends AppCompatActivity {
                 startActivity(new Intent(DestressPage.this, HomePage.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
-                //startActivity(new Intent(DestressPage.this, TaskTimerPage.class));
+                startActivity(new Intent(DestressPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(DestressPage.this, TaskActivity.class));
