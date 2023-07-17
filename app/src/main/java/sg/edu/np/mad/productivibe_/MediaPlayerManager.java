@@ -90,6 +90,15 @@ public class MediaPlayerManager {
         }
     }
 
+//    // Methods to get and set the isMusicPlaying flag
+//    public boolean isMusicPlaying() {
+//        return isMusicPlaying;
+//    }
+//
+//    public void setMusicPlaying(boolean isPlaying) {
+//        isMusicPlaying = isPlaying;
+//    }
+
     // To control start/pause/ending of audio lifecycle
     public void start() {
         if (!isMusicPlaying) {

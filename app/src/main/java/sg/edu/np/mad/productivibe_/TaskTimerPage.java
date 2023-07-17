@@ -4,10 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class TaskTimerPage extends AppCompatActivity implements TaskTimerListener {
     private static final int TIMER_LENGTH = 30;
@@ -18,6 +22,31 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_timer_page);
+
+        // Setting the navigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_timer);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.bottom_timer) {
+                return true;
+            } else if (itemId == R.id.bottom_tasks) {
+                startActivity(new Intent(TaskTimerPage.this, TaskActivity.class));
+                return true;
+            } else if (itemId == R.id.bottom_destress) {
+                startActivity(new Intent(TaskTimerPage.this, DestressPage.class));
+                return true;
+            } else if (itemId == R.id.bottom_home) {
+                startActivity(new Intent(TaskTimerPage.this, HomePage.class));
+                return true;
+            } else if (itemId == R.id.bottom_statistics) {
+                startActivity(new Intent(TaskTimerPage.this, StatisticsPage.class));
+                return true;
+            }
+            return false;
+        });
+
         mTimerView = (TaskTimerView) findViewById(R.id.timer);
         mTimerView.setTaskTimerListener(this);
         final Button timerStartButton = (Button) findViewById(R.id.btn_timer_start);

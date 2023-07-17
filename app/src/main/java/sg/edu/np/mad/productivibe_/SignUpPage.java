@@ -120,6 +120,7 @@ public class SignUpPage extends AppCompatActivity {
                                                                @Override
                                                                public void onCancelled(@NonNull DatabaseError error) {
                                                                    // if it doesnt work
+                                                                   Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
                                                                    Log.d(TITLE, error.getMessage());
 
                                                                }

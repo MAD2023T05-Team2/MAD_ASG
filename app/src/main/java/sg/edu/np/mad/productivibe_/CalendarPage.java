@@ -42,7 +42,7 @@ public class CalendarPage extends AppCompatActivity {
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.bottom_calendar) {
+            if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(CalendarPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
@@ -51,7 +51,7 @@ public class CalendarPage extends AppCompatActivity {
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(CalendarPage.this, HomePage.class));
                 return true;
-            } else if (itemId == R.id.bottom_timer) {
+            } else if (itemId == R.id.bottom_destress) {
                 startActivity(new Intent(CalendarPage.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_statistics) {

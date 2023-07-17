@@ -24,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RemoteViews;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +38,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +52,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,10 +87,10 @@ public class TaskActivity extends AppCompatActivity{
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(TaskActivity.this, HomePage.class));
                 return true;
-            } else if (itemId == R.id.bottom_calendar) {
+            } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(TaskActivity.this, TaskTimerPage.class));
                 return true;
-            } else if (itemId == R.id.bottom_timer) {
+            } else if (itemId == R.id.bottom_destress) {
                 startActivity(new Intent(TaskActivity.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_statistics) {
@@ -121,6 +127,10 @@ public class TaskActivity extends AppCompatActivity{
 
         // Load tasks from the database
         taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
+
+        //taskList = getTaskfromFirebase(taskDBR);
+
+
         // Separate pending and completed tasks
         List<Task> pendingTasks = new ArrayList<>();
         List<Task> completedTasks = new ArrayList<>();
@@ -226,6 +236,66 @@ public class TaskActivity extends AppCompatActivity{
         }
     };
 
+    // displays a dialog for creating a new task when create button is clicked
+//    private void showCreateTaskDialog() {
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
+//
+//        EditText taskNameEditText = dialogView.findViewById(R.id.taskNameEditText);
+//        EditText taskDescEditText = dialogView.findViewById(R.id.taskDescriptionEditText);
+//        EditText taskDurationEditText = dialogView.findViewById(R.id.taskDurationEditText);
+//        EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
+//        EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
+//
+//        // Constructing the dialog
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Create Task");
+//        builder.setView(dialogView);
+//
+//        builder.setPositiveButton("Create", null); // Set initially disabled
+//        builder.setNegativeButton("Cancel", null);
+//        final AlertDialog dialog = builder.create();
+//
+//        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+//            @Override
+//            public void onShow(DialogInterface dialogInterface) {
+//                Button createButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+//                createButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        // Validate user input
+//                        boolean isValidInput = validateInput(taskNameEditText, taskDescEditText, taskDateTimeEditText, taskDueDateTimeEditText, taskDurationEditText);
+//                        if (isValidInput) {
+//                            String taskName = taskNameEditText.getText().toString().trim();
+//                            String taskDesc = taskDescEditText.getText().toString().trim();
+//                            String taskDurationString = taskDurationEditText.getText().toString().trim();
+//                            String taskDateTime = taskDateTimeEditText.getText().toString().trim();
+//                            String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
+//
+//                            // Convert the edited date strings to Date objects
+//                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+//                            Date taskDateTimed = null;
+//                            Date taskDueDateTimed = null;
+//                            try {
+//                                taskDateTimed = dateFormat.parse(taskDateTime);
+//                                taskDueDateTimed = dateFormat.parse(taskDueDateTime);
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                            // Create a new Task object
+//                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+//                            String userId = sharedPreferences.getString("UserId", null);
+//                            Integer uId = Integer.parseInt(userId);
+//                            Task newTask = new Task(
+//                                    taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
+//                                    taskDueDateTimed, Integer.parseInt(taskDurationString), "Type",
+//                                    "Repeat", 0, "", uId // saves the userID
+//                            );
+//
+//                            // Add the new task to the list and database
+//                            taskList.add(newTask);
+//                            taskDatabase.addTask(newTask);
 
     // create task and add into the database
     private void showCreateTaskDialog() {
@@ -444,6 +514,9 @@ public class TaskActivity extends AppCompatActivity{
                             task.setTaskDateTime(editedDate);
                             task.setTaskDueDateTime(editedDueDate);
 
+                            // update firebase
+                            taskDBR.child(String.valueOf(task.getId())).setValue(task);
+
                             taskDatabase.updateTask(task);
                         // Notify the adapter of the updated task
                         adapter.notifyItemChanged(position);
@@ -520,6 +593,11 @@ public class TaskActivity extends AppCompatActivity{
         adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
         Database taskDatabase = Database.getInstance(this); // Get the TaskDatabase instance
+
+        // delete from database
+        DatabaseReference toRemove = taskDBR.child(String.valueOf(task.getId()));
+        toRemove.removeValue();
+
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
         if (pendingIntent != null && alarmManager != null) {
@@ -706,10 +784,30 @@ public class TaskActivity extends AppCompatActivity{
                 calendar.set(Calendar.MINUTE, minute);
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String selectedTime = timeFormat.format(calendar.getTime());
-                editText.setText(editText.getText().toString().split(" ")[0] + " " + selectedTime);  // Use existing date with the selected time
+                editText.setText(editText.getText() + " " + selectedTime);
             }
         }, hour, minute, false);
         timePickerDialog.show();
+    }
+
+    // Method to call all tasks from firebase
+    private void getTaskfromFirebase(List<Task> taskLs, DatabaseReference databaseReference){
+        // the reference is already pointing the user
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // this method is call to get the realtime
+                // updates in the data.
+                GenericTypeIndicator<List<Task>> t = new GenericTypeIndicator<List<Task>>() {};
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // calling on cancelled method when we receive
+                // any error or we are not able to get the data.
+                Toast.makeText(TaskActivity.this, "Failed to retrieve tasks from database.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
