@@ -26,7 +26,7 @@ public class DestressPage extends AppCompatActivity {
     private Button picturesButton;
     private Button videosButton;
     private boolean isCountdownRunning = false;
-    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
+    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

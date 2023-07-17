@@ -31,8 +31,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private RecyclerView homeTaskRecyclerView;
     private Database db;
     private TaskAdapter homeTaskadapter;
-    boolean isMuted = false;
-    MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
+    private boolean isMuted;
     final String TITLE = "HomePage";
 
     @Override
@@ -40,6 +39,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance(this);
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -64,6 +64,24 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             }
             return false;
         });
+
+        // Check if it's the first launch of the app
+        SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        boolean isFirstLaunch = sharedPreferences2.getBoolean("IsFirstLaunch", true);
+        Log.v(TITLE, "IsFirstLaunch value: " + isFirstLaunch);
+
+        if (isFirstLaunch) {
+            // Start the BGM MediaPlayer and save the state in SharedPreferences
+            mediaPlayer.setMusicSource(this, R.raw.bgm);
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+            Log.v(TITLE, "Music Started!");
+
+            // Mark that the app has already been launched for the first time
+            SharedPreferences.Editor editor = sharedPreferences2.edit();
+            editor.putBoolean("IsFirstLaunch", false);
+            editor.apply();
+        }
     }
 
     @Override
@@ -91,11 +109,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskadapter = new TaskAdapter(homeTaskList);
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
-
-        // Start the BGM MediaPlayer upon app launch
-        mediaPlayer.setMusicSource(this,R.raw.bgm);
-        mediaPlayer.start();
-        mediaPlayer.setLooping(true);
 
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
@@ -167,7 +180,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance();
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance(this);
         int itemId = item.getItemId();
         if (itemId == R.id.menu_edit_profile) {
             // To edit user's profile details
@@ -179,9 +192,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             if (isMuted) {
                 mediaPlayer.resume();
                 isMuted = false;
+                Log.v(TITLE, "Music Resumed");
             } else {
                 mediaPlayer.pause();
                 isMuted = true;
+                Log.v(TITLE, "Music Paused");
             }
             return true;
         }
@@ -191,6 +206,13 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             SharedPreferences.Editor RUDeditor = rememberUserData.edit();
             RUDeditor.putString("Remember", "False");
             RUDeditor.apply();
+
+            // Mark that the app back to launching for the first time
+            SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences2.edit();
+            editor.putBoolean("IsFirstLaunch", true);
+            editor.apply();
+
             // Back to login page
             startActivity(new Intent(HomePage.this, LoginPage.class));
             // Release mediaPlayer when user logs out
@@ -206,6 +228,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         super.onDestroy();
         // Release mediaPlayer when the app is shutdown
         onDestroy();
+        // Mark that the app back to launching for the first time
+        SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences2.edit();
+        editor.putBoolean("IsFirstLaunch", true);
+        editor.apply();
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){

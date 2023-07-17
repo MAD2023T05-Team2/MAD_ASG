@@ -3,6 +3,7 @@ package sg.edu.np.mad.productivibe_;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -14,27 +15,37 @@ Implemented BGM into the app to help set a calming mood for the user. This uses 
 MediaPlayer is accessible across the whole app, increases scope so that the BGM plays outside of just 1 activity.
  */
 public class MediaPlayerManager {
+    private static final String PREFS_NAME = "MediaPlayerPrefs";
+    private static final String IS_MUSIC_PLAYING_KEY = "IsMusicPlaying";
+    private SharedPreferences sharedPreferences;
     private static MediaPlayerManager instance;
     private MediaPlayer mediaPlayer;
     private String musicSource;
+    private boolean isMusicPlaying;
 
-    private MediaPlayerManager() {
+    private MediaPlayerManager(Context context) {
         // Initialize MediaPlayer instance
         mediaPlayer = new MediaPlayer();
+        sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        // Retrieve the previous state of the music player
+        isMusicPlaying = sharedPreferences.getBoolean(IS_MUSIC_PLAYING_KEY, true);
 
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 // Called when the MediaPlayer is prepared and ready to start playback
-                mediaPlayer.start();
+                if (isMusicPlaying) {
+                    mediaPlayer.start();
+                }
             }
         });
     }
 
-    public static synchronized MediaPlayerManager getInstance() {
+    public static synchronized MediaPlayerManager getInstance(Context context) {
         // Get instance to be used throughout the whole application
         if (instance == null) {
-            instance = new MediaPlayerManager();
+            instance = new MediaPlayerManager(context);
         }
         return instance;
     }
@@ -81,19 +92,45 @@ public class MediaPlayerManager {
 
     // To control start/pause/ending of audio lifecycle
     public void start() {
-        mediaPlayer.start();
+        if (!isMusicPlaying) {
+            mediaPlayer.start();
+            isMusicPlaying = true;
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(IS_MUSIC_PLAYING_KEY, true);
+            editor.apply();
+        }
     }
 
     public void pause() {
-        mediaPlayer.pause();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            isMusicPlaying = false;
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(IS_MUSIC_PLAYING_KEY, false);
+            editor.apply();
+        }
     }
 
     public void resume() {
-        mediaPlayer.start();
+        if (!isMusicPlaying) {
+            mediaPlayer.start();
+            isMusicPlaying = true;
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(IS_MUSIC_PLAYING_KEY, true);
+            editor.apply();
+        }
     }
 
     public void onDestroy() {
         mediaPlayer.stop();
         mediaPlayer.release();
+        isMusicPlaying = false;
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_MUSIC_PLAYING_KEY, false);
+        editor.apply();
     }
 }
