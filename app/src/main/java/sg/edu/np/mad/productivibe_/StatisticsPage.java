@@ -51,13 +51,13 @@ public class StatisticsPage extends AppCompatActivity {
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(StatisticsPage.this, HomePage.class));
                 return true;
-            } else if (itemId == R.id.bottom_calendar) {
+            } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(StatisticsPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(StatisticsPage.this, TaskActivity.class));
                 return true;
-            } else if (itemId == R.id.bottom_timer) {
+            } else if (itemId == R.id.bottom_destress) {
                 startActivity(new Intent(StatisticsPage.this, DestressPage.class));
                 return true;
             }

@@ -81,10 +81,10 @@ public class TaskActivity extends AppCompatActivity{
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(TaskActivity.this, HomePage.class));
                 return true;
-            } else if (itemId == R.id.bottom_calendar) {
+            } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(TaskActivity.this, TaskTimerPage.class));
                 return true;
-            } else if (itemId == R.id.bottom_timer) {
+            } else if (itemId == R.id.bottom_destress) {
                 startActivity(new Intent(TaskActivity.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_statistics) {

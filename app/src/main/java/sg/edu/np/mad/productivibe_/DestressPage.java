@@ -41,16 +41,16 @@ public class DestressPage extends AppCompatActivity {
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_timer);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_destress);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.bottom_timer) {
+            if (itemId == R.id.bottom_destress) {
                 return true;
             } else if (itemId == R.id.bottom_home) {
                 startActivity(new Intent(DestressPage.this, HomePage.class));
                 return true;
-            } else if (itemId == R.id.bottom_calendar) {
+            } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(DestressPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
@@ -75,7 +75,6 @@ public class DestressPage extends AppCompatActivity {
                 countDownTimer();
             }
             // If pictures fragment is accessed, music continues to play
-            mediaPlayer.resume();
             replaceFragment(new PicturesFragment());
             Log.v(TITLE, "Picture fragment");
         });

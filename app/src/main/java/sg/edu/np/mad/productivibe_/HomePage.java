@@ -39,7 +39,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
-        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance(this);
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -52,10 +51,10 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(HomePage.this, TaskActivity.class));
                 return true;
-            } else if (itemId == R.id.bottom_calendar) {
+            } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(HomePage.this, TaskTimerPage.class));
                 return true;
-            } else if (itemId == R.id.bottom_timer) {
+            } else if (itemId == R.id.bottom_destress) {
                 startActivity(new Intent(HomePage.this, DestressPage.class));
                 return true;
             } else if (itemId == R.id.bottom_statistics) {
@@ -65,6 +64,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             return false;
         });
 
+        MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance(this);
         // Check if it's the first launch of the app
         SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         boolean isFirstLaunch = sharedPreferences2.getBoolean("IsFirstLaunch", true);
@@ -227,12 +227,13 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     protected void onDestroy() {
         super.onDestroy();
         // Release mediaPlayer when the app is shutdown
-        onDestroy();
         // Mark that the app back to launching for the first time
         SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences2.edit();
         editor.putBoolean("IsFirstLaunch", true);
         editor.apply();
+
+        onDestroy();
     }
 
     public List<Task> filterCurrentDate(List<Task> filteredTaskList){
