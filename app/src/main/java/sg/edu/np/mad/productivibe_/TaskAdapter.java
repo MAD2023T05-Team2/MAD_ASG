@@ -79,6 +79,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     task.setStatus("Pending");
                     taskDatabase.updateTask(task);
                 }
+                updateList(taskList);
             }
         });
 

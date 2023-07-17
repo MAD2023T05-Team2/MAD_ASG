@@ -82,7 +82,7 @@ public class TaskActivity extends AppCompatActivity{
                 startActivity(new Intent(TaskActivity.this, HomePage.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
-                startActivity(new Intent(TaskActivity.this, CalendarPage.class));
+                //startActivity(new Intent(TaskActivity.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(TaskActivity.this, DestressPage.class));
