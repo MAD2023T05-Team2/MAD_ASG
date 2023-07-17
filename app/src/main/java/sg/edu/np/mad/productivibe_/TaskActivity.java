@@ -226,68 +226,8 @@ public class TaskActivity extends AppCompatActivity{
         }
     };
 
-    // displays a dialog for creating a new task when create button is clicked
-//    private void showCreateTaskDialog() {
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
-//
-//        EditText taskNameEditText = dialogView.findViewById(R.id.taskNameEditText);
-//        EditText taskDescEditText = dialogView.findViewById(R.id.taskDescriptionEditText);
-//        EditText taskDurationEditText = dialogView.findViewById(R.id.taskDurationEditText);
-//        EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
-//        EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
-//
-//        // Constructing the dialog
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Create Task");
-//        builder.setView(dialogView);
-//
-//        builder.setPositiveButton("Create", null); // Set initially disabled
-//        builder.setNegativeButton("Cancel", null);
-//        final AlertDialog dialog = builder.create();
-//
-//        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialogInterface) {
-//                Button createButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//                createButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        // Validate user input
-//                        boolean isValidInput = validateInput(taskNameEditText, taskDescEditText, taskDateTimeEditText, taskDueDateTimeEditText, taskDurationEditText);
-//                        if (isValidInput) {
-//                            String taskName = taskNameEditText.getText().toString().trim();
-//                            String taskDesc = taskDescEditText.getText().toString().trim();
-//                            String taskDurationString = taskDurationEditText.getText().toString().trim();
-//                            String taskDateTime = taskDateTimeEditText.getText().toString().trim();
-//                            String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
-//
-//                            // Convert the edited date strings to Date objects
-//                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-//                            Date taskDateTimed = null;
-//                            Date taskDueDateTimed = null;
-//                            try {
-//                                taskDateTimed = dateFormat.parse(taskDateTime);
-//                                taskDueDateTimed = dateFormat.parse(taskDueDateTime);
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                            // Create a new Task object
-//                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//                            String userId = sharedPreferences.getString("UserId", null);
-//                            Integer uId = Integer.parseInt(userId);
-//                            Task newTask = new Task(
-//                                    taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
-//                                    taskDueDateTimed, Integer.parseInt(taskDurationString), "Type",
-//                                    "Repeat", 0, "", uId // saves the userID
-//                            );
-//
-//                            // Add the new task to the list and database
-//                            taskList.add(newTask);
-//                            taskDatabase.addTask(newTask);
 
-    // create taak and add into the database
+    // create task and add into the database
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
@@ -320,6 +260,12 @@ public class TaskActivity extends AppCompatActivity{
                 showDatePicker(taskDueDateTimeEditText);
             }
         });
+
+        // Set focusable to false to avoid requiring a second click for date picker
+        taskDateTimeEditText.setFocusable(false);
+        taskDateTimeEditText.setClickable(true);
+        taskDueDateTimeEditText.setFocusable(false);
+        taskDueDateTimeEditText.setClickable(true);
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -455,6 +401,12 @@ public class TaskActivity extends AppCompatActivity{
                 showDatePicker(taskDueDateTimeEditText);
             }
         });
+
+        // Set focusable to false to avoid requiring a second click for date picker
+        taskDateTimeEditText.setFocusable(false);
+        taskDateTimeEditText.setClickable(true);
+        taskDueDateTimeEditText.setFocusable(false);
+        taskDueDateTimeEditText.setClickable(true);
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -686,13 +638,39 @@ public class TaskActivity extends AppCompatActivity{
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        final String existingDateTime = editText.getText().toString().trim();
+        String existingDate = "";
+        String existingTime = "";
+
+        if (!existingDateTime.isEmpty()) {
+            try {
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                Date parsedDateTime = dateTimeFormat.parse(existingDateTime);
+                calendar.setTime(parsedDateTime);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                existingDate = dateFormat.format(parsedDateTime);
+                existingTime = timeFormat.format(parsedDateTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final String finalExistingTime = existingTime;
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 calendar.set(year, month, day);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
                 String selectedDate = dateFormat.format(calendar.getTime());
-                editText.setText(selectedDate);
+
+                // Restore the existing time
+                String selectedDateTime = selectedDate + " " + finalExistingTime;
+                editText.setText(selectedDateTime);
                 showTimePicker(editText, calendar);
             }
         }, year, month, day);
@@ -704,6 +682,23 @@ public class TaskActivity extends AppCompatActivity{
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
+        String existingTime = editText.getText().toString().trim();
+        if (existingTime.contains(" ")) {
+            String[] timeParts = existingTime.split(" ");
+            if (timeParts.length == 2) {
+                String timeString = timeParts[1];
+                try {
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    Date parsedTime = timeFormat.parse(timeString);
+                    calendar.setTime(parsedTime);
+                    hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    minute = calendar.get(Calendar.MINUTE);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
@@ -711,11 +706,13 @@ public class TaskActivity extends AppCompatActivity{
                 calendar.set(Calendar.MINUTE, minute);
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String selectedTime = timeFormat.format(calendar.getTime());
-                editText.setText(editText.getText() + " " + selectedTime);
+                editText.setText(editText.getText().toString().split(" ")[0] + " " + selectedTime);  // Use existing date with the selected time
             }
         }, hour, minute, false);
         timePickerDialog.show();
     }
+
+
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
 
