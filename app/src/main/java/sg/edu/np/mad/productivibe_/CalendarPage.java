@@ -38,11 +38,12 @@ public class CalendarPage extends AppCompatActivity {
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_calendar);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_tasks);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.bottom_calendar) {
+                startActivity(new Intent(CalendarPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(CalendarPage.this, TaskActivity.class));

@@ -53,7 +53,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 startActivity(new Intent(HomePage.this, TaskActivity.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
-                startActivity(new Intent(HomePage.this, CalendarPage.class));
+                startActivity(new Intent(HomePage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_timer) {
                 startActivity(new Intent(HomePage.this, DestressPage.class));

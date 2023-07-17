@@ -12,6 +12,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -76,6 +79,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     task.setStatus("Pending");
                     taskDatabase.updateTask(task);
                 }
+                updateList(taskList);
             }
         });
 
@@ -96,9 +100,35 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
 
     // update the dataset used for adapter
-    public void updateList(List<Task> updatedList){
-        this.taskList = updatedList;
+    public void updateList(List<Task> updatedList) {
+        // Separate pending and completed tasks
+        List<Task> pendingTasks = new ArrayList<>();
+        List<Task> completedTasks = new ArrayList<>();
+
+        for (Task task : updatedList) {
+            if (task.getStatus().equals("Pending")) {
+                pendingTasks.add(task);
+            } else {
+                completedTasks.add(task);
+            }
+        }
+
+        // Sort pending tasks by due date
+        Collections.sort(pendingTasks, new Comparator<Task>() {
+            @Override
+            public int compare(Task task1, Task task2) {
+                return task1.getTaskDueDateTime().compareTo(task2.getTaskDueDateTime());
+            }
+        });
+
+        // Clear the task list and add pending tasks first, followed by completed tasks
+        taskList.clear();
+        taskList.addAll(pendingTasks);
+        taskList.addAll(completedTasks);
+
+        notifyDataSetChanged();
     }
+
 
     public void clearList(){
         int size = taskList.size();

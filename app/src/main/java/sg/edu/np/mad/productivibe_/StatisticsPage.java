@@ -52,7 +52,7 @@ public class StatisticsPage extends AppCompatActivity {
                 startActivity(new Intent(StatisticsPage.this, HomePage.class));
                 return true;
             } else if (itemId == R.id.bottom_calendar) {
-                startActivity(new Intent(StatisticsPage.this, CalendarPage.class));
+                startActivity(new Intent(StatisticsPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(StatisticsPage.this, TaskActivity.class));
