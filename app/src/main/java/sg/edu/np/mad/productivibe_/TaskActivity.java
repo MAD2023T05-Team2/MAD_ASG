@@ -44,6 +44,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -116,8 +118,34 @@ public class TaskActivity extends AppCompatActivity{
         String userName = sharedPreferences.getString("Username", null);
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
+
         // Load tasks from the database
         taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
+        // Separate pending and completed tasks
+        List<Task> pendingTasks = new ArrayList<>();
+        List<Task> completedTasks = new ArrayList<>();
+
+        for (Task task : taskList) {
+            if (task.getStatus().equals("Pending")) {
+                pendingTasks.add(task);
+            } else {
+                completedTasks.add(task);
+            }
+        }
+
+        // Sort pending tasks by due date
+        Collections.sort(pendingTasks, new Comparator<Task>() {
+            @Override
+            public int compare(Task task1, Task task2) {
+                return task1.getTaskDueDateTime().compareTo(task2.getTaskDueDateTime());
+            }
+        });
+
+        // Clear the task list and add pending tasks first, followed by completed tasks
+        taskList.clear();
+        taskList.addAll(pendingTasks);
+        taskList.addAll(completedTasks);
+
         adapter.notifyDataSetChanged();
 
         // Implementation of swipe gesture for editing/deletion of tasks
