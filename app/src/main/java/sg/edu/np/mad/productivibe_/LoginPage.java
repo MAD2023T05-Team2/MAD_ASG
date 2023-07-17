@@ -1,5 +1,6 @@
 package sg.edu.np.mad.productivibe_;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,13 +18,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 // Login page allows users to login with an existing account
 // Remember me feature is available, it will not prompt the user for login details the next time they enter the app unless they had chose to log out previously
 public class LoginPage extends AppCompatActivity {
-    private Database db;
     private DatabaseReference dbr;
     private FirebaseDatabase fdb;
     String TITLE = "Login Page";
@@ -62,7 +65,6 @@ public class LoginPage extends AppCompatActivity {
         CheckBox rememberMe = findViewById(R.id.rememberMe);
 
         // Initialize the database
-        db = Database.getInstance(this);
         fdb = FirebaseDatabase.getInstance();
         dbr = fdb.getReference("users");
 
@@ -74,13 +76,71 @@ public class LoginPage extends AppCompatActivity {
                 String userName = username.getText().toString();
                 String pass = password.getText().toString();
 
-                User userData = db.findUserData(userName);
-
                 if (userName.equals("") || pass.equals("")) { // Check if all fields are entered
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                     Log.v(TITLE, "Not all fields are entered");
                 }
+                else{
+                    // check if user name already exists in database
+                    dbr.orderByChild("userName").equalTo(userName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                // username exists
+                                // takes the first data snapshot in the returned iterable
+                                // as each username is unique ; 1 username regardless
+                                DataSnapshot sn= snapshot.getChildren().iterator().next();
+                                // check password
+                                if (sn.child("passWord").getValue().equals(pass)){
+                                    // if password matches
+                                    // Successful Login and bring user to the homepage
+                                    Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
+                                    startActivity(loginToHome);
 
+                                    // Remember the name so that it will be displayed on the home page
+                                    SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                    SharedPreferences.Editor RNeditor = rememberName.edit();
+                                    RNeditor.putString("Name", sn.child("userName").getValue().toString());
+                                    RNeditor.putString("Username", sn.child("Name").getValue().toString());
+                                    //RNeditor.putString("UserId", userData.getUserId());
+                                    RNeditor.apply();
+
+                                    // Remember whether the user chose the app to remember their login details
+                                    boolean isChecked = rememberMe.isChecked();
+                                    SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                    SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+
+                                    if (isChecked) {
+                                        RUDeditor.putString("Remember", "True");
+                                        Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        RUDeditor.putString("Remember", "False");
+                                        Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                                else{
+                                    // wrong password
+                                    Toast.makeText(getApplicationContext(), "Password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
+                                    Log.v(TITLE, "Wrong password");
+                                }
+                            }
+                            else{
+                                // username does not exist
+                                // prompt them to create an account
+                                Toast.makeText(getApplicationContext(), "No such username found. Please try again.", Toast.LENGTH_SHORT).show();
+                                Log.v(TITLE, "No such username");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // error in calling firebase database
+                            Log.d(TITLE, error.getMessage());
+                        }
+                    });
+                }
+/*
                 else if (userData != null){ // Username exists in database
                     if (userData.getPassWord().equals(pass)){ // Check if the password entered is the same as the one in the database
                         // Successful Login and bring user to the homepage
@@ -120,8 +180,11 @@ public class LoginPage extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "No such username found. Please try again.", Toast.LENGTH_SHORT).show();
                     Log.v(TITLE, "No such username");
                 }
+                */
             }
         });
+
+
 
         // Event handler for the signup text view
         signup.setOnClickListener(new View.OnClickListener(){
