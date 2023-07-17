@@ -136,6 +136,7 @@ public class LoginPage extends AppCompatActivity {
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             // error in calling firebase database
+                            Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
                             Log.d(TITLE, error.getMessage());
                         }
                     });
