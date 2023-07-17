@@ -14,6 +14,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +37,8 @@ public class TaskTimerView extends View {
     private float mCircleSweepAngle;
 
     private ValueAnimator mTimerAnimator;
+
+    private TaskTimerListener mListener;
 
     public TaskTimerView(Context context) {
         this(context, null);
@@ -67,6 +71,10 @@ public class TaskTimerView extends View {
         mEraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
+    public void setTaskTimerListener(TaskTimerListener listener){
+        this.mListener = listener;
+    }
+
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -97,6 +105,16 @@ public class TaskTimerView extends View {
         canvas.drawBitmap(mBitmap, 0, 0, null);
     }
 
+    public long getDuration(){
+        if(mTimerAnimator.isRunning()){
+            return mTimerAnimator.getCurrentPlayTime()/1000;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
     public void start(int secs) {
         stop();
 
@@ -107,6 +125,8 @@ public class TaskTimerView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 drawProgress((float) animation.getAnimatedValue());
+                mListener.onTaskTimerUpdate(getDuration());
+
             }
         });
         mTimerAnimator.start();
@@ -118,6 +138,18 @@ public class TaskTimerView extends View {
             mTimerAnimator = null;
 
             drawProgress(0f);
+        }
+    }
+
+    public void pause(){
+        if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
+            mTimerAnimator.pause();
+        }
+    }
+
+    public void resume(){
+        if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
+            mTimerAnimator.resume();
         }
     }
 
