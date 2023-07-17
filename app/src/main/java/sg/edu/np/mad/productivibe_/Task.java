@@ -33,6 +33,8 @@ public class Task {
         this.recurringDuration = recurringDuration;
         this.taskUserID = taskUserID;
     }
+    // null task construct
+    public Task(){};
 
     public int getId() {
         return Id;

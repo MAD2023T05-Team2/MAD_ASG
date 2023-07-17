@@ -24,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RemoteViews;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +38,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +52,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -121,6 +127,10 @@ public class TaskActivity extends AppCompatActivity{
 
         // Load tasks from the database
         taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
+
+        //taskList = getTaskfromFirebase(taskDBR);
+
+
         // Separate pending and completed tasks
         List<Task> pendingTasks = new ArrayList<>();
         List<Task> completedTasks = new ArrayList<>();
@@ -492,6 +502,9 @@ public class TaskActivity extends AppCompatActivity{
                             task.setTaskDateTime(editedDate);
                             task.setTaskDueDateTime(editedDueDate);
 
+                            // update firebase
+                            taskDBR.child(String.valueOf(task.getId())).setValue(task);
+
                             taskDatabase.updateTask(task);
                         // Notify the adapter of the updated task
                         adapter.notifyItemChanged(position);
@@ -568,6 +581,11 @@ public class TaskActivity extends AppCompatActivity{
         adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
         Database taskDatabase = Database.getInstance(this); // Get the TaskDatabase instance
+
+        // delete from database
+        DatabaseReference toRemove = taskDBR.child(String.valueOf(task.getId()));
+        toRemove.removeValue();
+
         taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
         if (pendingIntent != null && alarmManager != null) {
@@ -716,6 +734,28 @@ public class TaskActivity extends AppCompatActivity{
         }, hour, minute, false);
         timePickerDialog.show();
     }
+
+    // Method to call all tasks from firebase
+    private void getTaskfromFirebase(List<Task> taskLs, DatabaseReference databaseReference){
+        // the reference is already pointing the user
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // this method is call to get the realtime
+                // updates in the data.
+                GenericTypeIndicator<List<Task>> t = new GenericTypeIndicator<List<Task>>() {};
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // calling on cancelled method when we receive
+                // any error or we are not able to get the data.
+                Toast.makeText(TaskActivity.this, "Failed to retrieve tasks from database.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
 
