@@ -43,7 +43,7 @@ public class CalendarPage extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.bottom_calendar) {
-                // startActivity(new Intent(CalendarPage.this, TaskTimerPage.class));
+                startActivity(new Intent(CalendarPage.this, TaskTimerPage.class));
                 return true;
             } else if (itemId == R.id.bottom_tasks) {
                 startActivity(new Intent(CalendarPage.this, TaskActivity.class));
