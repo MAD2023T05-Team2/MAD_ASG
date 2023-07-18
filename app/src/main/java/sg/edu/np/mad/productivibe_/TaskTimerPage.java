@@ -138,9 +138,6 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
         // Call the getAllTasksFromUser method to retrieve tasks for the specified user ID.
         List<Task> taskList = taskDatabase.getAllTasksFromUser(userId);
 
-        // Load tasks from the database
-        taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
-
         // Create a list of task names to display in the dialog
         ArrayList<String> taskNames = new ArrayList<>();
         for (Task task : taskList) {
@@ -159,8 +156,8 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 // When a task is selected, update the timer duration with the selected task's duration
                 if (which >= 0 && which < taskList.size()) {
                     Task selectedTask = taskList.get(which);
-                    long taskDuration = selectedTask.getTaskDuration();
-                    updateTimerDuration((int) taskDuration);
+                    long taskDurationSeconds = selectedTask.getTaskDuration();
+                    updateTimerDuration((int) taskDurationSeconds);
                 }
             }
         });
@@ -169,14 +166,14 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
         builder.show();
     }
     // Method to update the timer duration
-    private void updateTimerDuration(int duration) {
+    private void updateTimerDuration(int durationSeconds) {
         // Update the TIMER_LENGTH with the selected task's duration
-        TIMER_LENGTH = duration;
+        TIMER_LENGTH = durationSeconds / 60;
 
         // Update the TextView to display the new timer duration
         final TextView countDownText = findViewById(R.id.countdown);
-        long minute = TIMER_LENGTH / 60;
-        long seconds = TIMER_LENGTH % 60;
+        long minute = TIMER_LENGTH;
+        long seconds = durationSeconds % 60;
         String minuteStr = ((minute < 10) ? "0" : "") + minute;
         String secondsStr = ((seconds < 10) ? "0" : "") + seconds;
 
