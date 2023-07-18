@@ -2,9 +2,12 @@ package sg.edu.np.mad.productivibe_;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +15,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskTimerPage extends AppCompatActivity implements TaskTimerListener {
-    private static final int TIMER_LENGTH = 30;
+    private static int TIMER_LENGTH = 30;
     private boolean isPaused = false;
     private boolean isRunning = false;
     private TaskTimerView mTimerView;
@@ -22,6 +29,17 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_timer_page);
+
+        // Find the "Select Task" button in the layout file
+        // and set an onClickListener for it
+        Button selectTaskButton = findViewById(R.id.button);
+        selectTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the method to show the dialog when the button is clicked
+                showTaskSelectionDialog();
+            }
+        });
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -108,6 +126,63 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 countDownText.setText(originalMinuteStr + ":" + originalSecondsStr);
             }
         });
+    }
+
+    // Method to show the task selection dialog
+    private void showTaskSelectionDialog() {
+        // Initialize the database
+        Database taskDatabase = Database.getInstance(this);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("UserId", null);
+
+        // Call the getAllTasksFromUser method to retrieve tasks for the specified user ID.
+        List<Task> taskList = taskDatabase.getAllTasksFromUser(userId);
+
+        // Load tasks from the database
+        taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
+
+        // Create a list of task names to display in the dialog
+        ArrayList<String> taskNames = new ArrayList<>();
+        for (Task task : taskList) {
+            taskNames.add(task.getTaskName());
+        }
+
+        // Convert the ArrayList to a simple array
+        String[] taskNamesArray = taskNames.toArray(new String[0]);
+
+        // Create an AlertDialog with the list of task names
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Task");
+        builder.setItems(taskNamesArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // When a task is selected, update the timer duration with the selected task's duration
+                if (which >= 0 && which < taskList.size()) {
+                    Task selectedTask = taskList.get(which);
+                    long taskDuration = selectedTask.getTaskDuration();
+                    updateTimerDuration((int) taskDuration);
+                }
+            }
+        });
+
+        // Show the dialog
+        builder.show();
+    }
+    // Method to update the timer duration
+    private void updateTimerDuration(int duration) {
+        // Update the TIMER_LENGTH with the selected task's duration
+        TIMER_LENGTH = duration;
+
+        // Update the TextView to display the new timer duration
+        final TextView countDownText = findViewById(R.id.countdown);
+        long minute = TIMER_LENGTH / 60;
+        long seconds = TIMER_LENGTH % 60;
+        String minuteStr = ((minute < 10) ? "0" : "") + minute;
+        String secondsStr = ((seconds < 10) ? "0" : "") + seconds;
+
+        if (countDownText != null) {
+            countDownText.setText(minuteStr + ":" + secondsStr);
+        }
     }
 
     @Override
