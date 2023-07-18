@@ -42,7 +42,7 @@
                 android:id="@+id/timer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:circleColor="@color/timer_circle"
+                app:circleColor="@color/lighter_teal"
                 tools:layout_editor_absoluteY="651dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

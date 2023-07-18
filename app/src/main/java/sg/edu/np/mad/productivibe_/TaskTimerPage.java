@@ -82,8 +82,15 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 mTimerView.stop();
                 isRunning = false;
                 timerStartButton.setText("Start");
+                final TextView countDownText = (TextView) findViewById(R.id.countdown);
+                // Reset the countdown text to its original value
+                long originalDurationSeconds = 0;
+                long originalMinute = originalDurationSeconds / 60;
+                long originalSeconds = originalDurationSeconds % 60;
+                String originalMinuteStr = ((originalMinute < 10) ? "0" : "") + originalMinute;
+                String originalSecondsStr = ((originalSeconds < 10) ? "0" : "") + originalSeconds;
+                countDownText.setText(originalMinuteStr + ":" + originalSecondsStr);
             }
-
         });
     }
 
