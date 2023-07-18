@@ -15,7 +15,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:backgroundTint="@color/selected_item_background"
-        app:menu="@menu/bottom_menu" />
+        app:menu="@menu/bottom_menu" >
+
+        <LinearLayout
+            android:id="@+id/btm_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -31,8 +40,12 @@
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Task" />
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:backgroundTint="@color/teal"
+            android:text="Click here to Select Task!" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -43,14 +56,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:circleColor="@color/lighter_teal"
-                tools:layout_editor_absoluteY="651dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.526"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.498"
-                />
+                app:layout_constraintVertical_bias="0.183" />
 
             <TextView
                 android:id="@+id/countdown"
@@ -63,36 +74,42 @@
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/timer"
-                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintHorizontal_bias="0.482"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.52" />
-            <LinearLayout
-                android:id="@+id/btm_layout"
+                app:layout_constraintVertical_bias="0.39" />
+
+            <Button
+                android:id="@+id/btn_timer_start"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="220dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="118dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/teal"
+                android:text="Start"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timer" />
 
-                <Button
-                    android:id="@+id/btn_timer_start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:layout_weight="1"
-                    android:text="Start" />
+            <Button
+                android:id="@+id/btn_timer_reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="220dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="118dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/teal"
+                android:text="Reset"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timer" />
 
-                <Button
-                    android:id="@+id/btn_timer_reset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:layout_weight="1"
-                    android:text="Reset" />
-
-            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </LinearLayout>
 

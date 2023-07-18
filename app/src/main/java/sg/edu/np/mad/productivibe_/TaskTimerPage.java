@@ -54,7 +54,6 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
         timerStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(isRunning){
                     if(isPaused){
                         timerStartButton.setText("Pause");
@@ -69,8 +68,7 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 else{
                     mTimerView.start(TIMER_LENGTH);
                     isRunning = true;
-                    timerStartButton.setText("Pause");
-
+                    timerStartButton.setText("Resume");
                 }
             }
 
