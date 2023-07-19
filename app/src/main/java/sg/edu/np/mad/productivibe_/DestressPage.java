@@ -166,7 +166,6 @@ public class DestressPage extends AppCompatActivity {
     public static class DestressMessage extends Fragment { //Destress message fragment
         View view;
         ImageView gif;
-        TextView destressQuote;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -176,44 +175,9 @@ public class DestressPage extends AppCompatActivity {
             gif = view.findViewById(R.id.frog_gif);
             // Adding the gif here using Glide library
             Glide.with(this).asGif().load(R.drawable.frog).into(gif);
-            destressQuote = view.findViewById(R.id.destressQuote);
             return view;
         }
 
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-            // Create a new instance of RequestManagerAPI
-            RequestManagerAPI requestManagerAPI = new RequestManagerAPI(requireContext());
-
-            // Make the API request and handle the response using a Callback object
-            requestManagerAPI.getRandomQuote(new Callback<QuoteResponse>() {
-                @Override
-                public void onResponse(Call<QuoteResponse> call, Response<QuoteResponse> response) {
-                    if (response.isSuccessful()) {
-                        QuoteResponse randomQuote = response.body();
-                        if (randomQuote != null) {
-                            // Get the quote content and author from the response
-                            String content = randomQuote.getContent();
-                            String author = randomQuote.getAuthor();
-
-                            // Update the TextViews with the quote content and author
-                            destressQuote.setText(content + " ~"+author);
-                        }
-                    } else {
-                        // Handle error if the request was not successful
-                        destressQuote.setText("Failed to fetch quote.");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<QuoteResponse> call, Throwable t) {
-                    // Handle failure (e.g., network error)
-                    destressQuote.setText("Network error. Please try again later.");
-                }
-            });
-        }
     }
 }
 

@@ -18,4 +18,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/destressQuote"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="50dp"
+        android:fontFamily="@font/eb_garamond"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text=""
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
