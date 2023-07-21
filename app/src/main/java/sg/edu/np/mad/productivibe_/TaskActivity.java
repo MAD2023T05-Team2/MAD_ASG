@@ -43,6 +43,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -55,6 +56,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -117,7 +119,7 @@ public class TaskActivity extends AppCompatActivity{
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Initialize the database
-        taskDatabase = Database.getInstance(this);
+        //taskDatabase = Database.getInstance(this);
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("UserId", null);
 
@@ -126,9 +128,64 @@ public class TaskActivity extends AppCompatActivity{
         taskDBR = fdb.getReference("tasks/" + userName);
 
         // Load tasks from the database
-        taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
+        //taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
 
         //taskList = getTaskfromFirebase(taskDBR);
+        // read in list of objects
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                /*
+                for (DataSnapshot sn : snapshot.getChildren()){
+                    // not the most elegant but it should work
+                    int id = Integer.parseInt(sn.child("id").getValue(Long.class));
+                    String status = sn.child("id").getValue(String.class);
+                    String taskName = sn.child("taskName").getValue(String.class);
+                    String taskDesc = sn.child("taskDesc").getValue(String.class);
+                    String taskDateTime = sn.child("taskDateTime").getValue(String.class);
+                    String taskDueDateTime = sn.child("taskDueDateTime").getValue(String.class);
+                    long taskDuration = sn.child("taskDuration").getValue(long.class);
+                    String taskType = sn.child("taskType").getValue(String.class);
+                    String repeat = sn.child("repeat").getValue(String.class);
+                    int recurringId = Integer.parseInt(Objects.requireNonNull(sn.child("recurringId").getValue(long.class)));
+                    String recurringDuration = sn.child("recurringDuration").getValue(String.class);
+                    int taskUserID = Integer.parseInt(Objects.requireNonNull(sn.child("taskUserID").getValue(long.class)));
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                    Date taskDateTimed = null;
+                    Date taskDueDateTimed = null;
+                    try {
+                        taskDateTimed = dateFormat.parse(taskDateTime);
+                        taskDueDateTimed = dateFormat.parse(taskDueDateTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Task task = new Task(id, status, taskName, taskDesc, taskDateTimed,
+                            taskDueDateTimed, taskDuration, taskType,
+                            repeat, recurringId, recurringDuration, taskUserID);
+                    taskList.add(task);
+                }
+
+                */
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    Task t = sn.getValue(Task.class);
+                    taskList.add(t);
+                }
+                Log.d("FIREBASE",String.valueOf(taskList.size()));
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Log.d(TITLE, error.getMessage());
+            }
+        });
+
+        adapter.notifyDataSetChanged();
+        Log.d(TITLE,String.valueOf(taskList.size()));
 
 
         // Separate pending and completed tasks
@@ -348,15 +405,13 @@ public class TaskActivity extends AppCompatActivity{
                             String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
 
                             // Convert the edited date strings to Date objects
+
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                            Date taskDateTimed = null;
-                            Date taskDueDateTimed = null;
-                            try {
-                                taskDateTimed = dateFormat.parse(taskDateTime);
-                                taskDueDateTimed = dateFormat.parse(taskDueDateTime);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            String taskDateTimed = taskDateTime;
+                            String taskDueDateTimed = taskDueDateTime;
+                            // change format to parse if cannot
+                            //taskDateTimed = dateFormat.format(taskDateTime);
+                            //taskDueDateTimed = dateFormat.format(taskDueDateTime);
 
                             // Create a new Task object
                             SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -370,11 +425,15 @@ public class TaskActivity extends AppCompatActivity{
                             );
 
                             // Add the new task to the list and database
-                            taskList.add(newTask);
+                            //taskList.add(newTask);
                             // into firebase
-                            taskDBR.child(String.valueOf(newTask.getId())).setValue(newTask);
+                            String FBtaskId = String.valueOf(newTask.getId());
+                            taskDBR.child(FBtaskId).setValue(newTask);
+                            //save the simple format for easier retrieval
+                            taskDBR.child(FBtaskId).child("taskDateTime").setValue(taskDateTime);
+                            taskDBR.child(FBtaskId).child("taskDueDateTime").setValue(taskDueDateTime);
 
-                            taskDatabase.addTask(newTask);
+                            //taskDatabase.addTask(newTask);
 
                             // Notify the adapter of the new task
                             adapter.notifyItemInserted(taskList.size() - 1);
@@ -396,7 +455,7 @@ public class TaskActivity extends AppCompatActivity{
                             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
 
                             RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-                            int no = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId)).size();
+                            int no = filterCurrentDate(taskList).size();
                             String taskNo = no + " Tasks Due Today:";
                             widgetViews.setTextViewText(R.id.todayTask, taskNo);
 
@@ -485,14 +544,10 @@ public class TaskActivity extends AppCompatActivity{
 
                             // Convert the edited date strings to Date objects
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                            Date editedDate = null;
-                            Date editedDueDate = null;
-                            try {
-                                editedDate = dateFormat.parse(editedTaskDate);
-                                editedDueDate = dateFormat.parse(editedTaskDueDate);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+                            String editedDate = null;
+                            String editedDueDate = null;
+                            editedDate = dateFormat.format(editedTaskDate);
+                            editedDueDate = dateFormat.format(editedTaskDueDate);
 
                             // Update the task in the list and database
                             Task task = taskList.get(position);
@@ -530,7 +585,7 @@ public class TaskActivity extends AppCompatActivity{
                         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
 
                         RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-                        int no = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId)).size();
+                        int no = filterCurrentDate(taskList).size();
                         String taskNo = no + " Tasks Due Today:";
                         widgetViews.setTextViewText(R.id.todayTask, taskNo);
 
@@ -614,7 +669,7 @@ public class TaskActivity extends AppCompatActivity{
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
 
         RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-        int no = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId)).size();
+        int no = filterCurrentDate(taskList).size();
         String taskNo = no + " Tasks Due Today:";
         widgetViews.setTextViewText(R.id.todayTask, taskNo);
 
@@ -634,8 +689,8 @@ public class TaskActivity extends AppCompatActivity{
             for (Task task : taskList) {
                 String taskName = task.getTaskName().toLowerCase();
                 String taskDesc = task.getTaskDesc().toLowerCase();
-                String taskDateTime = dateFormat.format(task.getTaskDateTime()).toLowerCase();
-                String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime()).toLowerCase();
+                String taskDateTime = task.getTaskDateTime().toLowerCase();
+                String taskDueDateTime = task.getTaskDueDateTime().toLowerCase();
                 String taskDuration = String.valueOf(task.getTaskDuration());
 
                 if (taskName.contains(lowerCaseQuery) || taskDesc.contains(lowerCaseQuery) ||
@@ -651,7 +706,15 @@ public class TaskActivity extends AppCompatActivity{
 
         public void sendPushNotification(Task task) {
         Calendar deadline = Calendar.getInstance();
-        deadline.setTime(task.getTaskDateTime()); // Set deadline based on user input
+        // convert string to datetime
+        Date deadlineTiming = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+            try {
+                deadlineTiming = dateFormat.parse(task.getTaskDateTime());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        deadline.setTime(deadlineTiming); // Set deadline based on user input
         Calendar currentTime = Calendar.getInstance(); // Retrieve current time
         long milliDiff = deadline.getTimeInMillis() - currentTime.getTimeInMillis();
         double days = milliDiff / (24 * 60 * 60 * 1000);
@@ -679,19 +742,26 @@ public class TaskActivity extends AppCompatActivity{
         alarmManager.cancel(pendingIntent);
     }
 
-    public static List<Task> filterCurrentDate(List<Task> filteredTaskList){
+    public List<Task> filterCurrentDate(List<Task> filteredTaskList) {
         // filter out tasks based on due data
         List<Task> temp = new ArrayList<>();
         // convert date object to a string with a nicer format
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         //get current date
         Date currentDate = new Date();
         String strDate = format.format(currentDate);
-        for (Task t : filteredTaskList){
+        for (Task t : filteredTaskList) {
             // check if it contains the date
-            String comparedDate = format.format(t.getTaskDueDateTime());
-            if (comparedDate.equals(strDate)){
-                temp.add(t);
+            String taskDueDate = t.getTaskDueDateTime();
+            try {
+                Date dueDate = dateFormat.parse(taskDueDate);
+                String comparedDate = format.format(dueDate);
+                if (comparedDate.equals(strDate)) {
+                    temp.add(t);
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
             }
         }
         return temp;

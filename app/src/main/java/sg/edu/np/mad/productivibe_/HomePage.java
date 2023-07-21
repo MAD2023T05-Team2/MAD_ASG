@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -241,14 +242,20 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         List<Task> temp = new ArrayList<>();
         // convert date object to a string with a nicer format
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         //get current date
         Date currentDate = new Date();
         String strDate = format.format(currentDate);
         for (Task t : filteredTaskList){
             // check if it contains the date
-            String comparedDate = format.format(t.getTaskDueDateTime());
-            if (comparedDate.equals(strDate)){
-                temp.add(t);
+            String taskDueDate = t.getTaskDueDateTime();
+            try {
+                Date dueDate = dateFormat.parse(taskDueDate);
+                String comparedDate = format.format(dueDate);
+                if (comparedDate.equals(strDate)){
+                    temp.add(t);}
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
             }
         }
         return temp;

@@ -75,7 +75,7 @@ public class TaskWidgetService extends RemoteViewsService {
             remoteView.setTextViewText(R.id.widgetTaskName, t.getTaskName());
 
             // Convert from date to string datatype
-            Date taskDueDateTime = t.getTaskDueDateTime();
+            String taskDueDateTime = t.getTaskDueDateTime();
             // Create a SimpleDateFormat object with the desired time format
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             // Format the date to get the time as a string
