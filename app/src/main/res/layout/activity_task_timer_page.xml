@@ -54,15 +54,14 @@
             <ImageView
                 android:id="@+id/frogTimerImageView"
                 android:layout_width="300dp"
-                android:layout_height="438dp"
+                android:layout_height="433dp"
                 android:alpha="0.7"
                 android:src="@drawable/frogtimer"
                 app:layout_constraintBottom_toBottomOf="@id/timer"
                 app:layout_constraintEnd_toEndOf="@id/timer"
-                app:layout_constraintHorizontal_bias="0.47"
                 app:layout_constraintStart_toStartOf="@id/timer"
                 app:layout_constraintTop_toTopOf="@id/timer"
-                app:layout_constraintVertical_bias="0.76" />
+                app:layout_constraintVertical_bias="0.769" />
 
             <sg.edu.np.mad.productivibe_.TaskTimerView
                 android:id="@+id/timer"
@@ -72,10 +71,10 @@
                 app:circleColor="@color/teal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintHorizontal_bias="0.488"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.498" />
+                app:layout_constraintVertical_bias="0.435" />
 
 
             <TextView
@@ -91,7 +90,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/timer"
                 app:layout_constraintHorizontal_bias="0.643"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.463" />
 
             <Button
                 android:id="@+id/btn_timer_start"
@@ -122,6 +122,22 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timer" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="90dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="36dp"
+                android:text="You Can \
+                Do It!"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/countdown"
+                app:layout_constraintEnd_toEndOf="@+id/countdown"
+                app:layout_constraintHorizontal_bias="0.487"
+                app:layout_constraintStart_toStartOf="@+id/countdown"
+                app:layout_constraintTop_toTopOf="@+id/timer"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
