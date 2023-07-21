@@ -51,18 +51,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/frogTimerImageView"
+                android:layout_width="300dp"
+                android:layout_height="438dp"
+                android:alpha="0.7"
+                android:src="@drawable/frogtimer"
+                app:layout_constraintBottom_toBottomOf="@id/timer"
+                app:layout_constraintEnd_toEndOf="@id/timer"
+                app:layout_constraintHorizontal_bias="0.47"
+                app:layout_constraintStart_toStartOf="@id/timer"
+                app:layout_constraintTop_toTopOf="@id/timer"
+                app:layout_constraintVertical_bias="0.76" />
+
             <sg.edu.np.mad.productivibe_.TaskTimerView
                 android:id="@+id/timer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="286dp"
+                android:layout_height="311dp"
                 android:layout_margin="16dp"
-                app:circleColor="@color/lighter_teal"
+                app:circleColor="@color/teal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.183" />
+                app:layout_constraintVertical_bias="0.498" />
+
 
             <TextView
                 android:id="@+id/countdown"
@@ -75,10 +89,9 @@
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/timer"
-                app:layout_constraintHorizontal_bias="0.482"
+                app:layout_constraintHorizontal_bias="0.643"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.39" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/btn_timer_start"
