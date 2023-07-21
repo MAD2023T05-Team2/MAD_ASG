@@ -297,7 +297,7 @@ public class TaskActivity extends AppCompatActivity{
 //                            taskList.add(newTask);
 //                            taskDatabase.addTask(newTask);
 
-    // create taak and add into the database
+    // create task and add into the database
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_task, null);

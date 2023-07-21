@@ -3,6 +3,8 @@ package sg.edu.np.mad.productivibe_;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,6 +32,8 @@ public class LoginPage extends AppCompatActivity {
     private DatabaseReference dbr;
     private FirebaseDatabase fdb;
     String TITLE = "Login Page";
+
+    private Database db; //to be deleted after testing of widget
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,15 @@ public class LoginPage extends AppCompatActivity {
                                         RUDeditor.putString("Remember", "False");
                                         Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
                                     }
+
+                                    // update widget with the logged-in user's tasks
+                                    String userId = sharedPreferences.getString("UserId", "");
+                                    // Create an intent to update the widget
+                                    Intent intent = new Intent(LoginPage.this, TaskWidget.class);
+                                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                                    int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), TaskWidget.class));
+                                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                                    sendBroadcast(intent);
 
                                 }
                                 else{
