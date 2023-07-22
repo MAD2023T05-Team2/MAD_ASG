@@ -1,6 +1,8 @@
 package sg.edu.np.mad.productivibe_;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -132,9 +134,9 @@ public class TaskTimerView extends View {
     }
 
     // handles the start timer animation
-    public void start(int secs) {
+    public void start(long secs) {
         stop();
-
+        // the progress is completed when its at 1, only goes from 0 to 1
         mTimerAnimator = ValueAnimator.ofFloat(0f, 1f);
         mTimerAnimator.setDuration(TimeUnit.SECONDS.toMillis(secs));
         mTimerAnimator.setInterpolator(new LinearInterpolator());
@@ -146,6 +148,19 @@ public class TaskTimerView extends View {
 
             }
         });
+
+        mTimerAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if(((ValueAnimator) animation).getAnimatedFraction() == 1.0f){
+                    mListener.onTaskTimerComplete();
+                }
+
+            }
+        });
+
+
         mTimerAnimator.start();
     }
 
@@ -154,9 +169,8 @@ public class TaskTimerView extends View {
         if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
             mTimerAnimator.cancel();
             mTimerAnimator = null;
-
-            drawProgress(0f);
         }
+        drawProgress(0f);
     }
 
     // handles the pause timer animation
