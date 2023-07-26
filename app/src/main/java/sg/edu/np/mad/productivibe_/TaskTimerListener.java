@@ -4,5 +4,5 @@ package sg.edu.np.mad.productivibe_;
 // Listener acts as a connector and tells the two pages what to do
 public interface TaskTimerListener {
     void onTaskTimerUpdate(long duration);
-
+    void onTaskTimerComplete();
 }
