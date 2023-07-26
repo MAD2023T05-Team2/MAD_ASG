@@ -142,10 +142,6 @@ public class TaskActivity extends AppCompatActivity{
             }
         });
 
-        adapter.notifyDataSetChanged();
-        Log.d(TITLE,String.valueOf(taskList.size()));
-
-
         // Separate pending and completed tasks
         List<Task> pendingTasks = new ArrayList<>();
         List<Task> completedTasks = new ArrayList<>();
