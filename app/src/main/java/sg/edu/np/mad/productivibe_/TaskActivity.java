@@ -65,7 +65,6 @@ public class TaskActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     public TaskAdapter adapter;
     private List<Task> taskList;
-    private Database taskDatabase;
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
     PendingIntent pendingIntent;
@@ -118,64 +117,23 @@ public class TaskActivity extends AppCompatActivity{
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        // Initialize the database
-        //taskDatabase = Database.getInstance(this);
+        // Initialize the database;
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId", null);
-
         String userName = sharedPreferences.getString("Username", null);
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
 
-        // Load tasks from the database
-        //taskList.addAll(taskDatabase.getAllTasksFromUser(userId));
-
-        //taskList = getTaskfromFirebase(taskDBR);
-        // read in list of objects
         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                /*
-                for (DataSnapshot sn : snapshot.getChildren()){
-                    // not the most elegant but it should work
-                    int id = Integer.parseInt(sn.child("id").getValue(Long.class));
-                    String status = sn.child("id").getValue(String.class);
-                    String taskName = sn.child("taskName").getValue(String.class);
-                    String taskDesc = sn.child("taskDesc").getValue(String.class);
-                    String taskDateTime = sn.child("taskDateTime").getValue(String.class);
-                    String taskDueDateTime = sn.child("taskDueDateTime").getValue(String.class);
-                    long taskDuration = sn.child("taskDuration").getValue(long.class);
-                    String taskType = sn.child("taskType").getValue(String.class);
-                    String repeat = sn.child("repeat").getValue(String.class);
-                    int recurringId = Integer.parseInt(Objects.requireNonNull(sn.child("recurringId").getValue(long.class)));
-                    String recurringDuration = sn.child("recurringDuration").getValue(String.class);
-                    int taskUserID = Integer.parseInt(Objects.requireNonNull(sn.child("taskUserID").getValue(long.class)));
-
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                    Date taskDateTimed = null;
-                    Date taskDueDateTimed = null;
-                    try {
-                        taskDateTimed = dateFormat.parse(taskDateTime);
-                        taskDueDateTimed = dateFormat.parse(taskDueDateTime);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Task task = new Task(id, status, taskName, taskDesc, taskDateTimed,
-                            taskDueDateTimed, taskDuration, taskType,
-                            repeat, recurringId, recurringDuration, taskUserID);
-                    taskList.add(task);
-                }
-
-                */
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
                     taskList.add(t);
                 }
                 Log.d("FIREBASE",String.valueOf(taskList.size()));
-
+                adapter.notifyItemRangeInserted(0,taskList.size());
+                // collects all the tasks saved in the firebase
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // if cannot connect or firebase returns an error
@@ -560,7 +518,7 @@ public class TaskActivity extends AppCompatActivity{
                             // update firebase
                             taskDBR.child(String.valueOf(task.getId())).setValue(task);
 
-                            taskDatabase.updateTask(task);
+                            //taskDatabase.updateTask(task);
                         // Notify the adapter of the updated task
                         adapter.notifyItemChanged(position);
 
