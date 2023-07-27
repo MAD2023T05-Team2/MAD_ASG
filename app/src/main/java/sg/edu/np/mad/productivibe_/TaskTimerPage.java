@@ -175,99 +175,97 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 }
                 Log.d("FIREBASE", String.valueOf(taskList.size()));
                 // collects all the tasks saved in the firebase
-            }
+                // Create a list of task names to display in the dialog
+                pendingTasks = new ArrayList<>();
+                ArrayList<String> taskNames = new ArrayList<>();
+                Log.d("FIREBASE", String.valueOf(taskList.size()));
+
+                for (Task task : taskList) {
+                    Log.d("FIREBASE", String.valueOf(task.getStatus()));
+                    if (task.getStatus().equalsIgnoreCase("pending")) {
+                        taskNames.add(task.getTaskName());
+                        pendingTasks.add(task);
+                    }
+                }
+
+
+                if (taskNames.size() == 0) {
+                    // jump to tasklist
+                    Context c = TaskTimerPage.this;
+                    noTaskDialogListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                // on below line we are setting a click listener
+                                // for our positive button
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    // on below line we are displaying a toast message.
+                                    startActivity(new Intent(TaskTimerPage.this, TaskActivity.class));
+                                    break;
+                                // on below line we are setting click listener
+                                // for our negative button.
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    // on below line we are dismissing our dialog box.
+                                    dialog.dismiss();
+
+                            }
+                        }
+                    };
+                    // on below line we are creating a builder variable for our alert dialog
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TaskTimerPage.this);
+                    // on below line we are setting message for our dialog box.
+                    builder.setMessage("You have no task, do you want to create task?")
+                            // on below line we are setting positive button
+                            // and setting text to it.
+                            .setPositiveButton("Yes", noTaskDialogListener)
+                            // on below line we are setting negative button
+                            // and setting text to it.
+                            .setNegativeButton("No", noTaskDialogListener)
+                            // on below line we are calling
+                            // show to display our dialog.
+                            .show();
+                }
+
+                    // Convert the ArrayList to a simple array
+                    String[] taskNamesArray = taskNames.toArray(new String[0]);
+
+                    // Create an AlertDialog with the list of task names
+                    AlertDialog.Builder builderL = new AlertDialog.Builder(TaskTimerPage.this);
+                    builderL.setTitle("Select Task");
+                    builderL.setItems(taskNamesArray, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // When a task is selected, update the timer duration with the selected task's duration
+                            if (which >= 0 && which < pendingTasks.size()) {
+                                selectedTaskIndex = which;
+                                Task selectedTask = pendingTasks.get(which);
+                                TIMER_LENGTH = selectedTask.getTaskDuration()*60;
+                                updateTimerDuration(TIMER_LENGTH);
+                                timerStartButton.setEnabled(true);
+                                timerResetButton.setEnabled(true);
+
+                                isRunning = false;
+                                isPaused = true;
+                                timerStartButton.setText("Start");
+
+                            }
+                        }
+                    });
+
+                    // Show the dialog
+                    builderL.show();
+                }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                     // if cannot connect or firebase returns an error
-                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TaskTimerPage.this, "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
                 Log.d("FIREBASE", "DOESNT CONNECT!");
                 }
             });
 
-        // Create a list of task names to display in the dialog
-        pendingTasks = new ArrayList<>();
-        ArrayList<String> taskNames = new ArrayList<>();
 
-        for (Task task : taskList) {
-            Log.d("FIREBASE", String.valueOf(task.getStatus()));
-            if(task.getStatus().equalsIgnoreCase("pending")){
-                taskNames.add(task.getTaskName());
-                pendingTasks.add(task);
-            }
         }
-
-
-
-
-
-        if(taskNames.size() == 0){
-            // jump to tasklist
-            Context c = this;
-            noTaskDialogListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        // on below line we are setting a click listener
-                        // for our positive button
-                        case DialogInterface.BUTTON_POSITIVE:
-                            // on below line we are displaying a toast message.
-                            startActivity(new Intent(TaskTimerPage.this, TaskActivity.class));
-                            break;
-                        // on below line we are setting click listener
-                        // for our negative button.
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            // on below line we are dismissing our dialog box.
-                            dialog.dismiss();
-
-                    }
-                }
-            };
-            // on below line we are creating a builder variable for our alert dialog
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            // on below line we are setting message for our dialog box.
-            builder.setMessage("You have no task, do you want to create task?")
-                    // on below line we are setting positive button
-                    // and setting text to it.
-                    .setPositiveButton("Yes", noTaskDialogListener)
-                    // on below line we are setting negative button
-                    // and setting text to it.
-                    .setNegativeButton("No", noTaskDialogListener)
-                    // on below line we are calling
-                    // show to display our dialog.
-                    .show();
-            return;
-        }
-
-        // Convert the ArrayList to a simple array
-        String[] taskNamesArray = taskNames.toArray(new String[0]);
-
-        // Create an AlertDialog with the list of task names
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Task");
-        builder.setItems(taskNamesArray, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // When a task is selected, update the timer duration with the selected task's duration
-                if (which >= 0 && which < pendingTasks.size()) {
-                    selectedTaskIndex = which;
-                    Task selectedTask = pendingTasks.get(which);
-                    TIMER_LENGTH = selectedTask.getTaskDuration()*60;
-                    updateTimerDuration(TIMER_LENGTH);
-                    timerStartButton.setEnabled(true);
-                    timerResetButton.setEnabled(true);
-
-                    isRunning = false;
-                    isPaused = true;
-                    timerStartButton.setText("Start");
-
-                }
-            }
-        });
-
-        // Show the dialog
-        builder.show();
-    }
     // Method to update the timer duration
     private void updateTimerDuration(long durationSeconds) {
         // Update the TIMER_LENGTH with the selected task's duration
