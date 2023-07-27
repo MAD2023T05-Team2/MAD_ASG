@@ -31,17 +31,18 @@ public class TaskWidget extends AppWidgetProvider {
     private static Database db;
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, String myPrefs, FirebaseDatabase fdb) {
+                                int appWidgetId, String myPrefs) {
 
         // Initialize the database
-        //TaskWidget.db = Database.getInstance(context.getApplicationContext());
+        TaskWidget.db = Database.getInstance(context.getApplicationContext());
 
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
         String userName = sharedPreferences.getString("Username", null);
         // create list of today task based on the user
-        fdb = FirebaseDatabase.getInstance();
+        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
         DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
         // get list of tasks
         ArrayList<Task> widgetTaskList = new ArrayList<>();
@@ -98,7 +99,7 @@ public class TaskWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             // update the views and content of the widget
-            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs", fdb);
+            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs");
 
             // notify appWidgetManager that the data has changed for the task list view in the widget
             // triggers the onDataSetChanged() method in the RemoteViewsService
