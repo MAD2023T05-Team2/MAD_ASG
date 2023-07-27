@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +37,7 @@ public class TaskWidgetService extends RemoteViewsService {
         private DatabaseReference taskDBR;
         private FirebaseDatabase fdb;
         private ArrayList<Task> widgetTaskList = new ArrayList<>();
+        private RemoteViews remoteView;
 
         public WidgetRemoteViewsFactory(Context context) {
             this.context = context;
@@ -46,6 +48,7 @@ public class TaskWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
+            /*
 
             // getting stored userid
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
@@ -58,13 +61,21 @@ public class TaskWidgetService extends RemoteViewsService {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     // filter to current date
-                    SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
                     //get current date
                     Date currentDate = new Date();
                     String strDate = format.format(currentDate);
                     for (DataSnapshot sn: snapshot.getChildren()){
                         Task t = sn.getValue(Task.class);
-                        if (t.getTaskDueDateTime().equals(strDate)){
+                        Date comparedDate = null;
+                        try {
+                            comparedDate = firebase.parse(t.getTaskDueDateTime());
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        String compareDate = format.format(comparedDate);
+                        if (compareDate.equals(strDate)){
                             widgetTaskList.add(t);
                         }
                     }
@@ -79,6 +90,7 @@ public class TaskWidgetService extends RemoteViewsService {
             });
             //widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
             Log.v("Service", "widgetTaskList");
+            */
         }
 
         @Override
@@ -98,17 +110,25 @@ public class TaskWidgetService extends RemoteViewsService {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     // filter to current date
-                    SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+                    SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
                     //get current date
                     Date currentDate = new Date();
                     String strDate = format.format(currentDate);
                     for (DataSnapshot sn: snapshot.getChildren()){
                         Task t = sn.getValue(Task.class);
-                        if (t.getTaskDueDateTime().equals(strDate)){
+                        Date comparedDate = null;
+                        try {
+                            comparedDate = firebase.parse(t.getTaskDueDateTime());
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        String compareDate = format.format(comparedDate);
+                        if (compareDate.equals(strDate)){
                             widgetTaskList.add(t);
                         }
                     }
-                    Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
+                    Log.d("SERVICE",String.valueOf(widgetTaskList.size()));
                     // collects all the tasks saved in the firebase
                 }
                 @Override
@@ -138,20 +158,54 @@ public class TaskWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Task t = widgetTaskList.get(position);
-            RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.task_widget_item);
+            taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
 
-            remoteView.setTextViewText(R.id.widgetTaskName, t.getTaskName());
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // filter to current date
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+                    SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                    //get current date
+                    Date currentDate = new Date();
+                    String strDate = format.format(currentDate);
+                    for (DataSnapshot sn: snapshot.getChildren()){
+                        Task t = sn.getValue(Task.class);
+                        Date comparedDate = null;
+                        try {
+                            comparedDate = firebase.parse(t.getTaskDueDateTime());
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        String compareDate = format.format(comparedDate);
+                        if (compareDate.equals(strDate)){
+                            widgetTaskList.add(t);
+                        }
+                    }
+                    Log.d("SERVICE GET VIEW",String.valueOf(widgetTaskList.size()));
+                    // collects all the tasks saved in the firebase
+                    Task t = widgetTaskList.get(position);
+                    remoteView = new RemoteViews(context.getPackageName(), R.layout.task_widget_item);
 
-            // Convert from date to string datatype
-            String taskDueDateTime = t.getTaskDueDateTime();
-            // Create a SimpleDateFormat object with the desired time format
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            // Format the date to get the time as a string
-            String taskDueTime = timeFormat.format(taskDueDateTime);
-            remoteView.setTextViewText(R.id.widgetTaskTime, taskDueTime);
-            Log.v("Service", taskDueTime);
+                    remoteView.setTextViewText(R.id.widgetTaskName, t.getTaskName());
 
+                    // Convert from date to string datatype
+                    String taskDueDateTime = t.getTaskDueDateTime();
+                    // Create a SimpleDateFormat object with the desired time format
+                    //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    // Format the date to get the time as a string
+                    //String taskDueTime = timeFormat.format(taskDueDateTime);
+                    String[] dateTime = taskDueDateTime.split(" ");
+                    String taskDueTime = dateTime[1];
+                    Log.v("Service comparing", taskDueTime);
+                    remoteView.setTextViewText(R.id.widgetTaskTime, taskDueTime);
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // if cannot connect or firebase returns an error
+                    //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                }
+            });
             return remoteView;
         }
 
@@ -174,24 +228,6 @@ public class TaskWidgetService extends RemoteViewsService {
         @Override
         public boolean hasStableIds() {
             return true;
-        }
-
-        public static List<Task> filterCurrentDate(List<Task> filteredTaskList){
-            // filter out tasks based on due data
-            List<Task> temp = new ArrayList<>();
-            // convert date object to a string with a nicer format
-            SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
-            //get current date
-            Date currentDate = new Date();
-            String strDate = format.format(currentDate);
-            for (Task t : filteredTaskList){
-                // check if it contains the date
-                String comparedDate = format.format(t.getTaskDueDateTime());
-                if (comparedDate.equals(strDate)){
-                    temp.add(t);
-                }
-            }
-            return temp;
         }
 
     }

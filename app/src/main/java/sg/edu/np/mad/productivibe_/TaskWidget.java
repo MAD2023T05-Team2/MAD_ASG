@@ -55,8 +55,6 @@ public class TaskWidget extends AppWidgetProvider {
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
-                    Log.d("TASK",t.getTaskDueDateTime());
-                    Log.d("TASK",strDate);
                     Date comparedDate = null;
                     try {
                         comparedDate = firebase.parse(t.getTaskDueDateTime());
