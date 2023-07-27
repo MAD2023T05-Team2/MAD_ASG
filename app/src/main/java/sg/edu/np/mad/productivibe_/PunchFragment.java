@@ -101,6 +101,7 @@ public class PunchFragment extends Fragment {
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
                     image.setImageURI(selectedImageUri);
+                    counter = 0;
                 }
             }
         }

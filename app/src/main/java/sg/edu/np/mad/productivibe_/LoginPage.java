@@ -111,25 +111,20 @@ public class LoginPage extends AppCompatActivity {
 
                                     // Remember whether the user chose the app to remember their login details
                                     boolean isChecked = rememberMe.isChecked();
+                                    Log.v("isChecked", Boolean.toString(isChecked));
                                     SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                                     SharedPreferences.Editor RUDeditor = rememberUserData.edit();
 
-                                    if (isChecked) {
+                                    if (isChecked == true) {
                                         RUDeditor.putString("Remember", "True");
                                         Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                                        Log.v("Remember", "True");
                                     } else {
                                         RUDeditor.putString("Remember", "False");
                                         Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                                        Log.v("Remember", "False");
                                     }
-
-                                    // update widget with the logged-in user's tasks
-                                    String userId = sharedPreferences.getString("UserId", "");
-                                    // Create an intent to update the widget
-                                    Intent intent = new Intent(LoginPage.this, TaskWidget.class);
-                                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                                    int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), TaskWidget.class));
-                                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                                    sendBroadcast(intent);
+                                    RUDeditor.apply();
 
                                 }
                                 else{
