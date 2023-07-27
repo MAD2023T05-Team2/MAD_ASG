@@ -47,6 +47,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
 
+        // Initialize the database
+        db = Database.getInstance(this);
+
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
