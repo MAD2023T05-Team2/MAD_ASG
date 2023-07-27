@@ -103,6 +103,17 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
 
+        // Recyclerview to show tasks on homepage
+        homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
+        homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // get list of tasks
+        ArrayList<Task> homeTaskList = new ArrayList<>();
+
+        homeTaskadapter = new TaskAdapter(homeTaskList);
+        homeTaskRecyclerView.setAdapter(homeTaskadapter);
+        homeTaskadapter.notifyDataSetChanged();
+
         // Initialize the database
         // Get UserId from shared preferences and put today's tasks into a list
         sharedPreferences = this.getSharedPreferences("MyPrefs", 0);
@@ -110,8 +121,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         // create list of today task based on the user
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
         DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
-        // get list of tasks
-        ArrayList<Task> homeTaskList = new ArrayList<>();
+
         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -124,6 +134,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                     Task t = sn.getValue(Task.class);
                     if (t.getTaskDueDateTime().equals(strDate)){
                         homeTaskList.add(t);
+                        homeTaskadapter.notifyItemRangeInserted(0,homeTaskList.size());
                     }
                 }
                 Log.d("FIREBASE",String.valueOf(homeTaskList.size()));
@@ -136,12 +147,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             }
         });
 
-        // Recyclerview to show tasks on homepage
-        homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
-        homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        homeTaskadapter = new TaskAdapter(homeTaskList);
-        homeTaskRecyclerView.setAdapter(homeTaskadapter);
-        homeTaskadapter.notifyDataSetChanged();
+
 
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
