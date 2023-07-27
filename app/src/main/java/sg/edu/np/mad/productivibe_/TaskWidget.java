@@ -31,8 +31,9 @@ public class TaskWidget extends AppWidgetProvider {
     private static Database db;
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, String myPrefs, Database db) {
+                                int appWidgetId, String myPrefs) {
 
         // Initialize the database
         TaskWidget.db = Database.getInstance(context.getApplicationContext());
@@ -98,7 +99,7 @@ public class TaskWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             // update the views and content of the widget
-            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs", db);
+            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs");
 
             // notify appWidgetManager that the data has changed for the task list view in the widget
             // triggers the onDataSetChanged() method in the RemoteViewsService
