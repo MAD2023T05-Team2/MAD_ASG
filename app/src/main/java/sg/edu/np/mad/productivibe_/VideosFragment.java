@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+// VideosFragment is a fragment under the Destress Page which displays a list of calming videos in a RecyclerView
 public class VideosFragment extends Fragment {
 
     private RecyclerView recyclerView;
