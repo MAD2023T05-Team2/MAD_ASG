@@ -457,11 +457,11 @@ public class TaskActivity extends AppCompatActivity{
         taskDurationEditText.setText(String.valueOf(task.getTaskDuration()));
 
         // Convert the date objects to string representations
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-        String taskDateTime = dateFormat.format(task.getTaskDateTime());
-        String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
-        taskDateTimeEditText.setText(taskDateTime);
-        taskDueDateTimeEditText.setText(taskDueDateTime);
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+        //String taskDateTime = dateFormat.format(task.getTaskDateTime());
+        //String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
+        taskDateTimeEditText.setText(task.getTaskDateTime());
+        taskDueDateTimeEditText.setText(task.getTaskDueDateTime());
 
         // Constructing the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

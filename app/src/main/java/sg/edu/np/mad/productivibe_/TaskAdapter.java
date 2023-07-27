@@ -1,5 +1,7 @@
 package sg.edu.np.mad.productivibe_;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,11 +76,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             @Override
             public void onClick(View v) {
                 Database taskDatabase = Database.getInstance(v.getContext());
+                // get database
+                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String userName = sharedPreferences.getString("Username", null);
+                // create list of today task based on the user
+                FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+                DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
+
+
                 if(holder.taskStatusButton.getText().equals("Pending")){
                     holder.taskStatusButton.setText("Done");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
                     task.setStatus("Done");
                     taskDatabase.updateTask(task); //updates the status in database
+                    taskDBR.child(String.valueOf(task.getId())).child("status").setValue("Done");
 
                 }
                 else{
@@ -83,6 +97,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
                     task.setStatus("Pending");
                     taskDatabase.updateTask(task);
+                    taskDBR.child(String.valueOf(task.getId())).child("status").setValue("Pending");
                 }
                 updateList(taskList);
             }

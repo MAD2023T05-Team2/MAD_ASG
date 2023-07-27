@@ -39,6 +39,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private Database db;
     private TaskAdapter homeTaskadapter;
     private boolean isMuted;
+    private ValueEventListener retrieveData;
+    private DatabaseReference taskDBR;
     final String TITLE = "HomePage";
 
     @Override
@@ -123,23 +125,30 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         String userName = sharedPreferences.getString("Username", null);
         // create list of today task based on the user
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
-        DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
-
-        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        taskDBR = fdb.getReference("tasks/" + userName);
+        retrieveData = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // filter to current date
-                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
                 //get current date
                 Date currentDate = new Date();
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
-                    if (t.getTaskDueDateTime().equals(strDate)){
+                    Date comparedDate = null;
+                    try {
+                        comparedDate = firebase.parse(t.getTaskDueDateTime());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String compareDate = format.format(comparedDate);
+                    if (compareDate.equals(strDate)){
                         homeTaskList.add(t);
-                        homeTaskadapter.notifyItemRangeInserted(0,homeTaskList.size());
                     }
                 }
+                homeTaskadapter.notifyItemRangeInserted(0,homeTaskList.size());
                 Log.d("FIREBASE",String.valueOf(homeTaskList.size()));
                 // collects all the tasks saved in the firebase
             }
@@ -148,7 +157,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 // if cannot connect or firebase returns an error
                 //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        taskDBR.orderByKey().addListenerForSingleValueEvent(retrieveData);
 
 
 
@@ -275,30 +285,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         editor.putBoolean("IsFirstLaunch", true);
         editor.apply();
 
-        onDestroy();
-    }
-
-    public List<Task> filterCurrentDate(List<Task> filteredTaskList){
-        // filter out tasks based on due data
-        List<Task> temp = new ArrayList<>();
-        // convert date object to a string with a nicer format
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-        //get current date
-        Date currentDate = new Date();
-        String strDate = format.format(currentDate);
-        for (Task t : filteredTaskList){
-            // check if it contains the date
-            String taskDueDate = t.getTaskDueDateTime();
-            try {
-                Date dueDate = dateFormat.parse(taskDueDate);
-                String comparedDate = format.format(dueDate);
-                if (comparedDate.equals(strDate)){
-                    temp.add(t);}
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
+        // for the firebase listener
+        if (taskDBR != null && retrieveData != null) {
+            taskDBR.removeEventListener(retrieveData);
         }
-        return temp;
+
+        onDestroy();
     }
 }
