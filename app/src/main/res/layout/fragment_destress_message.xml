@@ -21,21 +21,21 @@
     <TextView
         android:id="@+id/destressDesc"
         android:layout_width="271dp"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
         android:layout_gravity="center"
         android:layout_marginStart="60dp"
         android:layout_marginTop="-85dp"
         android:layout_marginEnd="70dp"
         android:gravity="center"
         android:textSize="17sp"
-        android:text="Destress and Elevate Your Mood: Indulge in some photos, videos and an inspiring quote!" />
+        android:text="Destress and Elevate Your Mood by Punching or Indulging in some photos and videos!" />
 
     <ImageView
         android:id="@+id/frog_gif"
         android:layout_width="257dp"
         android:layout_height="185dp"
         android:layout_marginStart="79dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="230dp"
         android:src="@drawable/frog" />
 
 

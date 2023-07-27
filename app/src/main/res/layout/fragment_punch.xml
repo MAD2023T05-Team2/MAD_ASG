@@ -11,7 +11,7 @@
         android:layout_width="319dp"
         android:layout_height="385dp"
         android:layout_marginStart="43dp"
-        android:layout_marginTop="194dp"
+        android:layout_marginTop="114dp"
         android:layout_marginEnd="85dp"
         android:src="@drawable/punch" />
 
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="225dp"
-        android:layout_marginTop="114dp"
+        android:layout_marginTop="84dp"
         app:icon = "@drawable/baseline_photo_camera_back_24"
         android:text="Select Photo"/>
 
@@ -31,7 +31,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="155dp"
-        android:layout_marginTop="574dp"
+        android:layout_marginTop="420dp"
         android:text="0"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="80sp"
@@ -39,13 +39,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/punching"
+        />
 
     <TextView
         android:id="@+id/punchMessage"
         android:layout_width="361dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="0dp"
         android:layout_marginStart="25dp"
         android:gravity="center"
         android:text="Tap on the punching bag, or your own selected image, to release stress, tension and frustration!"
