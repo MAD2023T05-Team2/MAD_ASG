@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,9 +29,6 @@ import java.util.Locale;
  * Implementation of App Widget functionality.
  */
 public class TaskWidget extends AppWidgetProvider {
-    private static Database db;
-    private DatabaseReference taskDBR;
-    private FirebaseDatabase fdb;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String myPrefs) {
@@ -50,18 +48,53 @@ public class TaskWidget extends AppWidgetProvider {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // filter to current date
-                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
                 //get current date
                 Date currentDate = new Date();
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
-                    if (t.getTaskDueDateTime().equals(strDate)){
+                    Log.d("TASK",t.getTaskDueDateTime());
+                    Log.d("TASK",strDate);
+                    Date comparedDate = null;
+                    try {
+                        comparedDate = firebase.parse(t.getTaskDueDateTime());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String compareDate = format.format(comparedDate);
+                    if (compareDate.equals(strDate)){
                         widgetTaskList.add(t);
                     }
                 }
                 Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
                 // collects all the tasks saved in the firebase
+
+                // Construct the RemoteViews object
+                int no = widgetTaskList.size();
+                String taskNo = no + " Tasks Due Today:";
+                RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+                widgetViews.setTextViewText(R.id.todayTask, taskNo);
+                Log.v("Widget", taskNo);
+
+                // To display tasks using list view
+                Intent serviceIntent = new Intent(context, TaskWidgetService.class);
+                serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+                widgetViews.setRemoteAdapter(R.id.widgetTaskView, serviceIntent);
+                widgetViews.setEmptyView(R.id.widgetTaskView, R.id.noTasks);
+
+                // Instruct the widget manager to update the widget
+                appWidgetManager.updateAppWidget(appWidgetId, widgetViews);
+
+                // Create an Intent to launch HomePage when widget is clicked
+                Intent intent = new Intent(context, HomePage.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                widgetViews.setOnClickPendingIntent(R.id.todayTask, pendingIntent);
+                widgetViews.setOnClickPendingIntent(R.id.widgetTaskView, pendingIntent);
+
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -70,28 +103,7 @@ public class TaskWidget extends AppWidgetProvider {
             }
         });
 
-        // Construct the RemoteViews object
-        int no = widgetTaskList.size();
-        String taskNo = no + " Tasks Due Today:";
-        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-        widgetViews.setTextViewText(R.id.todayTask, taskNo);
-        Log.v("Widget", taskNo);
 
-        // To display tasks using list view
-        Intent serviceIntent = new Intent(context, TaskWidgetService.class);
-        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        widgetViews.setRemoteAdapter(R.id.widgetTaskView, serviceIntent);
-        widgetViews.setEmptyView(R.id.widgetTaskView, R.id.noTasks);
-
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, widgetViews);
-
-        // Create an Intent to launch HomePage when widget is clicked
-        Intent intent = new Intent(context, HomePage.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        widgetViews.setOnClickPendingIntent(R.id.todayTask, pendingIntent);
-        widgetViews.setOnClickPendingIntent(R.id.widgetTaskView, pendingIntent);
     }
 
     @Override
