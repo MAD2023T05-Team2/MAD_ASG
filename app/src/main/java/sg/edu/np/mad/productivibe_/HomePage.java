@@ -122,7 +122,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
         DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
 
-        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // filter to current date
@@ -134,9 +134,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                     Task t = sn.getValue(Task.class);
                     if (t.getTaskDueDateTime().equals(strDate)){
                         homeTaskList.add(t);
-                        homeTaskadapter.notifyItemRangeInserted(0,homeTaskList.size());
                     }
                 }
+                homeTaskadapter.notifyItemRangeInserted(0,homeTaskList.size());
                 Log.d("FIREBASE",String.valueOf(homeTaskList.size()));
                 // collects all the tasks saved in the firebase
             }

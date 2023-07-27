@@ -28,15 +28,12 @@ import java.util.Locale;
  * Implementation of App Widget functionality.
  */
 public class TaskWidget extends AppWidgetProvider {
-    private static Database db;
-    private DatabaseReference taskDBR;
-    private FirebaseDatabase fdb;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String myPrefs) {
 
         // Initialize the database
-        TaskWidget.db = Database.getInstance(context.getApplicationContext());
+        //TaskWidget.db = Database.getInstance(context.getApplicationContext());
 
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
