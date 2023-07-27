@@ -33,15 +33,19 @@ So why settle for mediocrity when you achieve greatness with this powerful produ
 
 | Feature | Description | In-charge |
 | :------ | :---------- | :-------- | 
-| Mood Dialogs | Prompt users their feelings that day (Dynamic Layout) | Xin Le |
-| Statistics | Displays charts (mood/study hours) | Xin Le |
-| Splash Screen | Opening App | Alethea |
-| Background Music | Selected Music will play and can opt in or out of such music | Alethea |
-| Timer with Animation | Allow user to grab the duration of task from pending tasks then updates the timer | Sherylyn |
-| Timer page Prompts | After each timer session, the user can choose to complete the task or not and another prompt to create task if none available | Sherylyn |
-| Task widget | - | Gwyneth |
-| Splash Screen Quotes | Different Motivational Quotes | Gwyneth |
-| Firebase | - | Kiara | 
+| Mood Dialogs | Prompt users their feelings that day (Dynamic Layout) | - |
+| Splash Screen | Opening App | - |
+| Task Sorting | Sort them into user-defined categories | - |
+| Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | - |
+| Prompt to destress page | After each timer/stopwatch session, if the user has been productive for at least 1 hour, they will be prompted to visit the destress page to relax and unwind | - |
+| ++ Music | Selected Music will play as the timer goes on | - |
+| Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
+| Background Music | Can opt in or out of such music | - |
+| Language Pack | - | - |
+| Friends! | Study with friends | - | 
+| Statistics | Displays charts (mood/study hours) | - |
+| Reward System | Points earned based on productiveness and reflected on a leaderboard | - |
+| You're not alone! | Study with cartoon characters / videos of celebrities | - |
 
 
 ### Log In Page
