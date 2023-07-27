@@ -1,5 +1,6 @@
 package sg.edu.np.mad.productivibe_;
 
+// This class represents a response object that holds information about a user
 public class User {
 
     private int userId;

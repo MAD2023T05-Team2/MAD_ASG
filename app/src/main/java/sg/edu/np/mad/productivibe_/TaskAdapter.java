@@ -45,9 +45,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDurationTextView.setText(String.valueOf(task.getTaskDuration()));
 
         // format datetime nicely
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-        String taskDateTime = dateFormat.format(task.getTaskDateTime());
-        String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
+        // no longer in date format
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+        //String taskDateTime = dateFormat.format(task.getTaskDateTime());
+        //String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
+
+        String taskDateTime = task.getTaskDateTime();
+        String taskDueDateTime = task.getTaskDueDateTime();
+
 
         holder.taskDateTimeTextView.setText(taskDateTime);
         holder.taskDueDateTimeTextView.setText(taskDueDateTime);

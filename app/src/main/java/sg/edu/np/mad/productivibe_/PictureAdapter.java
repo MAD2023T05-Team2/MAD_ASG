@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+// This class helps to populate a RecyclerView in the PicturesFragment class with pictures
+
 public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureViewHolder> {
     private List<Integer> pictureList;
 

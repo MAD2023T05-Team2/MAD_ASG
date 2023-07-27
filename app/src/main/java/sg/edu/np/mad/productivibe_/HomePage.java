@@ -1,5 +1,6 @@
 package sg.edu.np.mad.productivibe_;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +18,14 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,19 +103,51 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
 
-        // Initialize the database
-        db = Database.getInstance(this);
-
-        // Load tasks from the database
-        String userId = sharedPreferences.getString("UserId", null);
-        List<Task> homeTaskList = filterCurrentDate(db.getAllTasksFromUser(userId));
-
         // Recyclerview to show tasks on homepage
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
         homeTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // get list of tasks
+        ArrayList<Task> homeTaskList = new ArrayList<>();
+
         homeTaskadapter = new TaskAdapter(homeTaskList);
         homeTaskRecyclerView.setAdapter(homeTaskadapter);
         homeTaskadapter.notifyDataSetChanged();
+
+        // Initialize the database
+        // Get UserId from shared preferences and put today's tasks into a list
+        sharedPreferences = this.getSharedPreferences("MyPrefs", 0);
+        String userName = sharedPreferences.getString("Username", null);
+        // create list of today task based on the user
+        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+        DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
+
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // filter to current date
+                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                //get current date
+                Date currentDate = new Date();
+                String strDate = format.format(currentDate);
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    Task t = sn.getValue(Task.class);
+                    if (t.getTaskDueDateTime().equals(strDate)){
+                        homeTaskList.add(t);
+                        homeTaskadapter.notifyItemRangeInserted(0,homeTaskList.size());
+                    }
+                }
+                Log.d("FIREBASE",String.valueOf(homeTaskList.size()));
+                // collects all the tasks saved in the firebase
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
         // FAB dropdown list
         FloatingActionButton dropdownList = findViewById(R.id.dropdownList);
@@ -241,14 +280,20 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         List<Task> temp = new ArrayList<>();
         // convert date object to a string with a nicer format
         SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         //get current date
         Date currentDate = new Date();
         String strDate = format.format(currentDate);
         for (Task t : filteredTaskList){
             // check if it contains the date
-            String comparedDate = format.format(t.getTaskDueDateTime());
-            if (comparedDate.equals(strDate)){
-                temp.add(t);
+            String taskDueDate = t.getTaskDueDateTime();
+            try {
+                Date dueDate = dateFormat.parse(taskDueDate);
+                String comparedDate = format.format(dueDate);
+                if (comparedDate.equals(strDate)){
+                    temp.add(t);}
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
             }
         }
         return temp;

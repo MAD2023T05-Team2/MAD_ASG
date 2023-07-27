@@ -10,6 +10,14 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,17 +29,46 @@ import java.util.Locale;
  */
 public class TaskWidget extends AppWidgetProvider {
     private static Database db;
+    private DatabaseReference taskDBR;
+    private FirebaseDatabase fdb;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, String myPrefs, Database db) {
+                                int appWidgetId, String myPrefs) {
 
         // Initialize the database
-        TaskWidget.db = Database.getInstance(context.getApplicationContext());
+        //TaskWidget.db = Database.getInstance(context.getApplicationContext());
 
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-        String userId = sharedPreferences.getString("UserId", null);
-        ArrayList <Task> widgetTaskList = new ArrayList<>();
-        widgetTaskList = (ArrayList<Task>) filterCurrentDate(TaskWidget.db.getAllTasksFromUser(userId));
+        String userName = sharedPreferences.getString("Username", null);
+        // create list of today task based on the user
+        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+        DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
+        // get list of tasks
+        ArrayList<Task> widgetTaskList = new ArrayList<>();
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // filter to current date
+                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                //get current date
+                Date currentDate = new Date();
+                String strDate = format.format(currentDate);
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    Task t = sn.getValue(Task.class);
+                    if (t.getTaskDueDateTime().equals(strDate)){
+                        widgetTaskList.add(t);
+                    }
+                }
+                Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
+                // collects all the tasks saved in the firebase
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Construct the RemoteViews object
         int no = widgetTaskList.size();
@@ -62,7 +99,7 @@ public class TaskWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             // update the views and content of the widget
-            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs", db);
+            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs");
 
             // notify appWidgetManager that the data has changed for the task list view in the widget
             // triggers the onDataSetChanged() method in the RemoteViewsService

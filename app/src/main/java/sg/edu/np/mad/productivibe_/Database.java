@@ -112,8 +112,8 @@ public class Database extends SQLiteOpenHelper {
         values.put(COLUMN_STATUS, task.getStatus());
         values.put(COLUMN_TASK_NAME, task.getTaskName());
         values.put(COLUMN_TASK_DESC, task.getTaskDesc());
-        values.put(COLUMN_TASK_DATE_TIME, task.getTaskDateTime().getTime());
-        values.put(COLUMN_TASK_DUE_DATE_TIME, task.getTaskDueDateTime().getTime());
+        values.put(COLUMN_TASK_DATE_TIME, task.getTaskDateTime());
+        values.put(COLUMN_TASK_DUE_DATE_TIME, task.getTaskDueDateTime());
         values.put(COLUMN_TASK_DURATION, task.getTaskDuration());
         values.put(COLUMN_TASK_TYPE, task.getTaskType());
         values.put(COLUMN_REPEAT, task.getRepeat());
@@ -130,8 +130,8 @@ public class Database extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TASK_NAME, task.getTaskName());
         values.put(COLUMN_TASK_DESC, task.getTaskDesc());
-        values.put(COLUMN_TASK_DATE_TIME, task.getTaskDateTime().getTime());
-        values.put(COLUMN_TASK_DUE_DATE_TIME, task.getTaskDueDateTime().getTime());
+        values.put(COLUMN_TASK_DATE_TIME, task.getTaskDateTime());
+        values.put(COLUMN_TASK_DUE_DATE_TIME, task.getTaskDueDateTime());
         values.put(COLUMN_TASK_DURATION, task.getTaskDuration());
         values.put(COLUMN_STATUS, task.getStatus());
 
@@ -177,10 +177,10 @@ public class Database extends SQLiteOpenHelper {
                 String status = cursor.getString(statusIndex);
                 String taskName = cursor.getString(taskNameIndex);
                 String taskDesc = cursor.getString(taskDescIndex);
-                long taskDateTimeMillis = cursor.getLong(taskDateTimeIndex);
-                Date taskDateTime = new Date(taskDateTimeMillis);
-                long taskDueDateTimeMillis = cursor.getLong(taskDueDateTimeIndex);
-                Date taskDueDateTime = new Date(taskDueDateTimeMillis);
+                //long taskDateTimeMillis = cursor.getLong(taskDateTimeIndex);
+                String taskDateTime = cursor.getString(taskDateTimeIndex);
+                //long taskDueDateTimeMillis = cursor.getLong(taskDueDateTimeIndex);
+                String taskDueDateTime = cursor.getString(taskDueDateTimeIndex);
                 long taskDuration = cursor.getLong(taskDurationIndex);
                 String taskType = cursor.getString(taskTypeIndex);
                 String repeat = cursor.getString(repeatIndex);

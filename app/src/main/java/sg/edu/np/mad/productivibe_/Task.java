@@ -2,13 +2,14 @@ package sg.edu.np.mad.productivibe_;
 
 import java.util.Date;
 
+// This class represents a response object that holds information about a task
 public class Task {
     private int Id;
     private String status;
     private String taskName;
     private String taskDesc;
-    private Date taskDateTime;
-    private Date taskDueDateTime;
+    private String taskDateTime;
+    private String taskDueDateTime;
     private long taskDuration;
     private String taskType;
     private String repeat;
@@ -17,8 +18,8 @@ public class Task {
     private int taskUserID;
 
 
-    public Task(int id, String status, String taskName, String taskDesc, Date taskDateTime,
-                Date taskDueDateTime, long taskDuration, String taskType,
+    public Task(int id, String status, String taskName, String taskDesc, String taskDateTime,
+                String taskDueDateTime, long taskDuration, String taskType,
                 String repeat, int recurringId, String recurringDuration, int taskUserID) {
         this.Id = id;
         this.status = status;
@@ -52,11 +53,11 @@ public class Task {
         return taskDesc;
     }
 
-    public Date getTaskDateTime() {
+    public String getTaskDateTime() {
         return taskDateTime;
     }
 
-    public Date getTaskDueDateTime() {
+    public String getTaskDueDateTime() {
         return taskDueDateTime;
     }
 
@@ -101,11 +102,11 @@ public class Task {
         this.taskDesc = taskDesc;
     }
 
-    public void setTaskDateTime(Date taskDateTime) {
+    public void setTaskDateTime(String taskDateTime) {
         this.taskDateTime = taskDateTime;
     }
 
-    public void setTaskDueDateTime(Date taskDueDateTime) {
+    public void setTaskDueDateTime(String taskDueDateTime) {
         this.taskDueDateTime = taskDueDateTime;
     }
 

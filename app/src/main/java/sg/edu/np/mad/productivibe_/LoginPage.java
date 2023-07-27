@@ -3,6 +3,8 @@ package sg.edu.np.mad.productivibe_;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,6 +32,8 @@ public class LoginPage extends AppCompatActivity {
     private DatabaseReference dbr;
     private FirebaseDatabase fdb;
     String TITLE = "Login Page";
+
+    private Database db; //to be deleted after testing of widget
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,16 +111,20 @@ public class LoginPage extends AppCompatActivity {
 
                                     // Remember whether the user chose the app to remember their login details
                                     boolean isChecked = rememberMe.isChecked();
+                                    Log.v("isChecked", Boolean.toString(isChecked));
                                     SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                                     SharedPreferences.Editor RUDeditor = rememberUserData.edit();
 
-                                    if (isChecked) {
+                                    if (isChecked == true) {
                                         RUDeditor.putString("Remember", "True");
                                         Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                                        Log.v("Remember", "True");
                                     } else {
                                         RUDeditor.putString("Remember", "False");
                                         Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                                        Log.v("Remember", "False");
                                     }
+                                    RUDeditor.apply();
 
                                 }
                                 else{
