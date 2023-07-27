@@ -2,6 +2,7 @@ package sg.edu.np.mad.productivibe_;
 
 import java.util.Date;
 
+// This class represents a response object that holds information about a task
 public class Task {
     private int Id;
     private String status;

@@ -22,9 +22,9 @@
         android:id="@+id/pictures"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="85dp"
+        android:layout_marginStart="95dp"
         android:layout_marginTop="34dp"
-        android:layout_marginEnd="45dp"
+        android:layout_marginEnd="5dp"
         android:backgroundTint="@color/teal"
         android:text="Pictures"
         app:layout_constraintEnd_toStartOf="@+id/videos"
@@ -35,13 +35,26 @@
         android:id="@+id/videos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="59dp"
+        android:layout_marginStart="19dp"
         android:layout_marginTop="34dp"
-        android:layout_marginEnd="85dp"
+        android:layout_marginEnd="255dp"
         android:backgroundTint="@color/teal"
         android:text="Videos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/pictures"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/punch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="85dp"
+        android:backgroundTint="@color/teal"
+        android:text="Punching Bag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/videos"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+// PicturesFragment is a fragment under the Destress Page which displays a list of funny pictures in a RecyclerView
 public class PicturesFragment extends Fragment {
 
     private RecyclerView recyclerView;

@@ -30,10 +30,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 // The destress page allows users a 5 minute break from their tasks to view entertaining pictures and videos
+// and also a punching bag for them to release their stress
 public class DestressPage extends AppCompatActivity {
     private static final String TITLE = "Destress Page";
     private Button picturesButton;
     private Button videosButton;
+    private Button punchButton;
     private boolean isCountdownRunning = false;
     MediaPlayerManager mediaPlayer = MediaPlayerManager.getInstance(this);
 
@@ -44,6 +46,7 @@ public class DestressPage extends AppCompatActivity {
 
         picturesButton = findViewById(R.id.pictures);
         videosButton = findViewById(R.id.videos);
+        punchButton = findViewById(R.id.punch);
 
         // Show fragment with the destress message
         replaceFragment(new DestressMessage());
@@ -97,6 +100,15 @@ public class DestressPage extends AppCompatActivity {
             mediaPlayer.pause();
             replaceFragment(new VideosFragment());
             Log.v(TITLE, "Video fragment");
+        });
+
+        // When punching bag button is pressed, punch fragment is displayed
+        punchButton.setOnClickListener(v -> {
+            if (!isCountdownRunning) { // If countdown timer is not running yet, start countdown timer
+                countDownTimer();
+            }
+            replaceFragment(new PunchFragment());
+            Log.v(TITLE, "Punching Bag fragment");
         });
     }
 

@@ -2,6 +2,7 @@ package sg.edu.np.mad.productivibe_;
 
 import java.util.List;
 
+// This class represents a response object that holds information about a quote obtained from the API
 public class QuoteResponse {
     private String id;
     private String author;

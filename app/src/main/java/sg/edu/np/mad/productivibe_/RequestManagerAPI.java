@@ -10,6 +10,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
+// This class manages API requests to retrieve random quotes from the "https://api.quotable.io/" API endpoin
 public class RequestManagerAPI {
     Context context;
     Retrofit retrofit = new Retrofit.Builder()
