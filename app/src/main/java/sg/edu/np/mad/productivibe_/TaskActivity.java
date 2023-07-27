@@ -163,11 +163,13 @@ public class TaskActivity extends AppCompatActivity{
         });
 
         // Clear the task list and add pending tasks first, followed by completed tasks
+        int listSize = taskList.size();
         taskList.clear();
+        adapter.notifyItemRangeRemoved(0,listSize);
         taskList.addAll(pendingTasks);
         taskList.addAll(completedTasks);
-
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemRangeInserted(0,listSize);
+        //adapter.notifyDataSetChanged();
 
         // Implementation of swipe gesture for editing/deletion of tasks
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallback);

@@ -1,5 +1,6 @@
 package sg.edu.np.mad.productivibe_;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -16,7 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +39,9 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
     private int selectedTaskIndex = 0;
     private Button timerStartButton;
     private Button timerResetButton;
+    private DatabaseReference taskDBR;
+    private FirebaseDatabase fdb;
+    private List<Task> taskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +58,11 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 showTaskSelectionDialog();
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_timer);
@@ -142,25 +155,50 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
         });
     }
 
+
+
     // Method to show the task selection dialog
     private void showTaskSelectionDialog() {
-        // Initialize the database
-        Database taskDatabase = Database.getInstance(this);
+        // Initialize the database;
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId", null);
-
-        // Call the getAllTasksFromUser method to retrieve tasks for the specified user ID.
-        List<Task> taskList = taskDatabase.getAllTasksFromUser(userId);
+        String userName = sharedPreferences.getString("Username", null);
+        fdb = FirebaseDatabase.getInstance();
+        taskDBR = fdb.getReference("tasks/" + userName);
+        taskList = new ArrayList<>();
+        Query pendingTask = taskDBR.child("status").orderByKey().equalTo("Pending");
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot sn : snapshot.getChildren()) {
+                    Task t = sn.getValue(Task.class);
+                    taskList.add(t);
+                }
+                Log.d("FIREBASE", String.valueOf(taskList.size()));
+                // collects all the tasks saved in the firebase
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                    // if cannot connect or firebase returns an error
+                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Log.d("FIREBASE", "DOESNT CONNECT!");
+                }
+            });
 
         // Create a list of task names to display in the dialog
         pendingTasks = new ArrayList<>();
         ArrayList<String> taskNames = new ArrayList<>();
+
         for (Task task : taskList) {
+            Log.d("FIREBASE", String.valueOf(task.getStatus()));
             if(task.getStatus().equalsIgnoreCase("pending")){
                 taskNames.add(task.getTaskName());
                 pendingTasks.add(task);
             }
         }
+
+
+
+
 
         if(taskNames.size() == 0){
             // jump to tasklist
@@ -279,8 +317,9 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                             Toast.makeText(c, "Task completed", Toast.LENGTH_SHORT).show();
                             Task selected = pendingTasks.get(selectedTaskIndex);
                             selected.setStatus("Done");
-                            Database taskDatabase = Database.getInstance(c);
-                            taskDatabase.updateTask(selected);
+                            //Database taskDatabase = Database.getInstance(c);
+                            //taskDatabase.updateTask(selected);
+                            taskDBR.child(String.valueOf(selected.getId())).setValue(selected);
                             timerStartButton.setEnabled(false);
                             timerResetButton.setEnabled(false);
 
