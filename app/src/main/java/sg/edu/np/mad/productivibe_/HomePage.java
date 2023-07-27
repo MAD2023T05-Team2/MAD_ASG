@@ -39,6 +39,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private Database db;
     private TaskAdapter homeTaskadapter;
     private boolean isMuted;
+    private ValueEventListener retrieveData;
+    private DatabaseReference taskDBR;
     final String TITLE = "HomePage";
 
     @Override
@@ -120,19 +122,28 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         String userName = sharedPreferences.getString("Username", null);
         // create list of today task based on the user
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
-        DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
-
-         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        taskDBR = fdb.getReference("tasks/" + userName);
+        retrieveData = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // filter to current date
-                SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
                 //get current date
                 Date currentDate = new Date();
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
-                    if (t.getTaskDueDateTime().equals(strDate)){
+                    Log.d("TASK",t.getTaskDueDateTime());
+                    Log.d("TASK",strDate);
+                    Date comparedDate = null;
+                    try {
+                        comparedDate = firebase.parse(t.getTaskDueDateTime());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    String compareDate = format.format(comparedDate);
+                    if (compareDate.equals(strDate)){
                         homeTaskList.add(t);
                     }
                 }
@@ -145,7 +156,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
                 // if cannot connect or firebase returns an error
                 //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        taskDBR.orderByKey().addListenerForSingleValueEvent(retrieveData);
 
 
 
@@ -271,6 +283,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         SharedPreferences.Editor editor = sharedPreferences2.edit();
         editor.putBoolean("IsFirstLaunch", true);
         editor.apply();
+
+        // for the firebase listener
+        if (taskDBR != null && retrieveData != null) {
+            taskDBR.removeEventListener(retrieveData);
+        }
 
         onDestroy();
     }
