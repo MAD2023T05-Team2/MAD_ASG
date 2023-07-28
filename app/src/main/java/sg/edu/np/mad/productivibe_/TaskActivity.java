@@ -129,6 +129,7 @@ public class TaskActivity extends AppCompatActivity{
             @Override
             public void onDataLoaded(List<Task> taskList) {
                 reorderTasks(taskList);
+                updateWidget(taskList);
             }
 
             @Override
@@ -842,7 +843,9 @@ public class TaskActivity extends AppCompatActivity{
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
                     taskList.add(t);
-                    lastTaskId = t.getId();
+                    if (lastTaskId < t.getId()){
+                        lastTaskId = t.getId(); // get the highest taskid
+                    }
                 }
                 Log.d("FIREBASE",String.valueOf(taskList.size()));
                 adapter.notifyItemRangeInserted(0,taskList.size());
@@ -885,6 +888,21 @@ public class TaskActivity extends AppCompatActivity{
         taskList.addAll(pendingTasks);
         taskList.addAll(completedTasks);
         adapter.notifyItemRangeInserted(0,listSize);
+    }
+
+    private void updateWidget(List<Task> taskList){
+        Context context = getApplicationContext();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
+
+        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+        int no = filterCurrentDate(taskList).size();
+        String taskNo = no + " Tasks Due Today:";
+        widgetViews.setTextViewText(R.id.todayTask, taskNo);
+
+        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
     }
 
 }

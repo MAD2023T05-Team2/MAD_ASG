@@ -41,6 +41,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private boolean isMuted;
     private ValueEventListener retrieveData;
     private DatabaseReference taskDBR;
+    private FirebaseDatabase fdb;
     final String TITLE = "HomePage";
 
     @Override
@@ -121,7 +122,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         sharedPreferences = this.getSharedPreferences("MyPrefs", 0);
         String userName = sharedPreferences.getString("Username", null);
         // create list of today task based on the user
-        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+        fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
         retrieveData = new ValueEventListener() {
             @Override
@@ -210,19 +211,26 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     }
 
     private void saveMood(String moodValue) {
+        // Initialize the database;
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId", null);
-        Date timestamp = new Date();
+        String userName = sharedPreferences.getString("Username", null);
+        // = FirebaseDatabase.getInstance();
+        DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
 
         // Convert the timestamp to a string
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timestampString = dateFormat.format(timestamp);
+        // current timing
+        Date timestamp = new Date();
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //String timestampString = dateFormat.format(timestamp);
+        long currentTime = timestamp.getTime();
 
         // Create a new Mood object
-        Mood mood = new Mood(userId, moodValue, timestampString);
+        //Mood mood = new Mood(userName, moodValue, currentTime);
+        // unnecessary at this point
 
         // Add the mood to the database
-        db.addMood(mood);
+        //db.addMood(mood);
+        moodDBR.child(String.valueOf(currentTime)).setValue(moodValue);
 
         Toast.makeText(this, "Mood saved: " + moodValue, Toast.LENGTH_SHORT).show();
     }
