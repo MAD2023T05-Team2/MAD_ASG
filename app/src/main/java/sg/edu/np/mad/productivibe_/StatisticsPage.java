@@ -83,7 +83,6 @@ public class StatisticsPage extends AppCompatActivity {
         // drawing the Line Chart
         List<String> dates = new ArrayList<>();
         List<Entry> entries = new ArrayList<>();
-        //drawLineChart(entries,dates);
 
         //for comparing
         // Calculate the date one month ago from the current date
@@ -101,6 +100,7 @@ public class StatisticsPage extends AppCompatActivity {
         moodDBR.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //List<Mood> moods = new ArrayList<>();
                 // Create lists to store the x-axis values (dates) and y-axis values (moods)
                 entries.clear();
                 List<String> moodsList = new ArrayList<>();
@@ -113,6 +113,9 @@ public class StatisticsPage extends AppCompatActivity {
                     if (Long.parseLong(sn.getKey()) > lastMonthTimeStamp){
                         //long timestamp = Long.parseLong(sn.getKey());
                         String mV = sn.getValue(String.class);
+                        //Mood m = new Mood(userName,mV,timestamp);
+                        //Log.d("FIREBASE MOOD",mV + " "+ userName + String.valueOf(timestamp));
+                        //moods.add(m);
                         // save as date format NOT long
                         Date ts = new Date(Long.parseLong(sn.getKey()));
                         String TimeStamp = dateFormat.format(ts);
@@ -120,6 +123,8 @@ public class StatisticsPage extends AppCompatActivity {
                         moodsList.add(mV);
                     }
                 }
+                Log.d("Firebase MOOD", String.valueOf(moodsList.size()));
+                Log.d("Firebase dates", String.valueOf(dates.size()));
 
                 // sort the dates in ascending order in dates
                 Collections.sort(dates, (date1, date2) -> {
@@ -145,13 +150,13 @@ public class StatisticsPage extends AppCompatActivity {
                 }
                 Log.d("Firebase entries", String.valueOf(entries.size()));
 
-                //LineDataSet dataSet = new LineDataSet(entries, "Mood");
-                //LineData lineData = new LineData(dataSet);
+                LineDataSet dataSet = new LineDataSet(entries, "Mood");
+                LineData lineData = new LineData(dataSet);
 
-                moodChart = drawLineChart(entries,dates);
+                drawLineChart(dataSet,dates);
 
                 moodChart.notifyDataSetChanged();
-                //moodChart.setData(lineData);
+                moodChart.setData(lineData);
                 // Refresh the chart
                 moodChart.invalidate();
                 Log.i(TITLE,"Refresh!");
@@ -179,8 +184,6 @@ public class StatisticsPage extends AppCompatActivity {
                 return 2f;
             case "sad":
                 return 1f;
-            case "angry":
-                return 0f;
             default:
                 return 0f;
         }
@@ -202,10 +205,9 @@ public class StatisticsPage extends AppCompatActivity {
     }
 
     // Method to draw and customize the line chart
-    private LineChart drawLineChart(List<Entry> entries, List<String> dates){
-        // instantiating
+    private void drawLineChart(LineDataSet dataSet, List<String> dates){
+
         // Create a LineDataSet from the entries
-        LineDataSet dataSet = new LineDataSet(entries, "Mood");
         dataSet.setDrawValues(false); // Disable displaying values on data points
         dataSet.setColor(Color.BLACK); // Set line color
         dataSet.setLineWidth(3f); // Set line width
@@ -214,11 +216,11 @@ public class StatisticsPage extends AppCompatActivity {
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER); // Set line mode to curved
         Log.i(TITLE,"Create a LineDataSet from the entries");
 
+
         // Customize the appearance of the line chart
         LineData lineData = new LineData(dataSet);
         moodChart.setData(lineData);
         moodChart.getDescription().setEnabled(false); // Disable chart description
-        moodChart.setDrawMarkers(false);
         moodChart.getLegend().setEnabled(false); // Disable legend
         moodChart.setTouchEnabled(false); // Disable touch interactions
         moodChart.setPinchZoom(false); // Disable pinch zoom
@@ -308,11 +310,8 @@ public class StatisticsPage extends AppCompatActivity {
         // Remove numerical values on the secondary Y-axis
         moodChart.getAxisRight().setEnabled(false); // Disable right axis
 
-        moodChart.notifyDataSetChanged();
         // Refresh the chart
         moodChart.invalidate();
-
-        return moodChart;
 
 
     }

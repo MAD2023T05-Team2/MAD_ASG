@@ -40,6 +40,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private TaskAdapter homeTaskadapter;
     private boolean isMuted;
     private ValueEventListener retrieveData;
+
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
     final String TITLE = "HomePage";
@@ -49,6 +50,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
+
+        // Initialize the database
+        db = Database.getInstance(this);
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -105,6 +109,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
+
 
         // Recyclerview to show tasks on homepage
         homeTaskRecyclerView = findViewById(R.id.homeTaskRecyclerView);
@@ -186,6 +191,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
 
+
+
         //FOR TESTING WILL DELETE AFTER
 //        db.deleteAllMoods(userId);
 //        Mood mood1 = new Mood(userId, "happy", "2023-06-28 10:30:00");
@@ -217,11 +224,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         // = FirebaseDatabase.getInstance();
         DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
 
+
         // Convert the timestamp to a string
-        // current timing
         Date timestamp = new Date();
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //String timestampString = dateFormat.format(timestamp);
         long currentTime = timestamp.getTime();
 
         // Create a new Mood object
@@ -229,7 +234,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         // unnecessary at this point
 
         // Add the mood to the database
-        //db.addMood(mood);
         moodDBR.child(String.valueOf(currentTime)).setValue(moodValue);
 
         Toast.makeText(this, "Mood saved: " + moodValue, Toast.LENGTH_SHORT).show();

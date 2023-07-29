@@ -316,6 +316,12 @@ public class TaskActivity extends AppCompatActivity{
             }
         });
 
+        // Set focusable to false to avoid requiring a second click for date picker
+        taskDateTimeEditText.setFocusable(false);
+        taskDateTimeEditText.setClickable(true);
+        taskDueDateTimeEditText.setFocusable(false);
+        taskDueDateTimeEditText.setClickable(true);
+
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -457,6 +463,12 @@ public class TaskActivity extends AppCompatActivity{
                 showDatePicker(taskDueDateTimeEditText);
             }
         });
+
+        // Set focusable to false to avoid requiring a second click for date picker
+        taskDateTimeEditText.setFocusable(false);
+        taskDateTimeEditText.setClickable(true);
+        taskDueDateTimeEditText.setFocusable(false);
+        taskDueDateTimeEditText.setClickable(true);
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -714,13 +726,39 @@ public class TaskActivity extends AppCompatActivity{
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        final String existingDateTime = editText.getText().toString().trim();
+        String existingDate = "";
+        String existingTime = "";
+
+        if (!existingDateTime.isEmpty()) {
+            try {
+                SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                Date parsedDateTime = dateTimeFormat.parse(existingDateTime);
+                calendar.setTime(parsedDateTime);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                existingDate = dateFormat.format(parsedDateTime);
+                existingTime = timeFormat.format(parsedDateTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final String finalExistingTime = existingTime;
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 calendar.set(year, month, day);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
                 String selectedDate = dateFormat.format(calendar.getTime());
-                editText.setText(selectedDate);
+
+                // Restore the existing time
+                String selectedDateTime = selectedDate + " " + finalExistingTime;
+                editText.setText(selectedDateTime);
                 showTimePicker(editText, calendar);
             }
         }, year, month, day);
@@ -731,6 +769,23 @@ public class TaskActivity extends AppCompatActivity{
     private void showTimePicker(final EditText editText, final Calendar calendar) {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
+
+        String existingTime = editText.getText().toString().trim();
+        if (existingTime.contains(" ")) {
+            String[] timeParts = existingTime.split(" ");
+            if (timeParts.length == 2) {
+                String timeString = timeParts[1];
+                try {
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    Date parsedTime = timeFormat.parse(timeString);
+                    calendar.setTime(parsedTime);
+                    hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    minute = calendar.get(Calendar.MINUTE);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
