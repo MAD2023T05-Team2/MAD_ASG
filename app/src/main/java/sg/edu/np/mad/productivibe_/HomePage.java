@@ -195,14 +195,14 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
         //FOR TESTING WILL DELETE AFTER
 //        db.deleteAllMoods(userId);
-//        Mood mood1 = new Mood(userId, "happy", "2023-06-28 10:30:00");
-//        Mood mood2 = new Mood(userId, "neutral", "2023-06-29 15:45:00");
-//        Mood mood3 = new Mood(userId, "sad", "2023-07-01 09:00:00");
-//        Mood mood4 = new Mood(userId, "party", "2023-07-03 19:20:00");
-//        Mood mood5 = new Mood(userId, "angry", "2023-07-05 12:10:00");
-//        Mood mood6 = new Mood(userId, "party", "2023-07-05 12:10:00");
-//        Mood mood7 = new Mood(userId, "angry", "2023-07-05 12:10:00");
-//        Mood mood8 = new Mood(userId, "neutral", "2023-07-06 12:10:00");
+//        Mood mood1 = new Mood(userId, "happy", "2023-07-15 10:30:00");
+//        Mood mood2 = new Mood(userId, "neutral", "2023-07-18 15:45:00");
+//        Mood mood3 = new Mood(userId, "sad", "2023-07-19 09:00:00");
+//        Mood mood4 = new Mood(userId, "party", "2023-07-20 19:20:00");
+//        Mood mood5 = new Mood(userId, "angry", "2023-07-20 12:10:00");
+//        Mood mood6 = new Mood(userId, "party", "2023-07-21 12:10:00");
+//        Mood mood7 = new Mood(userId, "angry", "2023-07-26 12:10:00");
+//        Mood mood8 = new Mood(userId, "neutral", "2023-07-28 12:10:00");
 //        Mood mood9 = new Mood(userId, "happy", "2023-07-08 12:10:00");
 //        db.addMood(mood1);
 //        db.addMood(mood2);
