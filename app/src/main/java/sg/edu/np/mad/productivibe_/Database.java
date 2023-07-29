@@ -235,7 +235,7 @@ public class Database extends SQLiteOpenHelper {
     public void addMood(Mood mood) {
         SQLiteDatabase db = sInstance.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_MOOD_USER_ID, mood.getUserId());
+        values.put(COLUMN_MOOD_USER_ID, mood.getUserName());
         values.put(COLUMN_MOOD_MOOD, mood.getMood());
         values.put(COLUMN_MOOD_TIMESTAMP, mood.getTimestamp());
         db.insert("moods", null, values);
@@ -268,7 +268,7 @@ public class Database extends SQLiteOpenHelper {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(idIndex);
                 String mood = cursor.getString(moodIndex);
-                String timestamp = cursor.getString(timestampIndex);
+                long timestamp = cursor.getLong(timestampIndex);
 
                 Mood moodObj = new Mood(id, mood, timestamp);
                 moodList.add(moodObj);

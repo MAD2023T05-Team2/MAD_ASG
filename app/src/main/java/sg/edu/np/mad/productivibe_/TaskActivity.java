@@ -67,6 +67,7 @@ public class TaskActivity extends AppCompatActivity{
     private List<Task> taskList;
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
+    private Integer lastTaskId = 0; // zero till the data is retrieved and is updated (handles new account)
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
     String TITLE = "Task Activity";
@@ -108,6 +109,7 @@ public class TaskActivity extends AppCompatActivity{
         // Initialize RecyclerView and its adapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(null);
         taskList = new ArrayList<>(); //holds data for tasks displayed in recycler view
         adapter = new TaskAdapter(taskList);
         recyclerView.setAdapter(adapter);
@@ -123,52 +125,20 @@ public class TaskActivity extends AppCompatActivity{
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
 
-        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        loadTasks(new GetTaskData() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot sn: snapshot.getChildren()){
-                    Task t = sn.getValue(Task.class);
-                    taskList.add(t);
-                }
-                Log.d("FIREBASE",String.valueOf(taskList.size()));
-                adapter.notifyItemRangeInserted(0,taskList.size());
-                // collects all the tasks saved in the firebase
+            public void onDataLoaded(List<Task> taskList) {
+                reorderTasks(taskList);
+                updateWidget(taskList);
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // if cannot connect or firebase returns an error
+            public void onError(String errorMsg) {
                 Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-                Log.d(TITLE, error.getMessage());
+                Log.d(TITLE, errorMsg);
             }
         });
 
-        // Separate pending and completed tasks
-        List<Task> pendingTasks = new ArrayList<>();
-        List<Task> completedTasks = new ArrayList<>();
-
-        for (Task task : taskList) {
-            if (task.getStatus().equals("Pending")) {
-                pendingTasks.add(task);
-            } else {
-                completedTasks.add(task);
-            }
-        }
-
-        // Sort pending tasks by due date
-        Collections.sort(pendingTasks, new Comparator<Task>() {
-            @Override
-            public int compare(Task task1, Task task2) {
-                return task1.getTaskDueDateTime().compareTo(task2.getTaskDueDateTime());
-            }
-        });
-
-        // Clear the task list and add pending tasks first, followed by completed tasks
-        int listSize = taskList.size();
-        taskList.clear();
-        adapter.notifyItemRangeRemoved(0,listSize);
-        taskList.addAll(pendingTasks);
-        taskList.addAll(completedTasks);
-        adapter.notifyItemRangeInserted(0,listSize);
         //adapter.notifyDataSetChanged();
 
         // Implementation of swipe gesture for editing/deletion of tasks
@@ -211,8 +181,10 @@ public class TaskActivity extends AppCompatActivity{
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
+                adapter.clearList();
                 adapter.setTasks(taskList); // Show all tasks again when search is closed
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeInserted(0, taskList.size());
                 return false;
             }
         });
@@ -380,8 +352,11 @@ public class TaskActivity extends AppCompatActivity{
                             String userId = sharedPreferences.getString("UserId", null);
                             String userName = sharedPreferences.getString("Username", null);
                             Integer uId = Integer.parseInt(userId);
+
+                            lastTaskId += 1;
+
                             Task newTask = new Task(
-                                    taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
+                                    lastTaskId, "Pending", taskName, taskDesc, taskDateTimed,
                                     taskDueDateTimed, Integer.parseInt(taskDurationString), "Type",
                                     "Repeat", 0, "", uId // saves the userID
                             );
@@ -398,7 +373,9 @@ public class TaskActivity extends AppCompatActivity{
                             //taskDatabase.addTask(newTask);
 
                             // Notify the adapter of the new task
-                            adapter.notifyItemInserted(taskList.size() - 1);
+                            taskList.add(newTask);
+                            reorderTasks(taskList);
+                            //adapter.notifyItemInserted(taskList.size() - 1);
 
                             // Trigger Notification Scheduling
                             notificationChannel();
@@ -511,27 +488,28 @@ public class TaskActivity extends AppCompatActivity{
                             String editedTaskDueDate = taskDueDateTimeEditText.getText().toString().trim();
 
                             // Convert the edited date strings to Date objects
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                            String editedDate = null;
-                            String editedDueDate = null;
-                            editedDate = dateFormat.format(editedTaskDate);
-                            editedDueDate = dateFormat.format(editedTaskDueDate);
+                            //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                            //String editedDate = null;
+                            //String editedDueDate = null;
+                            //editedDate = dateFormat.format(editedTaskDate);
+                            //editedDueDate = dateFormat.format(editedTaskDueDate);
 
                             // Update the task in the list and database
                             Task task = taskList.get(position);
                             task.setTaskName(editedTaskName);
                             task.setTaskDesc(editedTaskDesc);
                             task.setTaskDuration(editedTaskDuration);
-                            task.setTaskDateTime(editedDate);
-                            task.setTaskDueDateTime(editedDueDate);
+                            task.setTaskDateTime(editedTaskDate);
+                            task.setTaskDueDateTime(editedTaskDueDate);
 
                             // update firebase
                             taskDBR.child(String.valueOf(task.getId())).setValue(task);
 
                             //taskDatabase.updateTask(task);
                         // Notify the adapter of the updated task
-                        adapter.notifyItemChanged(position);
 
+                        //adapter.notifyItemChanged(position);
+                        reorderTasks(taskList);
                         // Trigger Notification Scheduling
                         notificationChannel();
                         pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(TaskActivity.this, BroadcastReceiver.class), PendingIntent.FLAG_IMMUTABLE);
@@ -609,12 +587,12 @@ public class TaskActivity extends AppCompatActivity{
         DatabaseReference toRemove = taskDBR.child(String.valueOf(task.getId()));
         toRemove.removeValue();
 
-        taskDatabase.deleteTask(task.getId()); // Delete the task from the database
+        //taskDatabase.deleteTask(task.getId()); // Delete the task from the database
 
         if (pendingIntent != null && alarmManager != null) {
             alarmManager.cancel(pendingIntent); // Halt the notifications for the deleted task
         }
-        adapter.notifyDataSetChanged(); // Update the RecyclerView
+        //adapter.notifyDataSetChanged(); // Update the RecyclerView
 
         // Undoing the task deletion
         Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
@@ -624,6 +602,8 @@ public class TaskActivity extends AppCompatActivity{
                         taskList.add(position, task);
                         adapter.notifyItemInserted(position);
                         recyclerView.scrollToPosition(position);
+                        // re-add the task
+                        taskDBR.child(String.valueOf(task.getId())).setValue(task);
                     }
                 }) .show();
 
@@ -669,7 +649,11 @@ public class TaskActivity extends AppCompatActivity{
             }
         }
         adapter.setTasks(filteredTasks); // Update the adapter with filtered tasks
-        adapter.notifyDataSetChanged();
+        // notify adapter
+        reorderTasks(filteredTasks);
+        //adapter.clearList();
+        //adapter.notifyItemRangeInserted(0,filteredTasks.size());
+        //adapter.notifyDataSetChanged();
     }
 
         public void sendPushNotification(Task task) {
@@ -816,26 +800,6 @@ public class TaskActivity extends AppCompatActivity{
         timePickerDialog.show();
     }
 
-    // Method to call all tasks from firebase
-    private void getTaskfromFirebase(List<Task> taskLs, DatabaseReference databaseReference){
-        // the reference is already pointing the user
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // this method is call to get the realtime
-                // updates in the data.
-                GenericTypeIndicator<List<Task>> t = new GenericTypeIndicator<List<Task>>() {};
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // calling on cancelled method when we receive
-                // any error or we are not able to get the data.
-                Toast.makeText(TaskActivity.this, "Failed to retrieve tasks from database.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
@@ -925,6 +889,75 @@ public class TaskActivity extends AppCompatActivity{
         } catch (ParseException e) {
             return false;
         }
+    }
+
+    private void loadTasks(GetTaskData getTaskData){
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    Task t = sn.getValue(Task.class);
+                    taskList.add(t);
+                    if (lastTaskId < t.getId()){
+                        lastTaskId = t.getId(); // get the highest taskid
+                    }
+                }
+                Log.d("FIREBASE",String.valueOf(taskList.size()));
+                adapter.notifyItemRangeInserted(0,taskList.size());
+                reorderTasks(taskList);
+                // collects all the tasks saved in the firebase
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Log.d(TITLE, error.getMessage());
+            }
+        });
+    }
+
+    private void reorderTasks(List<Task> taskList){
+        // Separate pending and completed tasks
+        List<Task> pendingTasks = new ArrayList<>();
+        List<Task> completedTasks = new ArrayList<>();
+
+        for (Task task : taskList) {
+            if (task.getStatus().equals("Pending")) {
+                pendingTasks.add(task);
+            } else {
+                completedTasks.add(task);
+            }
+        }
+        // Sort pending tasks by due date
+        Collections.sort(pendingTasks, new Comparator<Task>() {
+            @Override
+            public int compare(Task task1, Task task2) {
+                return task1.getTaskDueDateTime().compareTo(task2.getTaskDueDateTime());
+            }
+        });
+
+        // Clear the task list and add pending tasks first, followed by completed tasks
+        int listSize = taskList.size();
+        taskList.clear();
+        adapter.notifyItemRangeRemoved(0,listSize);
+        taskList.addAll(pendingTasks);
+        taskList.addAll(completedTasks);
+        adapter.notifyItemRangeInserted(0,listSize);
+    }
+
+    private void updateWidget(List<Task> taskList){
+        Context context = getApplicationContext();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
+
+        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+        int no = filterCurrentDate(taskList).size();
+        String taskNo = no + " Tasks Due Today:";
+        widgetViews.setTextViewText(R.id.todayTask, taskNo);
+
+        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
     }
 
 }

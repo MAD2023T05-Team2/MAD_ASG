@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -17,13 +18,21 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -71,42 +80,136 @@ public class StatisticsPage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // drawing the Line Chart
+        List<String> dates = new ArrayList<>();
+        List<Entry> entries = new ArrayList<>();
+        drawLineChart(entries,dates);
+
+        //for comparing
+        // Calculate the date one month ago from the current date
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        long lastMonthTimeStamp = calendar.getTime().getTime(); // take all posts after this timing
+        // Start up Firebase reference
         // Retrieve mood data from the database
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId", null);
-        List<Mood> moods = Database.getInstance(this).getMoodsForLastMonth(userId);
+        //String userId = sharedPreferences.getString("UserId", null);
+        String userName = sharedPreferences.getString("Username", null);
+        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+        DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
+        //Query fromLastMonth = moodDBR.orderByKey().startAfter(String.valueOf(lastMonthTimeStamp));
+        moodDBR.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //List<Mood> moods = new ArrayList<>();
+                // Create lists to store the x-axis values (dates) and y-axis values (moods)
+                entries.clear();
+                List<String> moodsList = new ArrayList<>();
 
-        // Create lists to store the x-axis values (dates) and y-axis values (moods)
-        List<String> dates = new ArrayList<>();
-        List<String> moodsList = new ArrayList<>();
+                // Format the timestamp from Firebase to a string
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-        // Prepare the mood data for the chart
-        for (Mood mood : moods) {
-            dates.add(formatDate(mood.getTimestamp()));
-            moodsList.add(mood.getMood());
-        }
+                // retrieval
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    if (Long.parseLong(sn.getKey()) > lastMonthTimeStamp){
+                        //long timestamp = Long.parseLong(sn.getKey());
+                        String mV = sn.getValue(String.class);
+                        //Mood m = new Mood(userName,mV,timestamp);
+                        //Log.d("FIREBASE MOOD",mV + " "+ userName + String.valueOf(timestamp));
+                        //moods.add(m);
+                        // save as date format NOT long
+                        Date ts = new Date(Long.parseLong(sn.getKey()));
+                        String TimeStamp = dateFormat.format(ts);
+                        dates.add(formatDate(TimeStamp));
+                        moodsList.add(mV);
+                    }
+                }
+                Log.d("Firebase MOOD", String.valueOf(moodsList.size()));
+                Log.d("Firebase dates", String.valueOf(dates.size()));
 
-        // Sort the dates in ascending order
-        Collections.sort(dates, (date1, date2) -> {
-            SimpleDateFormat format = new SimpleDateFormat("dd MMM", Locale.getDefault());
-            try {
-                Date d1 = format.parse(date1);
-                Date d2 = format.parse(date2);
-                return d1.compareTo(d2);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                // sort the dates in ascending order in dates
+                Collections.sort(dates, (date1, date2) -> {
+                    //Long ts1 = Long.parseLong(date1);
+                    //Long ts2 = Long.parseLong(date2);
+                    //return ts1.compareTo(ts2);
+                    SimpleDateFormat format = new SimpleDateFormat("dd MMM", Locale.getDefault());
+                    try {
+                        Date d1 = format.parse(date1);
+                        Date d2 = format.parse(date2);
+                        return d1.compareTo(d2);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                });
+
+                // Create entries for the line chart
+                for (int i = 0; i < moodsList.size(); i++) {
+                    String mood = moodsList.get(i);
+                    float moodValue = convertMoodToValue(mood);
+                    entries.add(new Entry(i, moodValue));
+                }
+                Log.d("Firebase entries", String.valueOf(entries.size()));
+
+                LineDataSet dataSet = new LineDataSet(entries, "Mood");
+                LineData lineData = new LineData(dataSet);
+
+                drawLineChart(entries,dates);
+
+                moodChart.notifyDataSetChanged();
+                moodChart.setData(lineData);
+                // Refresh the chart
+                moodChart.invalidate();
+                Log.i(TITLE,"Refresh!");
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Log.d(TITLE, error.getMessage());
             }
-            return 0;
         });
+        //List<Mood> moods = Database.getInstance(this).getMoodsForLastMonth(userId);
 
-        // Create entries for the line chart
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < moodsList.size(); i++) {
-            String mood = moodsList.get(i);
-            float moodValue = convertMoodToValue(mood);
-            entries.add(new Entry(i, moodValue));
+    }
+
+    // Helper method to convert mood string to a numerical value
+    private float convertMoodToValue(String mood) {
+        switch (mood) {
+            case "party":
+                return 4f;
+            case "happy":
+                return 3f;
+            case "neutral":
+                return 2f;
+            case "sad":
+                return 1f;
+            case "angry":
+                return 0f;
+            default:
+                return 0f;
+        }
+    }
+
+    // Helper method to format the date
+    private String formatDate(String date) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM", Locale.getDefault());
+
+        try {
+            Date parsedDate = inputFormat.parse(date);
+            return outputFormat.format(parsedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
+        return "";
+    }
+
+    // Method to draw and customize the line chart
+    private void drawLineChart(List<Entry> entries, List<String> dates){
+        // instantiating
         // Create a LineDataSet from the entries
         LineDataSet dataSet = new LineDataSet(entries, "Mood");
         dataSet.setDrawValues(false); // Disable displaying values on data points
@@ -115,6 +218,7 @@ public class StatisticsPage extends AppCompatActivity {
         dataSet.setCircleRadius(3f); // Set circle radius
         dataSet.setCircleColor(Color.BLACK); // Set circle color
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER); // Set line mode to curved
+        Log.i(TITLE,"Create a LineDataSet from the entries");
 
         // Customize the appearance of the line chart
         LineData lineData = new LineData(dataSet);
@@ -124,6 +228,8 @@ public class StatisticsPage extends AppCompatActivity {
         moodChart.setTouchEnabled(false); // Disable touch interactions
         moodChart.setPinchZoom(false); // Disable pinch zoom
         moodChart.setScaleEnabled(false); // Disable scaling
+        moodChart.notifyDataSetChanged();
+        Log.i(TITLE,"Customize the appearance of the line chart");
 
         // Adjust the top margin to shift the LineChart up
         LineChart lineChart = findViewById(R.id.moodChart);
@@ -131,6 +237,7 @@ public class StatisticsPage extends AppCompatActivity {
         int marginTop = -50; // Set the desired margin value for the top
         layoutParams.setMargins(layoutParams.leftMargin, marginTop, layoutParams.rightMargin, layoutParams.bottomMargin);
         lineChart.setLayoutParams(layoutParams);
+        Log.i(TITLE,"Adjust the top margin to shift the LineChart up");
 
 
         // Customize the X-axis
@@ -143,6 +250,7 @@ public class StatisticsPage extends AppCompatActivity {
         xAxis.setDrawGridLines(false); // Hide X-axis grid lines
         xAxis.setYOffset(-2f); // Move X-axis labels higher
         moodChart.setExtraRightOffset(25f); // Shift the last label to the left
+        Log.i(TITLE,"Customize the X-axis");
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
@@ -190,6 +298,7 @@ public class StatisticsPage extends AppCompatActivity {
         // Enable grid lines for all rows on the Y-axis
         moodChart.getAxisLeft().setDrawGridLines(true);
         moodChart.getAxisRight().setDrawGridLines(true);
+        Log.i(TITLE,"Customize the Y-axis");
 
         // Set grid line properties
         moodChart.getAxisLeft().setGridLineWidth(1f);
@@ -199,44 +308,17 @@ public class StatisticsPage extends AppCompatActivity {
         moodChart.getAxisLeft().enableGridDashedLine(10f, 10f, 0f);
         moodChart.getAxisRight().enableGridDashedLine(10f, 10f, 0f);
 
+        Log.i(TITLE,"Set grid line properties");
+
         // Remove numerical values on the secondary Y-axis
         moodChart.getAxisRight().setEnabled(false); // Disable right axis
 
+        moodChart.notifyDataSetChanged();
+        moodChart.setData(lineData);
         // Refresh the chart
         moodChart.invalidate();
-    }
 
-    // Helper method to convert mood string to a numerical value
-    private float convertMoodToValue(String mood) {
-        switch (mood) {
-            case "party":
-                return 4f;
-            case "happy":
-                return 3f;
-            case "neutral":
-                return 2f;
-            case "sad":
-                return 1f;
-            case "angry":
-                return 0f;
-            default:
-                return 0f;
-        }
-    }
 
-    // Helper method to format the date
-    private String formatDate(String date) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM", Locale.getDefault());
-
-        try {
-            Date parsedDate = inputFormat.parse(date);
-            return outputFormat.format(parsedDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return "";
     }
 
 

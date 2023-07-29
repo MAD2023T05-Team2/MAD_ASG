@@ -1,25 +1,25 @@
 package sg.edu.np.mad.productivibe_;
 
 public class Mood {
-    private String userId;
+    private String userName;
     private String mood;
-    private String timestamp;
+    private long timestamp;
 
-    public Mood(String userId, String mood, String timestamp) {
-        this.userId = userId;
+    public Mood(String userName, String mood, long timestamp) {
+        this.userName = userName;
         this.mood = mood;
         this.timestamp = timestamp;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
     public String getMood() {
         return mood;
     }
 
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 }
