@@ -754,7 +754,7 @@ public class TaskActivity extends AppCompatActivity{
                 getTaskData.onDataLoaded(taskList);
                 adapter.notifyItemRangeInserted(0,taskList.size());
                 reorderTasks(taskList);
-                updateWidget(taskList);
+                //updateWidget(taskList);
                 // collects all the tasks saved in the firebase
             }
             @Override
