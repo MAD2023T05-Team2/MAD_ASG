@@ -42,8 +42,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -53,10 +51,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -221,67 +217,6 @@ public class TaskActivity extends AppCompatActivity{
         }
     };
 
-    // displays a dialog for creating a new task when create button is clicked
-//    private void showCreateTaskDialog() {
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        View dialogView = inflater.inflate(R.layout.dialog_create_task, null);
-//
-//        EditText taskNameEditText = dialogView.findViewById(R.id.taskNameEditText);
-//        EditText taskDescEditText = dialogView.findViewById(R.id.taskDescriptionEditText);
-//        EditText taskDurationEditText = dialogView.findViewById(R.id.taskDurationEditText);
-//        EditText taskDateTimeEditText = dialogView.findViewById(R.id.taskDateTimeEditText);
-//        EditText taskDueDateTimeEditText = dialogView.findViewById(R.id.taskDueDateTimeEditText);
-//
-//        // Constructing the dialog
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Create Task");
-//        builder.setView(dialogView);
-//
-//        builder.setPositiveButton("Create", null); // Set initially disabled
-//        builder.setNegativeButton("Cancel", null);
-//        final AlertDialog dialog = builder.create();
-//
-//        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialogInterface) {
-//                Button createButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//                createButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        // Validate user input
-//                        boolean isValidInput = validateInput(taskNameEditText, taskDescEditText, taskDateTimeEditText, taskDueDateTimeEditText, taskDurationEditText);
-//                        if (isValidInput) {
-//                            String taskName = taskNameEditText.getText().toString().trim();
-//                            String taskDesc = taskDescEditText.getText().toString().trim();
-//                            String taskDurationString = taskDurationEditText.getText().toString().trim();
-//                            String taskDateTime = taskDateTimeEditText.getText().toString().trim();
-//                            String taskDueDateTime = taskDueDateTimeEditText.getText().toString().trim();
-//
-//                            // Convert the edited date strings to Date objects
-//                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-//                            Date taskDateTimed = null;
-//                            Date taskDueDateTimed = null;
-//                            try {
-//                                taskDateTimed = dateFormat.parse(taskDateTime);
-//                                taskDueDateTimed = dateFormat.parse(taskDueDateTime);
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                            // Create a new Task object
-//                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//                            String userId = sharedPreferences.getString("UserId", null);
-//                            Integer uId = Integer.parseInt(userId);
-//                            Task newTask = new Task(
-//                                    taskList.size() + 1, "Pending", taskName, taskDesc, taskDateTimed,
-//                                    taskDueDateTimed, Integer.parseInt(taskDurationString), "Type",
-//                                    "Repeat", 0, "", uId // saves the userID
-//                            );
-//
-//                            // Add the new task to the list and database
-//                            taskList.add(newTask);
-//                            taskDatabase.addTask(newTask);
-
     // create task and add into the database
     private void showCreateTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -422,10 +357,6 @@ public class TaskActivity extends AppCompatActivity{
         taskDescEditText.setText(task.getTaskDesc());
         taskDurationEditText.setText(String.valueOf(task.getTaskDuration()));
 
-        // Convert the date objects to string representations
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-        //String taskDateTime = dateFormat.format(task.getTaskDateTime());
-        //String taskDueDateTime = dateFormat.format(task.getTaskDueDateTime());
         taskDateTimeEditText.setText(task.getTaskDateTime());
         taskDueDateTimeEditText.setText(task.getTaskDueDateTime());
 
@@ -476,12 +407,6 @@ public class TaskActivity extends AppCompatActivity{
                             String editedTaskDate = taskDateTimeEditText.getText().toString().trim();
                             String editedTaskDueDate = taskDueDateTimeEditText.getText().toString().trim();
 
-                            // Convert the edited date strings to Date objects
-                            //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                            //String editedDate = null;
-                            //String editedDueDate = null;
-                            //editedDate = dateFormat.format(editedTaskDate);
-                            //editedDueDate = dateFormat.format(editedTaskDueDate);
 
                             // Update the task in the list and database
                             Task task = taskList.get(position);
@@ -494,8 +419,6 @@ public class TaskActivity extends AppCompatActivity{
                             // update firebase
                             taskDBR.child(String.valueOf(task.getId())).setValue(task);
 
-                            //taskDatabase.updateTask(task);
-                        // Notify the adapter of the updated task
 
                         //adapter.notifyItemChanged(position);
                         reorderTasks(taskList);
@@ -735,19 +658,17 @@ public class TaskActivity extends AppCompatActivity{
         int minute = calendar.get(Calendar.MINUTE);
 
         String existingTime = editText.getText().toString().trim();
-        if (existingTime.contains(" ")) {
-            String[] timeParts = existingTime.split(" ");
-            if (timeParts.length == 2) {
-                String timeString = timeParts[1];
-                try {
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                    Date parsedTime = timeFormat.parse(timeString);
-                    calendar.setTime(parsedTime);
-                    hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    minute = calendar.get(Calendar.MINUTE);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        String[] timeParts = existingTime.split(" ");
+        if (timeParts.length == 2) {
+            String timeString = timeParts[1];
+            try {
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                Date parsedTime = timeFormat.parse(timeString);
+                calendar.setTime(parsedTime);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
 
@@ -758,15 +679,23 @@ public class TaskActivity extends AppCompatActivity{
                 calendar.set(Calendar.MINUTE, minute);
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String selectedTime = timeFormat.format(calendar.getTime());
-                editText.setText(editText.getText() + " " + selectedTime);
+
+                // Check if there's already an existing time in the EditText
+                String existingDateTime = editText.getText().toString().trim();
+                String[] dateTimeParts = existingDateTime.split(" ");
+                if (dateTimeParts.length == 2) {
+                    // If there's an existing time, replace it with the selected time
+                    editText.setText(dateTimeParts[0] + " " + selectedTime);
+                } else {
+                    // If there's no existing time, add the selected time
+                    editText.setText(existingDateTime + " " + selectedTime);
+                }
             }
         }, hour, minute, false);
         timePickerDialog.show();
     }
 
 
-
-    // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
 
     private boolean validateInput(EditText taskNameEditText, EditText taskDescEditText, EditText taskDateTimeEditText, EditText taskDueDateTimeEditText, EditText taskDurationEditText) {
         boolean isValidInput = true;
