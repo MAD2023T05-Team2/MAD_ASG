@@ -387,18 +387,7 @@ public class TaskActivity extends AppCompatActivity{
                             dialog.dismiss();
 
                             // Update the widget with the new task
-                            Context context = getApplicationContext();
-                            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                            ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
-                            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-                            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
-
-                            RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-                            int no = filterCurrentDate(taskList).size();
-                            String taskNo = no + " Tasks Due Today:";
-                            widgetViews.setTextViewText(R.id.todayTask, taskNo);
-
-                            appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+                            updateWidget(taskList);
 
                         }
                     }
@@ -522,20 +511,7 @@ public class TaskActivity extends AppCompatActivity{
                         dialog.dismiss();
 
                         // Update the widget with the edited task
-                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                        String userId = sharedPreferences.getString("UserId", null);
-                        Context context = getApplicationContext();
-                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
-                        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
-
-                        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-                        int no = filterCurrentDate(taskList).size();
-                        String taskNo = no + " Tasks Due Today:";
-                        widgetViews.setTextViewText(R.id.todayTask, taskNo);
-
-                        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+                        updateWidget(taskList);
 
                         }
                     }
@@ -604,24 +580,12 @@ public class TaskActivity extends AppCompatActivity{
                         recyclerView.scrollToPosition(position);
                         // re-add the task
                         taskDBR.child(String.valueOf(task.getId())).setValue(task);
+                        updateWidget(taskList);
                     }
                 }) .show();
 
         // Update the widget, removing the deleted task
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId", null);
-        Context context = getApplicationContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
-
-        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-        int no = filterCurrentDate(taskList).size();
-        String taskNo = no + " Tasks Due Today:";
-        widgetViews.setTextViewText(R.id.todayTask, taskNo);
-
-        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+        updateWidget(taskList);
     }
 
     private void performSearch(String query) {
@@ -958,6 +922,7 @@ public class TaskActivity extends AppCompatActivity{
         widgetViews.setTextViewText(R.id.todayTask, taskNo);
 
         appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+
     }
 
 }

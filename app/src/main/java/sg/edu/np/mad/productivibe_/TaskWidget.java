@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -29,94 +28,14 @@ import java.util.Locale;
 /**
  * Implementation of App Widget functionality.
  */
-
-
 public class TaskWidget extends AppWidgetProvider {
-
-    private ArrayList<Task> widgetTaskList = new ArrayList<>();
-
-    private void loadTasks(GetTaskData getTaskData, Context context){
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-        String userName = sharedPreferences.getString("Username", null);
-        // create list of today task based on the user
-        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
-        DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
-        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // filter to current date
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-                SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                //get current date
-                Date currentDate = new Date();
-                String strDate = format.format(currentDate);
-                for (DataSnapshot sn: snapshot.getChildren()){
-                    Task t = sn.getValue(Task.class);
-                    Date comparedDate = null;
-                    try {
-                        comparedDate = firebase.parse(t.getTaskDueDateTime());
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    String compareDate = format.format(comparedDate);
-                    if (compareDate.equals(strDate)){
-                        widgetTaskList.add(t);
-                    }
-                }
-                Log.d("FIREBASE WIDGET",String.valueOf(widgetTaskList.size()));
-                // collects all the tasks saved in the firebase
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // if cannot connect or firebase returns an error
-                //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, String myPrefs) {
-
-        loadTasks(new GetTaskData() {
-            @Override
-            public void onDataLoaded(List<Task> taskList) {
-
-                int no = widgetTaskList.size();
-                String taskNo = no + " Tasks Due Today:";
-                RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-                widgetViews.setTextViewText(R.id.todayTask, taskNo);
-                Log.v("Widget", taskNo);
-
-                // To display tasks using list view
-                Intent serviceIntent = new Intent(context, TaskWidgetService.class);
-                serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-                widgetViews.setRemoteAdapter(R.id.widgetTaskView, serviceIntent);
-                widgetViews.setEmptyView(R.id.widgetTaskView, R.id.noTasks);
-
-                // Instruct the widget manager to update the widget
-                appWidgetManager.updateAppWidget(appWidgetId, widgetViews);
-
-                // Create an Intent to launch HomePage when widget is clicked
-                Intent intent = new Intent(context, HomePage.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-                widgetViews.setOnClickPendingIntent(R.id.todayTask, pendingIntent);
-                widgetViews.setOnClickPendingIntent(R.id.widgetTaskView, pendingIntent);
-            }
-
-            @Override
-            public void onError(String errorMsg) {
-
-            }
-        },context);
+    //private static Database db;
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                int appWidgetId) {
 
         // Initialize the database
         //TaskWidget.db = Database.getInstance(context.getApplicationContext());
 
-        /*
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
         String userName = sharedPreferences.getString("Username", null);
@@ -136,6 +55,8 @@ public class TaskWidget extends AppWidgetProvider {
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
+                    Log.d("TASK",t.getTaskDueDateTime());
+                    Log.d("TASK",strDate);
                     Date comparedDate = null;
                     try {
                         comparedDate = firebase.parse(t.getTaskDueDateTime());
@@ -181,10 +102,6 @@ public class TaskWidget extends AppWidgetProvider {
                 //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
             }
         });
-
-         */
-
-
     }
 
     @Override
@@ -192,7 +109,7 @@ public class TaskWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             // update the views and content of the widget
-            updateAppWidget(context, appWidgetManager, appWidgetId, "MyPrefs");
+            updateAppWidget(context, appWidgetManager, appWidgetId);
 
             // notify appWidgetManager that the data has changed for the task list view in the widget
             // triggers the onDataSetChanged() method in the RemoteViewsService
@@ -229,5 +146,4 @@ public class TaskWidget extends AppWidgetProvider {
         }
         return temp;
     }
-
 }
