@@ -815,7 +815,6 @@ public class TaskActivity extends AppCompatActivity{
         adapter.notifyItemRangeInserted(0,listSize);
     }
 
-
     private boolean validateInput(EditText taskNameEditText, EditText taskDescEditText, EditText taskDateTimeEditText, EditText taskDueDateTimeEditText, EditText taskDurationEditText) {
         boolean isValidInput = true;
 

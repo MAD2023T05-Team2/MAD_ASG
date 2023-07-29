@@ -6,14 +6,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 //import sg.edu.np.mad.productivibe_.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +33,10 @@ import androidx.recyclerview.widget.RecyclerView;
 // The calendar page allows users to view the different tasks due by dates in a more organised manner
 public class CalendarPage extends AppCompatActivity {
     String TITLE = "Calendar Page";
-    private List<Task> filteredTaskList;
+    private List<Task> filteredTaskList = new ArrayList<>();
     private TaskAdapter adapter;
-    private Database taskDatabase;
+    private DatabaseReference taskDBR;
+    private FirebaseDatabase fdb;
     private RecyclerView filteredRecyclerView;
 
     @Override
@@ -60,6 +69,7 @@ public class CalendarPage extends AppCompatActivity {
             }
             return false;
         });
+
     }
 
     @Override
@@ -68,21 +78,34 @@ public class CalendarPage extends AppCompatActivity {
 
         filteredRecyclerView = findViewById(R.id.calendarTaskView);
         filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        filteredRecyclerView.setItemAnimator(null);
 
         // Initialize the database
-        taskDatabase = Database.getInstance(this);
-        // Load tasks from the database
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("UserId", null);
-        // uses the function that retrieves task from the current user's user ID
-        filteredTaskList = filterCurrentDate(taskDatabase.getAllTasksFromUser(userId));
-        //for (Task t: filteredTaskList){
-        //    Log.d("LIST",t.getTaskDueDateTime().toString());
-        //}
-        //filteredTaskList.clear();
-        adapter = new TaskAdapter(filteredTaskList);
-        filteredRecyclerView.setAdapter(adapter);
+        String userName = sharedPreferences.getString("Username", null);
+        fdb = FirebaseDatabase.getInstance();
+        taskDBR = fdb.getReference("tasks/"+ userName);
+        // Load tasks from the database
+        loadTasks(new GetTaskData() {
+            @Override
+            public void onDataLoaded(List<Task> taskList) {
+                //get current date
+                Date currentDate = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
+                String crrDate = format.format(currentDate);
+                // filter the task list
+                // since the calendar would auto select that day
+                filteredTaskList = filterListDate(filteredTaskList,crrDate);
+                adapter = new TaskAdapter(filteredTaskList);
+                filteredRecyclerView.setAdapter(adapter);
+            }
 
+            @Override
+            public void onError(String errorMsg) {
+                Log.d(TITLE,errorMsg);
+
+            }
+        });
         // recyclerview
         // watch out for user selecting other dates
         CalendarView calendarView = findViewById(R.id.calendarView);
@@ -91,27 +114,40 @@ public class CalendarPage extends AppCompatActivity {
             public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
                 //formatting
                 //String month_name = DateFormatSymbols.getInstance().getMonths()[month].substring(0,3);
-                String strDate = String.format("%1$s-%2$s-%3$s", day, (month + 1),year);
+                String strDate = String.format("%1$s/%2$s/%3$s", day, (month + 1),year);
                 // filter out recycler view
                 Log.i(TITLE, strDate);
                 // retrieving the filtered values
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                String userId = sharedPreferences.getString("UserId", null);
-                filteredTaskList = filterListDate(taskDatabase.getAllTasksFromUser(userId),strDate);
+                loadTasks(new GetTaskData() {
+                    @Override
+                    public void onDataLoaded(List<Task> taskList) {
+
+                        taskList = filterListDate(taskList,strDate);
+                        adapter.notifyItemRangeInserted(0,taskList.size());
+                        if (taskList.isEmpty()){
+                            //filteredTasksList.clear();
+                            adapter.clearList();
+                            //adapter.notifyDataSetChanged();
+                            Log.d("FILTERED","List is empty");
+                        }
+                        else {
+                            //adapter.clearList();
+                            adapter.updateList(taskList);
+                            adapter.notifyItemRangeChanged(0,taskList.size());
+                            Log.d("FILTERED", "List should not be empty");
+                        }
+                        Log.v("AFTER FILTERING",taskList.toString());
+                    }
+
+                    @Override
+                    public void onError(String errorMsg) {
+                        Log.d(TITLE,errorMsg);
+                    }
+                });
+
+                //filteredTaskList = filterListDate(taskDatabase.getAllTasksFromUser(userId),strDate);
                 //List<Task> filteredTasksList = taskDatabase.getFilteredTasks("due_date","date",strDate);
-                if (filteredTaskList.isEmpty()){
-                    //filteredTasksList.clear();
-                    adapter.clearList();
-                    //adapter.notifyDataSetChanged();
-                    Log.d("FILTERED","List is empty");
-                }
-                else {
-                    //adapter.clearList();
-                    adapter.updateList(filteredTaskList);
-                    adapter.notifyItemRangeChanged(0,filteredTaskList.size());
-                    Log.d("FILTERED", "List should not be empty");
-                }
-                Log.v("AFTER FILTERING",filteredTaskList.toString());
+
             }
         });
 
@@ -125,36 +161,44 @@ public class CalendarPage extends AppCompatActivity {
         });
     }
 
+    private void loadTasks(GetTaskData getTaskData){
+        filteredTaskList.clear();
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    Task t = sn.getValue(Task.class);
+                    filteredTaskList.add(t);
+                }
+                Log.d("FIREBASE",String.valueOf(filteredTaskList.size()));
+                getTaskData.onDataLoaded(filteredTaskList);
+                //adapter.notifyItemRangeInserted(0,filteredTaskList.size());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Log.d(TITLE, error.getMessage());
+            }
+        });
+    }
+
     public List<Task> filterListDate(List<Task> filteredTaskList, String strDate){
         // filter out tasks based on due data
         List<Task> temp = new ArrayList<>();
-        Log.d("TRYING TO DEBUG", String.valueOf(filteredTaskList.size()));
-        // convert date object to a string with a nicer format
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+        SimpleDateFormat comparedformat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
+        SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+        // usable for both current Date and future dates
         for (Task t : filteredTaskList){
             // check if it contains the date
-            String comparedDate = format.format(t.getTaskDueDateTime());
-            Log.d("FILTERING",comparedDate);
-            Log.d("FILTERING",strDate);
-            if (comparedDate.equals(strDate)){
-                temp.add(t);
+            Date comparedDate = null;
+            try {
+                comparedDate = firebase.parse(t.getTaskDueDateTime());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
             }
-        }
-        return temp;
-    }
-
-    public List<Task> filterCurrentDate(List<Task> filteredTaskList){
-        // filter out tasks based on due data
-        List<Task> temp = new ArrayList<>();
-        // convert date object to a string with a nicer format
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
-        //get current date
-        Date currentDate = new Date();
-        String strDate = format.format(currentDate);
-        for (Task t : filteredTaskList){
-            // check if it contains the date
-            String comparedDate = format.format(t.getTaskDueDateTime());
-            if (comparedDate.equals(strDate)){
+            String compareDate = comparedformat.format(comparedDate);
+            if (compareDate.equals(strDate)){
                 temp.add(t);
             }
         }
