@@ -55,8 +55,6 @@ public class TaskWidget extends AppWidgetProvider {
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
                     Task t = sn.getValue(Task.class);
-                    Log.d("TASK",t.getTaskDueDateTime());
-                    Log.d("TASK",strDate);
                     Date comparedDate = null;
                     try {
                         comparedDate = firebase.parse(t.getTaskDueDateTime());
@@ -68,7 +66,7 @@ public class TaskWidget extends AppWidgetProvider {
                         widgetTaskList.add(t);
                     }
                 }
-                Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
+                //Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
                 // collects all the tasks saved in the firebase
 
                 // Construct the RemoteViews object
@@ -127,23 +125,5 @@ public class TaskWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
-    }
-
-    public static List<Task> filterCurrentDate(List<Task> filteredTaskList){
-        // filter out tasks based on due data
-        List<Task> temp = new ArrayList<>();
-        // convert date object to a string with a nicer format
-        SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
-        //get current date
-        Date currentDate = new Date();
-        String strDate = format.format(currentDate);
-        for (Task t : filteredTaskList){
-            // check if it contains the date
-            String comparedDate = format.format(t.getTaskDueDateTime());
-            if (comparedDate.equals(strDate)){
-                temp.add(t);
-            }
-        }
-        return temp;
     }
 }

@@ -1,5 +1,7 @@
 package sg.edu.np.mad.productivibe_;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,16 +55,19 @@ public class TaskWidgetService extends RemoteViewsService {
 
             fdb = FirebaseDatabase.getInstance();
             taskDBR = fdb.getReference("tasks/" + userName);
+            loadTasks(new GetTaskData() {
 
-            // create list of today task based on the user
-            //widgetTaskList = new ArrayList<>();
-            // no need to create a list
+                @Override
+                public void onDataLoaded(List<Task> widgetTaskList) {
+                    Log.d("Firebase Service", String.valueOf(widgetTaskList.size()));
+                }
+                @Override
+                public void onError(String errorMsg) {
+                    Log.d("loadData",errorMsg);
 
-            // for testing
-            //Task newTask = new Task(1, "Pending", "for widget", "taskDesc", "29/07/23 00:34", "29/07/23 23:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
-            //widgetTaskList.add(newTask);
-                    //(ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
-            //Log.v("Service", "widgetTaskList");
+                }
+            });
+            Log.d("Service","GetTaskData");
         }
 
         @Override
@@ -71,19 +76,38 @@ public class TaskWidgetService extends RemoteViewsService {
             Log.v("Service", "widgetTaskList, on DataSetChanged");
 
             // if dataset changed, list is cleared to store the new list of tasks
-            widgetTaskList.clear();
-
+            //widgetTaskList.clear();
             // getting stored userid
-            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
+            //SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
             //String userId = sharedPreferences.getString("UserId", null);
 
             // create list of today task based on the user
             // for testing
-            Task newTask = new Task(1, "Pending", "for widget 1", "taskDesc", "29/07/23 00:34", "29/07/23 13:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
-            Task newTask2 = new Task(2, "Pending", "for widget 2", "taskDesc", "29/07/23 00:34", "29/07/23 23:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
-            widgetTaskList.add(newTask2);
-            widgetTaskList.add(newTask);
+            //Task newTask = new Task(1, "Pending", " ", "taskDesc", "29/07/23 00:34", "29/07/23 13:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
+            //Task newTask2 = new Task(2, "Pending", "for widget 2", "taskDesc", "29/07/23 00:34", "29/07/23 23:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
+            //widgetTaskList.add(newTask2);
+            //widgetTaskList.add(newTask);
+            //widgetTaskList.remove(newTask);
             //widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
+
+            // getting stored userid
+            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
+            String userName = sharedPreferences.getString("Username", null);
+            fdb = FirebaseDatabase.getInstance();
+            taskDBR = fdb.getReference("tasks/" + userName);
+            loadTasks(new GetTaskData() {
+
+                @Override
+                public void onDataLoaded(List<Task> widgetTaskList) {
+                    Log.d("Firebase Service", String.valueOf(widgetTaskList.size()));
+                }
+                @Override
+                public void onError(String errorMsg) {
+                    Log.d("loadData",errorMsg);
+
+                }
+            });
+            Log.d("Service","GetTaskData");
         }
 
         @Override
@@ -141,29 +165,15 @@ public class TaskWidgetService extends RemoteViewsService {
             return true;
         }
 
-        public static List<Task> filterCurrentDate(List<Task> filteredTaskList){
-            // filter out tasks based on due data
-            List<Task> temp = new ArrayList<>();
-            // convert date object to a string with a nicer format
-            SimpleDateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
-            //get current date
-            Date currentDate = new Date();
-            String strDate = format.format(currentDate);
-            for (Task t : filteredTaskList){
-                // check if it contains the date
-                String comparedDate = format.format(t.getTaskDueDateTime());
-                if (comparedDate.equals(strDate)){
-                    temp.add(t);
-                }
-            }
-            return temp;
-        }
         private void loadTasks(GetTaskData getTaskData){
-
+            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
+            String userName = sharedPreferences.getString("Username", null);
+            fdb = FirebaseDatabase.getInstance();
+            taskDBR = fdb.getReference("tasks/" + userName);
             taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    widgetTaskList.clear();
+                    //widgetTaskList.clear();
                     // filter to current date
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
@@ -183,8 +193,11 @@ public class TaskWidgetService extends RemoteViewsService {
                             widgetTaskList.add(t);
                         }
                     }
+
+                    //widgetTaskList.remove(0);
                     Log.d("FIREBASE Service",String.valueOf(widgetTaskList.size()));
                     //adapter.notifyItemRangeInserted(0,widgetTaskList.size());
+
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {

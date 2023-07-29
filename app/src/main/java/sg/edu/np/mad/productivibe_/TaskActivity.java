@@ -923,6 +923,7 @@ public class TaskActivity extends AppCompatActivity{
 
         appWidgetManager.updateAppWidget(thisWidget, widgetViews);
 
+
     }
 
 }
