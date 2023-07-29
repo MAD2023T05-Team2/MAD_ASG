@@ -45,7 +45,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/productivityCard"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -72,7 +72,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/moodCard"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -83,7 +83,7 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moodTrackerStatsHeader" >
+        app:layout_constraintTop_toBottomOf="@+id/moodTrackerStatsHeader">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/moodChart"
