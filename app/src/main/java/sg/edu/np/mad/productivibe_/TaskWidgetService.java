@@ -36,14 +36,15 @@ public class TaskWidgetService extends RemoteViewsService {
     class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         private final Context context;
         //private Database db;
-        private ArrayList<Task> widgetTaskList = new ArrayList<>();
+        private List<Task> widgetTaskList = new ArrayList<>();
 
         private DatabaseReference taskDBR;
         private FirebaseDatabase fdb;
 
         public WidgetRemoteViewsFactory(Context context) {
             this.context = context;
-            //this.db = Database.getInstance(context.getApplicationContext());;
+            //this.db = Database.getInstance(context.getApplicationContext());
+
         }
 
         @Override
@@ -52,8 +53,11 @@ public class TaskWidgetService extends RemoteViewsService {
 
                 @Override
                 public void onDataLoaded(List<Task> loadedTaskList) {
-                    Log.d("Firebase Service", String.valueOf(loadedTaskList.size()));
+                    widgetTaskList.clear();
                     Log.d("Service","onCreate");
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+                    widgetTaskList = loadedTaskList;
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
                 }
                 @Override
                 public void onError(String errorMsg) {
@@ -67,32 +71,18 @@ public class TaskWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
 
-            //widgetTaskList.clear();
-
             Log.v("Service", "widgetTaskList, on DataSetChanged");
-
-            // if dataset changed, list is cleared to store the new list of tasks
-            //widgetTaskList.clear();
-            // getting stored userid
-            //SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            //String userId = sharedPreferences.getString("UserId", null);
-
-            // create list of today task based on the user
-            // for testing
-            //Task newTask = new Task(1, "Pending", " ", "taskDesc", "29/07/23 00:34", "29/07/23 13:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
-            //Task newTask2 = new Task(2, "Pending", "for widget 2", "taskDesc", "29/07/23 00:34", "29/07/23 23:34", Integer.parseInt("2"), "Type", "Repeat", 0, "", 0);
-            //widgetTaskList.add(newTask2);
-            //widgetTaskList.add(newTask);
-            //widgetTaskList.remove(newTask);
-            //widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
-
             loadTasks(new GetTaskData() {
 
                 @Override
                 public void onDataLoaded(List<Task> loadedTaskList) {
+                    widgetTaskList.clear();
                     Log.d("Firebase Service","onDataSetChanged");
-                    Log.d("Firebase Service", String.valueOf(loadedTaskList.size()));
-                    Log.d("Firebase Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    widgetTaskList = loadedTaskList;
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
                 }
                 @Override
                 public void onError(String errorMsg) {
@@ -160,7 +150,8 @@ public class TaskWidgetService extends RemoteViewsService {
 
         private void loadTasks(GetTaskData getTaskData){
 
-            widgetTaskList.clear();
+            //widgetTaskList.clear();
+            List<Task> loadTaskList = new ArrayList<>();
 
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
             String userName = sharedPreferences.getString("Username", null);
@@ -187,15 +178,14 @@ public class TaskWidgetService extends RemoteViewsService {
                         }
                         String compareDate = format.format(comparedDate);
                         if (compareDate.equals(strDate)){
-                            widgetTaskList.add(t);
+                            loadTaskList.add(t);
                             Log.v("Firebase GetTask",t.getTaskName());
                         }
                     }
 
                     //widgetTaskList.remove(0);
-                    Log.d("FIREBASE Service",String.valueOf(widgetTaskList.size()));
-                    getTaskData.onDataLoaded(widgetTaskList);
-                    widgetTaskList.clear();
+                    Log.d("FIREBASE Service",String.valueOf(loadTaskList.size()));
+                    getTaskData.onDataLoaded(loadTaskList);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
