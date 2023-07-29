@@ -739,6 +739,63 @@ public class TaskActivity extends AppCompatActivity{
     }
 
 
+    private void loadTasks(GetTaskData getTaskData){
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot sn: snapshot.getChildren()){
+                    Task t = sn.getValue(Task.class);
+                    taskList.add(t);
+                    if (lastTaskId < t.getId()){
+                        lastTaskId = t.getId(); // get the highest taskid
+                    }
+                }
+                Log.d("FIREBASE",String.valueOf(taskList.size()));
+                getTaskData.onDataLoaded(taskList);
+                adapter.notifyItemRangeInserted(0,taskList.size());
+                reorderTasks(taskList);
+                updateWidget(taskList);
+                // collects all the tasks saved in the firebase
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if cannot connect or firebase returns an error
+                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                Log.d(TITLE, error.getMessage());
+            }
+        });
+    }
+
+    private void reorderTasks(List<Task> taskList){
+        // Separate pending and completed tasks
+        List<Task> pendingTasks = new ArrayList<>();
+        List<Task> completedTasks = new ArrayList<>();
+
+        for (Task task : taskList) {
+            if (task.getStatus().equals("Pending")) {
+                pendingTasks.add(task);
+            } else {
+                completedTasks.add(task);
+            }
+        }
+        // Sort pending tasks by due date
+        Collections.sort(pendingTasks, new Comparator<Task>() {
+            @Override
+            public int compare(Task task1, Task task2) {
+                return task1.getTaskDueDateTime().compareTo(task2.getTaskDueDateTime());
+            }
+        });
+
+        // Clear the task list and add pending tasks first, followed by completed tasks
+        int listSize = taskList.size();
+        taskList.clear();
+        adapter.notifyItemRangeRemoved(0,listSize);
+        taskList.addAll(pendingTasks);
+        taskList.addAll(completedTasks);
+        adapter.notifyItemRangeInserted(0,listSize);
+    }
+
+
     private boolean validateInput(EditText taskNameEditText, EditText taskDescEditText, EditText taskDateTimeEditText, EditText taskDueDateTimeEditText, EditText taskDurationEditText) {
         boolean isValidInput = true;
 
@@ -824,61 +881,6 @@ public class TaskActivity extends AppCompatActivity{
         } catch (ParseException e) {
             return false;
         }
-    }
-
-    private void loadTasks(GetTaskData getTaskData){
-        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot sn: snapshot.getChildren()){
-                    Task t = sn.getValue(Task.class);
-                    taskList.add(t);
-                    if (lastTaskId < t.getId()){
-                        lastTaskId = t.getId(); // get the highest taskid
-                    }
-                }
-                Log.d("FIREBASE",String.valueOf(taskList.size()));
-                getTaskData.onDataLoaded(taskList);
-                adapter.notifyItemRangeInserted(0,taskList.size());
-                reorderTasks(taskList);
-                // collects all the tasks saved in the firebase
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // if cannot connect or firebase returns an error
-                Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-                Log.d(TITLE, error.getMessage());
-            }
-        });
-    }
-
-    private void reorderTasks(List<Task> taskList){
-        // Separate pending and completed tasks
-        List<Task> pendingTasks = new ArrayList<>();
-        List<Task> completedTasks = new ArrayList<>();
-
-        for (Task task : taskList) {
-            if (task.getStatus().equals("Pending")) {
-                pendingTasks.add(task);
-            } else {
-                completedTasks.add(task);
-            }
-        }
-        // Sort pending tasks by due date
-        Collections.sort(pendingTasks, new Comparator<Task>() {
-            @Override
-            public int compare(Task task1, Task task2) {
-                return task1.getTaskDueDateTime().compareTo(task2.getTaskDueDateTime());
-            }
-        });
-
-        // Clear the task list and add pending tasks first, followed by completed tasks
-        int listSize = taskList.size();
-        taskList.clear();
-        adapter.notifyItemRangeRemoved(0,listSize);
-        taskList.addAll(pendingTasks);
-        taskList.addAll(completedTasks);
-        adapter.notifyItemRangeInserted(0,listSize);
     }
 
 }
