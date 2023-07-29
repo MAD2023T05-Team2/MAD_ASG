@@ -7,55 +7,70 @@
     android:background="@color/white" >
 <!--    tools:context=".DestressPage">-->
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttons_destress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/frameLayout"
+        app:layout_constraintEnd_toEndOf="@id/right_destress"
+        app:layout_constraintStart_toStartOf="@id/left_destress"
+        app:layout_constraintTop_toTopOf="@id/top_destress">
+
+        <Button
+            android:id="@+id/pictures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/teal"
+            android:text="Pictures"
+            app:layout_constraintBottom_toBottomOf="@+id/videos"
+            app:layout_constraintEnd_toStartOf="@+id/videos"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/videos" />
+
+        <Button
+            android:id="@+id/videos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/teal"
+            android:text="Videos"
+            app:layout_constraintBottom_toBottomOf="@+id/punch"
+            app:layout_constraintEnd_toStartOf="@+id/punch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pictures"
+            app:layout_constraintTop_toTopOf="@+id/punch" />
+
+        <Button
+            android:id="@+id/punch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/teal"
+            android:text="Punching Bag"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/videos"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_width="404dp"
-        android:layout_height="523dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttons_destress">
+
+    </FrameLayout>
 
 <!--    Leading to Picture and Video fragments (Will try to change to TabLayout in stage 2)-->
-    <Button
-        android:id="@+id/pictures"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="95dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="5dp"
-        android:backgroundTint="@color/teal"
-        android:text="Pictures"
-        app:layout_constraintEnd_toStartOf="@+id/videos"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/videos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="255dp"
-        android:backgroundTint="@color/teal"
-        android:text="Videos"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pictures"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/punch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="89dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="85dp"
-        android:backgroundTint="@color/teal"
-        android:text="Punching Bag"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/videos"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -66,5 +81,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:backgroundTint="@color/selected_item_background"
         app:menu="@menu/bottom_menu" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_destress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.02" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_destress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.04" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_destress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.96" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -132,7 +132,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 completedTasks.add(task);
             }
         }
-
         // Sort pending tasks by due date
         Collections.sort(pendingTasks, new Comparator<Task>() {
             @Override
@@ -142,11 +141,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         });
 
         // Clear the task list and add pending tasks first, followed by completed tasks
+        notifyItemRangeRemoved(0,taskList.size());
         taskList.clear();
         taskList.addAll(pendingTasks);
         taskList.addAll(completedTasks);
+        notifyItemRangeInserted(0,taskList.size());
 
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
 

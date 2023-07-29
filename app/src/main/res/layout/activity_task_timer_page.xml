@@ -28,21 +28,20 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="32dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@id/top_timer">
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="30dp"
             android:backgroundTint="@color/teal"
             android:text="Click here to Select Task!" />
@@ -51,17 +50,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/frogTimerImageView"
-                android:layout_width="300dp"
-                android:layout_height="433dp"
-                android:alpha="0.7"
-                android:src="@drawable/frogtimer"
-                app:layout_constraintBottom_toBottomOf="@id/timer"
-                app:layout_constraintEnd_toEndOf="@id/timer"
-                app:layout_constraintStart_toStartOf="@id/timer"
-                app:layout_constraintTop_toTopOf="@id/timer"
-                app:layout_constraintVertical_bias="0.769" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/left_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.06" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="411dp"
+                app:constraint_referenced_ids="frogTimerImageView,timer,countdown"
+                app:layout_constraintEnd_toEndOf="@id/right_timer"
+                app:layout_constraintStart_toStartOf="@id/left_timer"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <sg.edu.np.mad.productivibe_.TaskTimerView
                 android:id="@+id/timer"
@@ -77,29 +87,40 @@
                 app:layout_constraintVertical_bias="0.435" />
 
 
+            <ImageView
+                android:id="@+id/frogTimerImageView"
+                android:layout_width="300dp"
+                android:layout_height="433dp"
+                android:alpha="0.7"
+                android:src="@drawable/frogtimer"
+                app:layout_constraintBottom_toBottomOf="@id/timer"
+                app:layout_constraintEnd_toEndOf="@id/timer"
+                app:layout_constraintStart_toStartOf="@id/timer"
+                app:layout_constraintTop_toTopOf="@id/timer"
+                app:layout_constraintVertical_bias="0.769" />
+
             <TextView
                 android:id="@+id/countdown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+                android:lineSpacingExtra="8sp"
                 android:text="00:00"
                 android:textColor="#0C0B0B"
                 android:textSize="51sp"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/timer"
                 app:layout_constraintEnd_toEndOf="@+id/timer"
-                app:layout_constraintHorizontal_bias="0.643"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.463" />
+                app:layout_constraintStart_toStartOf="@id/timer"
+                app:layout_constraintTop_toTopOf="@id/timer" />
 
             <Button
                 android:id="@+id/btn_timer_start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
-                android:layout_marginEnd="220dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginEnd="220dp"
                 android:layout_marginBottom="118dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/teal"
@@ -113,8 +134,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="220dp"
-                android:layout_marginEnd="40dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp"
                 android:layout_marginBottom="118dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/teal"
@@ -139,8 +160,22 @@
                 app:layout_constraintTop_toTopOf="@+id/timer"
                 app:layout_constraintVertical_bias="0.0" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/right_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.94" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

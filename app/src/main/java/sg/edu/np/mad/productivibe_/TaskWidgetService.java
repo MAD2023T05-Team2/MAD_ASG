@@ -1,5 +1,7 @@
 package sg.edu.np.mad.productivibe_;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +25,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+// This class helps to provide data for the widget displayed on the home screen of the device
+// It is responsible for updating the content of a widget with a list of tasks due for the current date.
+
 public class TaskWidgetService extends RemoteViewsService {
 
     @Override
@@ -31,35 +36,140 @@ public class TaskWidgetService extends RemoteViewsService {
         return new WidgetRemoteViewsFactory(getApplicationContext());
     }
 
+    // Factory class that provides data for the ListView in the widget
     class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         private final Context context;
-
+        private List<Task> widgetTaskList = new ArrayList<>();
         private DatabaseReference taskDBR;
         private FirebaseDatabase fdb;
-        private ArrayList<Task> widgetTaskList = new ArrayList<>();
-        private RemoteViews remoteView;
 
         public WidgetRemoteViewsFactory(Context context) {
             this.context = context;
-            // getting db
-            this.fdb = FirebaseDatabase.getInstance();
-
-        }
+                   }
 
         @Override
         public void onCreate() {
-            /*
+            loadTasks(new GetTaskData() {
 
-            // getting stored userid
+                @Override
+                public void onDataLoaded(List<Task> loadedTaskList) {
+                    widgetTaskList.clear();
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+                    widgetTaskList = loadedTaskList;
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+                }
+                @Override
+                public void onError(String errorMsg) {
+                    Log.d("loadData",errorMsg);
+
+                }
+            });
+            Log.d("Service","GetTaskData");
+        }
+
+        // Called when there is a change in the data set, such as the ListView being updated.
+        @Override
+        public void onDataSetChanged() {
+
+            Log.v("Service", "widgetTaskList, onDataSetChanged");
+            loadTasks(new GetTaskData() {
+
+                @Override
+                public void onDataLoaded(List<Task> loadedTaskList) {
+                    widgetTaskList.clear();
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+
+                    widgetTaskList = loadedTaskList;
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+                }
+                @Override
+                public void onError(String errorMsg) {
+                    Log.d("loadData",errorMsg);
+
+                }
+            });
+            Log.d("Service","GetTaskData");
+        }
+
+        // Called when the factory is destroyed
+        @Override
+        public void onDestroy() {
+            widgetTaskList.clear();
+        }
+
+        // Get the number of items in the ListView
+        @Override
+        public int getCount() {
+            return widgetTaskList.size();
+        }
+
+        // Called to get the RemoteViews associated with a single list item in the ListView
+        @Override
+        public RemoteViews getViewAt(int position) {
+            Task t = widgetTaskList.get(position);
+            RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.task_widget_item);
+
+            // Populate the RemoteViews with task data
+            remoteView.setTextViewText(R.id.widgetTaskName, t.getTaskName());
+
+            // Extract time from String
+            String taskDueDateTime = t.getTaskDueDateTime();
+            // Create a SimpleDateFormat object with the desired time format
+            SimpleDateFormat firebaseFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            try {
+                Date toExtract = firebaseFormat.parse(taskDueDateTime);
+                // Format the date to get the time as a string
+                String taskDueTime = timeFormat.format(toExtract);
+                remoteView.setTextViewText(R.id.widgetTaskTime, taskDueTime);
+                Log.v("Service", taskDueTime);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            return remoteView;
+        }
+
+        @Override
+        public RemoteViews getLoadingView() {
+            return null;
+        }
+
+        @Override
+        // Since there is only one widget view, return 1
+        public int getViewTypeCount() {
+            return 1;
+        }
+
+        // Return the ID of the item at the given position
+        @Override
+        public long getItemId(int position) {
+            return widgetTaskList.get(position).getId();
+        }
+
+        // Indicate whether the item at the given position is unique and stable
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        // Load tasks from Firebase and notify the GetTaskData callback when data is loaded
+        private void loadTasks(GetTaskData getTaskData){
+
+            List<Task> loadTaskList = new ArrayList<>();
+
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
             String userName = sharedPreferences.getString("Username", null);
-            // create list of today task based on the user
             fdb = FirebaseDatabase.getInstance();
             taskDBR = fdb.getReference("tasks/" + userName);
-            // get list of tasks
+
             taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                     // filter to current date
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
@@ -76,160 +186,22 @@ public class TaskWidgetService extends RemoteViewsService {
                         }
                         String compareDate = format.format(comparedDate);
                         if (compareDate.equals(strDate)){
-                            widgetTaskList.add(t);
+                            loadTaskList.add(t);
+                            Log.v("Firebase GetTask",t.getTaskName());
                         }
                     }
-                    Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
-                    // collects all the tasks saved in the firebase
+
+                    Log.d("Firebase Service",String.valueOf(loadTaskList.size()));
+                    getTaskData.onDataLoaded(loadTaskList);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     // if cannot connect or firebase returns an error
                     //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                    //Log.d(TITLE, error.getMessage());
                 }
             });
-            //widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
-            Log.v("Service", "widgetTaskList");
-            */
-        }
-
-        @Override
-        public void onDataSetChanged() {
-
-            // if dataset changed, list is cleared to store the new list of tasks
-            widgetTaskList.clear();
-
-            // getting stored userid
-            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            String userName = sharedPreferences.getString("Username", null);
-            // create list of today task based on the user
-            fdb = FirebaseDatabase.getInstance();
-            taskDBR = fdb.getReference("tasks/" + userName);
-            // get list of tasks
-            taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // filter to current date
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-                    SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                    //get current date
-                    Date currentDate = new Date();
-                    String strDate = format.format(currentDate);
-                    for (DataSnapshot sn: snapshot.getChildren()){
-                        Task t = sn.getValue(Task.class);
-                        Date comparedDate = null;
-                        try {
-                            comparedDate = firebase.parse(t.getTaskDueDateTime());
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        String compareDate = format.format(comparedDate);
-                        if (compareDate.equals(strDate)){
-                            widgetTaskList.add(t);
-                        }
-                    }
-                    Log.d("SERVICE",String.valueOf(widgetTaskList.size()));
-                    // collects all the tasks saved in the firebase
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // if cannot connect or firebase returns an error
-                    //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            // getting stored userid
-            //SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            //String userId = sharedPreferences.getString("UserId", null);
-
-            // create list of today task based on the user
-            //widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
-        }
-
-        @Override
-        public void onDestroy() {
-            widgetTaskList.clear();
-        }
-
-        @Override
-        public int getCount() {
-            return widgetTaskList.size();
-        }
-
-        @Override
-        public RemoteViews getViewAt(int position) {
-            taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // filter to current date
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-                    SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                    //get current date
-                    Date currentDate = new Date();
-                    String strDate = format.format(currentDate);
-                    for (DataSnapshot sn: snapshot.getChildren()){
-                        Task t = sn.getValue(Task.class);
-                        Date comparedDate = null;
-                        try {
-                            comparedDate = firebase.parse(t.getTaskDueDateTime());
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        String compareDate = format.format(comparedDate);
-                        if (compareDate.equals(strDate)){
-                            widgetTaskList.add(t);
-                        }
-                    }
-                    Log.d("SERVICE GET VIEW",String.valueOf(widgetTaskList.size()));
-                    // collects all the tasks saved in the firebase
-                    Task t = widgetTaskList.get(position);
-                    remoteView = new RemoteViews(context.getPackageName(), R.layout.task_widget_item);
-
-                    remoteView.setTextViewText(R.id.widgetTaskName, t.getTaskName());
-
-                    // Convert from date to string datatype
-                    String taskDueDateTime = t.getTaskDueDateTime();
-                    // Create a SimpleDateFormat object with the desired time format
-                    //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                    // Format the date to get the time as a string
-                    //String taskDueTime = timeFormat.format(taskDueDateTime);
-                    String[] dateTime = taskDueDateTime.split(" ");
-                    String taskDueTime = dateTime[1];
-                    Log.v("Service comparing", taskDueTime);
-                    remoteView.setTextViewText(R.id.widgetTaskTime, taskDueTime);
-
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // if cannot connect or firebase returns an error
-                    //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-                }
-            });
-            return remoteView;
-        }
-
-        @Override
-        public RemoteViews getLoadingView() {
-            return null;
-        }
-
-        @Override
-        // as there is only one widget view, return 1
-        public int getViewTypeCount() {
-            return 1;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return widgetTaskList.get(position).getId();
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
         }
 
     }
 }
-
