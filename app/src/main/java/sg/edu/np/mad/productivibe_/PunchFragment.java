@@ -37,7 +37,7 @@ public class PunchFragment extends Fragment {
         image = view.findViewById(R.id.punching);
         counterText = view.findViewById(R.id.count);
 
-        // handle the select image button to trigger the image chooser function
+        // Handle the select image button to trigger the image chooser function
         selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +53,7 @@ public class PunchFragment extends Fragment {
                 // show and update the counter number
                 counterText.setText(Integer.toString(counter));
 
-                // if user tapped more than 50 times, they must be feeling very frustrated.
+                // If user tapped more than 50 times, they must be feeling very frustrated.
                 // there is a popup to express concern about the user and hope that they
                 // feel better
                 if (counter == 50){
@@ -76,7 +76,7 @@ public class PunchFragment extends Fragment {
         counterText.setText(Integer.toString(counter)); // Update the counter text view
     }
 
-    // function when the select photo button is clicked
+    // Function when the select photo button is clicked
     void imageChooser() {
 
         // create an instance of the intent of the type image to open the device's file chooser for an image
@@ -88,14 +88,14 @@ public class PunchFragment extends Fragment {
         startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
     }
 
-    // function for when user select the image from the image chooser
+    // Function for when user select the image from the image chooser
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) { // Checks if the results of the activity is successful, otherwise,
                                        // the method will not perform any further actions
 
-            if (requestCode == SELECT_PICTURE) { //checking if the activity result received is related to the image chooser activity
+            if (requestCode == SELECT_PICTURE) { //Checking if the activity result received is related to the image chooser activity
                 // Get the url of the image from data
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {

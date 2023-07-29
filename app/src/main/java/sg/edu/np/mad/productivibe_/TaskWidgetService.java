@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+// This class helps to provide data for the widget displayed on the home screen of the device
+// It is responsible for updating the content of a widget with a list of tasks due for the current date.
+
 public class TaskWidgetService extends RemoteViewsService {
 
     @Override
@@ -33,19 +36,16 @@ public class TaskWidgetService extends RemoteViewsService {
         return new WidgetRemoteViewsFactory(getApplicationContext());
     }
 
+    // Factory class that provides data for the ListView in the widget
     class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         private final Context context;
-        //private Database db;
         private List<Task> widgetTaskList = new ArrayList<>();
-
         private DatabaseReference taskDBR;
         private FirebaseDatabase fdb;
 
         public WidgetRemoteViewsFactory(Context context) {
             this.context = context;
-            //this.db = Database.getInstance(context.getApplicationContext());
-
-        }
+                   }
 
         @Override
         public void onCreate() {
@@ -54,10 +54,11 @@ public class TaskWidgetService extends RemoteViewsService {
                 @Override
                 public void onDataLoaded(List<Task> loadedTaskList) {
                     widgetTaskList.clear();
-                    Log.d("Service","onCreate");
+                    Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
                     Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
                     widgetTaskList = loadedTaskList;
                     Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
                 }
                 @Override
                 public void onError(String errorMsg) {
@@ -68,21 +69,22 @@ public class TaskWidgetService extends RemoteViewsService {
             Log.d("Service","GetTaskData");
         }
 
+        // Called when there is a change in the data set, such as the ListView being updated.
         @Override
         public void onDataSetChanged() {
 
-            Log.v("Service", "widgetTaskList, on DataSetChanged");
+            Log.v("Service", "widgetTaskList, onDataSetChanged");
             loadTasks(new GetTaskData() {
 
                 @Override
                 public void onDataLoaded(List<Task> loadedTaskList) {
                     widgetTaskList.clear();
-                    Log.d("Firebase Service","onDataSetChanged");
-                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
                     Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
+
                     widgetTaskList = loadedTaskList;
-                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
                     Log.d("widget Service ", String.valueOf(widgetTaskList.size()));
+                    Log.d("loaded Service", String.valueOf(loadedTaskList.size()));
                 }
                 @Override
                 public void onError(String errorMsg) {
@@ -93,21 +95,25 @@ public class TaskWidgetService extends RemoteViewsService {
             Log.d("Service","GetTaskData");
         }
 
+        // Called when the factory is destroyed
         @Override
         public void onDestroy() {
             widgetTaskList.clear();
         }
 
+        // Get the number of items in the ListView
         @Override
         public int getCount() {
             return widgetTaskList.size();
         }
 
+        // Called to get the RemoteViews associated with a single list item in the ListView
         @Override
         public RemoteViews getViewAt(int position) {
             Task t = widgetTaskList.get(position);
             RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.task_widget_item);
 
+            // Populate the RemoteViews with task data
             remoteView.setTextViewText(R.id.widgetTaskName, t.getTaskName());
 
             // Extract time from String
@@ -133,24 +139,26 @@ public class TaskWidgetService extends RemoteViewsService {
         }
 
         @Override
-        // as there is only one widget view, return 1
+        // Since there is only one widget view, return 1
         public int getViewTypeCount() {
             return 1;
         }
 
+        // Return the ID of the item at the given position
         @Override
         public long getItemId(int position) {
             return widgetTaskList.get(position).getId();
         }
 
+        // Indicate whether the item at the given position is unique and stable
         @Override
         public boolean hasStableIds() {
             return true;
         }
 
+        // Load tasks from Firebase and notify the GetTaskData callback when data is loaded
         private void loadTasks(GetTaskData getTaskData){
 
-            //widgetTaskList.clear();
             List<Task> loadTaskList = new ArrayList<>();
 
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
@@ -183,8 +191,7 @@ public class TaskWidgetService extends RemoteViewsService {
                         }
                     }
 
-                    //widgetTaskList.remove(0);
-                    Log.d("FIREBASE Service",String.valueOf(loadTaskList.size()));
+                    Log.d("Firebase Service",String.valueOf(loadTaskList.size()));
                     getTaskData.onDataLoaded(loadTaskList);
                 }
                 @Override

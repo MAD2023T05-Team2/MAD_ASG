@@ -3,6 +3,7 @@ package sg.edu.np.mad.productivibe_;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,32 +26,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+// This class is called when user adds the widget to their home screen
 /**
  * Implementation of App Widget functionality.
  */
 public class TaskWidget extends AppWidgetProvider {
-    //private static Database db;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        // Initialize the database
-        //TaskWidget.db = Database.getInstance(context.getApplicationContext());
 
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
         String userName = sharedPreferences.getString("Username", null);
-        // create list of today task based on the user
+
+        // Create list of today task based on the user
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
         DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);
-        // get list of tasks
+
+        // Collects all the tasks saved in the firebase for that particular user
         ArrayList<Task> widgetTaskList = new ArrayList<>();
         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // filter to current date
+                // Filter to current date
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                //get current date
+                // Get current date
                 Date currentDate = new Date();
                 String strDate = format.format(currentDate);
                 for (DataSnapshot sn: snapshot.getChildren()){
@@ -66,8 +67,6 @@ public class TaskWidget extends AppWidgetProvider {
                         widgetTaskList.add(t);
                     }
                 }
-                //Log.d("FIREBASE",String.valueOf(widgetTaskList.size()));
-                // collects all the tasks saved in the firebase
 
                 // Construct the RemoteViews object
                 int no = widgetTaskList.size();
@@ -77,21 +76,22 @@ public class TaskWidget extends AppWidgetProvider {
                 Log.v("Widget", taskNo);
 
                 // To display tasks using list view
-                Intent serviceIntent = new Intent(context, TaskWidgetService.class);
-                serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-                widgetViews.setRemoteAdapter(R.id.widgetTaskView, serviceIntent);
-                widgetViews.setEmptyView(R.id.widgetTaskView, R.id.noTasks);
+                Intent serviceIntent = new Intent(context, TaskWidgetService.class); // Create intent to start TaskWidgetService class, which extends RemoteViewsService, providing data to populate the ListView in the widget
+                serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId); // Let service know which widget instance is requesting the data
+                serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))); // Sets the data to a URI representation of the intent to differentiate different instances of the same TaskWidgetService
+                widgetViews.setRemoteAdapter(R.id.widgetTaskView, serviceIntent); // Sets RemoteViewsService as the adapter for the ListView, meaning that it will be responsible for populating data into the ListView
+                widgetViews.setEmptyView(R.id.widgetTaskView, R.id.noTasks); // When Listview is empty, the empty view, R.id.noTasks will be displayed
 
                 // Instruct the widget manager to update the widget
                 appWidgetManager.updateAppWidget(appWidgetId, widgetViews);
 
                 // Create an Intent to launch HomePage when widget is clicked
                 Intent intent = new Intent(context, HomePage.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 widgetViews.setOnClickPendingIntent(R.id.todayTask, pendingIntent);
                 widgetViews.setOnClickPendingIntent(R.id.widgetTaskView, pendingIntent);
-
+                widgetViews.setOnClickPendingIntent(R.id.widgetTaskTime, pendingIntent);
+                widgetViews.setOnClickPendingIntent(R.id.widgetTaskName, pendingIntent);
 
             }
             @Override
@@ -106,20 +106,33 @@ public class TaskWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            // update the views and content of the widget
+            // Update the views and content of the widget
             updateAppWidget(context, appWidgetManager, appWidgetId);
 
-            // notify appWidgetManager that the data has changed for the task list view in the widget
-            // triggers the onDataSetChanged() method in the RemoteViewsService
+            // Notify appWidgetManager that the data has changed for the task list view in the widget
+            // Triggers the onDataSetChanged() method in the RemoteViewsService
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetTaskView);
         }
-        // ensures that the superclass implementation of the onUpdate() is also executed
+
+        // Ensures that the superclass implementation of the onUpdate() is also executed
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetTaskView);
+        }
+        // Call onUpdate() to ensure that the widget view is properly set up
+        // This is to handle cases where the widget is created but not updated automatically
+        // onUpdate() will update the views and trigger RemoteViewsService to load the list of tasks in the widget's ListView
+        onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
