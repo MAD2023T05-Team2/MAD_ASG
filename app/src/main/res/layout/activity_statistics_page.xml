@@ -11,7 +11,7 @@
         android:id="@+id/pageHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Wtv stats this page is for!!"
+        android:text="Statistics"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu" >
+        app:menu="@menu/bottom_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -45,8 +45,8 @@
             android:id="@+id/timerTrackerStatsHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="Productivity stats below!!!! Pls edit this text"
+            android:layout_marginStart="116dp"
+            android:text="Total Study Duration!!!"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -62,7 +62,33 @@
             app:flow_verticalAlign="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timerTrackerStatsHeader" />
+            app:layout_constraintTop_toBottomOf="@+id/timerTrackerStatsHeader">
+
+            <TextView
+                android:id="@+id/totalFocusTimeTextView"
+                android:layout_width="258dp"
+                android:layout_height="260dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="40dp"
+                android:textAlignment="center"
+                android:textSize="22sp" />
+
+            <ImageView
+                android:id="@+id/imageview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter" />
+
+            <ImageView
+                android:id="@+id/frogWaveImageView"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="bottom"
+                android:paddingTop="125dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/kermit_wave" />
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

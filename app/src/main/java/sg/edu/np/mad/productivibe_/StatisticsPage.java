@@ -6,9 +6,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -42,6 +45,14 @@ public class StatisticsPage extends AppCompatActivity {
     String TITLE = "Statistics Page";
 
     private LineChart moodChart;
+    ImageView imageView;
+    ImageView frogWaveImageView;
+    TextView totalFocusTimeTextView;
+
+    private DatabaseReference taskDBR;
+    private FirebaseDatabase fdb;
+    private ArrayList<Task> doneTasks;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,16 @@ public class StatisticsPage extends AppCompatActivity {
             }
             return false;
         });
+        imageView = findViewById(R.id.imageview);
+        totalFocusTimeTextView = findViewById(R.id.totalFocusTimeTextView);
+        frogWaveImageView = findViewById(R.id.frogWaveImageView);
+
+        // Adding the gif here using Glide library
+        Glide.with(this).load(R.drawable.confetti).into(imageView);
+        Glide.with(this).load(R.drawable.kermit_wave).into(frogWaveImageView);
+
+        // Call the method to calculate and update the total focus time
+        calculateTotalFocusTime();
 
         moodChart = findViewById(R.id.moodChart);
     }
@@ -316,6 +337,62 @@ public class StatisticsPage extends AppCompatActivity {
 
     }
 
+    // Method to calculate total focus time from tasks with 'done' status (in minutes)
+    private void calculateTotalFocusTime() {
+        // Initialize the database;
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userName = sharedPreferences.getString("Username", null);
+        fdb = FirebaseDatabase.getInstance();
+        taskDBR = fdb.getReference("tasks/" + userName);
+        ArrayList<Task> taskList = new ArrayList<>();
+        taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot sn : snapshot.getChildren()) {
+                    Task t = sn.getValue(Task.class);
+                    taskList.add(t);
+                }
+                Log.d("FIREBASE", String.valueOf(taskList.size()));
+                // collects all the tasks saved in the firebase
+                // Create a list of task names to display in the dialog
+                doneTasks = new ArrayList<>();
+                ArrayList<String> taskNames = new ArrayList<>();
+                Log.d("FIREBASE", String.valueOf(taskList.size()));
 
+                for (Task task : taskList) {
+                    Log.d("FIREBASE", String.valueOf(task.getStatus()));
+                    if (task.getStatus().equalsIgnoreCase("done")) {
+                        taskNames.add(task.getTaskName());
+                        doneTasks.add(task);
+                    }
+                }
+
+                // Calculation of total focus time should be done here
+                int totalDurationInMinutes = 0;
+                for (Task task : doneTasks) {
+                    totalDurationInMinutes += task.getTaskDuration();
+                }
+
+                // Convert the total duration to hours and minutes
+                int hours = totalDurationInMinutes / 60;
+                int minutes = totalDurationInMinutes % 60;
+
+                // Set the default text if no "done" tasks
+                String defaultText = "You are live laugh loving right now!\n" +
+                        "Go on and make some tasks before coming back!";
+
+                // Update the TextView with the calculated total focus time or the default text
+                if (doneTasks.isEmpty()) {
+                    totalFocusTimeTextView.setText(defaultText);
+                } else {
+                    totalFocusTimeTextView.setText("Total Focus Time\n" + hours + " hours and " + minutes + " minutes\n" + "You have done something, yay!");
+                }}
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 }
