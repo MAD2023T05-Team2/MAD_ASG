@@ -83,7 +83,6 @@ public class StatisticsPage extends AppCompatActivity {
         // drawing the Line Chart
         List<String> dates = new ArrayList<>();
         List<Entry> entries = new ArrayList<>();
-        drawLineChart(entries,dates);
 
         //for comparing
         // Calculate the date one month ago from the current date
@@ -154,7 +153,7 @@ public class StatisticsPage extends AppCompatActivity {
                 LineDataSet dataSet = new LineDataSet(entries, "Mood");
                 LineData lineData = new LineData(dataSet);
 
-                drawLineChart(entries,dates);
+                drawLineChart(dataSet,dates);
 
                 moodChart.notifyDataSetChanged();
                 moodChart.setData(lineData);
@@ -185,8 +184,6 @@ public class StatisticsPage extends AppCompatActivity {
                 return 2f;
             case "sad":
                 return 1f;
-            case "angry":
-                return 0f;
             default:
                 return 0f;
         }
@@ -208,10 +205,9 @@ public class StatisticsPage extends AppCompatActivity {
     }
 
     // Method to draw and customize the line chart
-    private void drawLineChart(List<Entry> entries, List<String> dates){
-        // instantiating
+    private void drawLineChart(LineDataSet dataSet, List<String> dates){
+
         // Create a LineDataSet from the entries
-        LineDataSet dataSet = new LineDataSet(entries, "Mood");
         dataSet.setDrawValues(false); // Disable displaying values on data points
         dataSet.setColor(Color.BLACK); // Set line color
         dataSet.setLineWidth(3f); // Set line width
@@ -219,6 +215,7 @@ public class StatisticsPage extends AppCompatActivity {
         dataSet.setCircleColor(Color.BLACK); // Set circle color
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER); // Set line mode to curved
         Log.i(TITLE,"Create a LineDataSet from the entries");
+
 
         // Customize the appearance of the line chart
         LineData lineData = new LineData(dataSet);
@@ -313,8 +310,6 @@ public class StatisticsPage extends AppCompatActivity {
         // Remove numerical values on the secondary Y-axis
         moodChart.getAxisRight().setEnabled(false); // Disable right axis
 
-        moodChart.notifyDataSetChanged();
-        moodChart.setData(lineData);
         // Refresh the chart
         moodChart.invalidate();
 
