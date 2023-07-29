@@ -867,6 +867,7 @@ public class TaskActivity extends AppCompatActivity{
                     }
                 }
                 Log.d("FIREBASE",String.valueOf(taskList.size()));
+                getTaskData.onDataLoaded(taskList);
                 adapter.notifyItemRangeInserted(0,taskList.size());
                 reorderTasks(taskList);
                 // collects all the tasks saved in the firebase

@@ -48,18 +48,12 @@ public class TaskWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-
-            // getting stored userid
-            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            String userName = sharedPreferences.getString("Username", null);
-
-            fdb = FirebaseDatabase.getInstance();
-            taskDBR = fdb.getReference("tasks/" + userName);
             loadTasks(new GetTaskData() {
 
                 @Override
-                public void onDataLoaded(List<Task> widgetTaskList) {
-                    Log.d("Firebase Service", String.valueOf(widgetTaskList.size()));
+                public void onDataLoaded(List<Task> loadedTaskList) {
+                    Log.d("Firebase Service", String.valueOf(loadedTaskList.size()));
+                    Log.d("Service","onCreate");
                 }
                 @Override
                 public void onError(String errorMsg) {
@@ -72,6 +66,8 @@ public class TaskWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
+
+            //widgetTaskList.clear();
 
             Log.v("Service", "widgetTaskList, on DataSetChanged");
 
@@ -90,16 +86,13 @@ public class TaskWidgetService extends RemoteViewsService {
             //widgetTaskList.remove(newTask);
             //widgetTaskList = (ArrayList<Task>) filterCurrentDate(db.getAllTasksFromUser(userId));
 
-            // getting stored userid
-            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            String userName = sharedPreferences.getString("Username", null);
-            fdb = FirebaseDatabase.getInstance();
-            taskDBR = fdb.getReference("tasks/" + userName);
             loadTasks(new GetTaskData() {
 
                 @Override
-                public void onDataLoaded(List<Task> widgetTaskList) {
-                    Log.d("Firebase Service", String.valueOf(widgetTaskList.size()));
+                public void onDataLoaded(List<Task> loadedTaskList) {
+                    Log.d("Firebase Service","onDataSetChanged");
+                    Log.d("Firebase Service", String.valueOf(loadedTaskList.size()));
+                    Log.d("Firebase Service ", String.valueOf(widgetTaskList.size()));
                 }
                 @Override
                 public void onError(String errorMsg) {
@@ -166,14 +159,18 @@ public class TaskWidgetService extends RemoteViewsService {
         }
 
         private void loadTasks(GetTaskData getTaskData){
+
+            widgetTaskList.clear();
+
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
             String userName = sharedPreferences.getString("Username", null);
             fdb = FirebaseDatabase.getInstance();
             taskDBR = fdb.getReference("tasks/" + userName);
+
             taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    //widgetTaskList.clear();
+
                     // filter to current date
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
@@ -191,13 +188,14 @@ public class TaskWidgetService extends RemoteViewsService {
                         String compareDate = format.format(comparedDate);
                         if (compareDate.equals(strDate)){
                             widgetTaskList.add(t);
+                            Log.v("Firebase GetTask",t.getTaskName());
                         }
                     }
 
                     //widgetTaskList.remove(0);
                     Log.d("FIREBASE Service",String.valueOf(widgetTaskList.size()));
-                    //adapter.notifyItemRangeInserted(0,widgetTaskList.size());
-
+                    getTaskData.onDataLoaded(widgetTaskList);
+                    widgetTaskList.clear();
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -207,7 +205,6 @@ public class TaskWidgetService extends RemoteViewsService {
                 }
             });
         }
-
 
     }
 }
