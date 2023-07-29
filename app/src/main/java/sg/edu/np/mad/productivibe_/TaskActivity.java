@@ -764,7 +764,21 @@ public class TaskActivity extends AppCompatActivity{
         timePickerDialog.show();
     }
 
+    // method to update widget
+    private void updateWidget(List<Task> taskList){
+        Context context = getApplicationContext();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
 
+        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
+        int no = filterCurrentDate(taskList).size();
+        String taskNo = no + " Tasks Due Today:";
+        widgetViews.setTextViewText(R.id.todayTask, taskNo);
+
+        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
+    }
 
     // ------------------------------------------------------- VALIDATION CODE ---------------------------------------------------------------------------
 
@@ -907,23 +921,6 @@ public class TaskActivity extends AppCompatActivity{
         taskList.addAll(pendingTasks);
         taskList.addAll(completedTasks);
         adapter.notifyItemRangeInserted(0,listSize);
-    }
-
-    private void updateWidget(List<Task> taskList){
-        Context context = getApplicationContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, TaskWidget.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widgetTaskView);
-
-        RemoteViews widgetViews = new RemoteViews(context.getPackageName(), R.layout.task_widget);
-        int no = filterCurrentDate(taskList).size();
-        String taskNo = no + " Tasks Due Today:";
-        widgetViews.setTextViewText(R.id.todayTask, taskNo);
-
-        appWidgetManager.updateAppWidget(thisWidget, widgetViews);
-
-
     }
 
 }
