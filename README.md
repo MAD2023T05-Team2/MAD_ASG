@@ -144,6 +144,8 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Widget updates when there is a creation, edition or deletion of tasks
 * Upon pressing the widget, it will prompt the user into the home page of the app
 
+![wid](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/6ddf908b-68a8-4152-a360-a6283ad09007)
+
 ### Statistics (Mood and Total Study Time)
 * Shows the amount of time spent on being productive, takes the total duration of all tasks that are completed
 * Shows the mood of user throughout the week to be more aware of their emotional patterns, which can be integrated into goal-setting exercises
@@ -152,5 +154,5 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 
 ### Edit Profile
 * User can change their profile details
-* 
+
 ![ep](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/08cac9f8-d330-4c92-b4ea-cd562ca9a249)
