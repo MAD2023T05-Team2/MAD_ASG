@@ -108,7 +108,6 @@
                 android:text="00:00"
                 android:textColor="#0C0B0B"
                 android:textSize="51sp"
-                android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="@id/timer"
                 app:layout_constraintEnd_toEndOf="@+id/timer"
                 app:layout_constraintStart_toStartOf="@id/timer"
