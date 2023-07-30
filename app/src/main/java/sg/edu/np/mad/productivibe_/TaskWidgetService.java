@@ -162,8 +162,7 @@ public class TaskWidgetService extends RemoteViewsService {
 
             List<Task> loadTaskList = new ArrayList<>();
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            //String userName = sharedPreferences.getString("Username", null);
+            // Get username from firebase and put today's tasks into a list
             String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
             fdb = FirebaseDatabase.getInstance();
             taskDBR = fdb.getReference("tasks/" + userName);

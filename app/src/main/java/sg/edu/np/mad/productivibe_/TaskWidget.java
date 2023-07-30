@@ -36,9 +36,7 @@ public class TaskWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
 
-        // Get UserId from shared preferences and put today's tasks into a list
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-        //String userName = sharedPreferences.getString("Username", null);
+        // Get Username from firebase and put today's tasks into a list
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Create list of today task based on the user
