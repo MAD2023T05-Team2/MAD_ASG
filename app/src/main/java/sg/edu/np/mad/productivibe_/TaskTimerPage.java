@@ -192,25 +192,7 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 if (pendingTasks.size() > 0) {
                     // jump to tasklist
                     Context c = TaskTimerPage.this;
-                    noTaskDialogListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                // on below line we are setting a click listener
-                                // for our positive button
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    // on below line we are displaying a toast message.
-                                    startActivity(new Intent(TaskTimerPage.this, TaskActivity.class));
-                                    break;
-                                // on below line we are setting click listener
-                                // for our negative button.
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    // on below line we are dismissing our dialog box.
-                                    dialog.dismiss();
 
-                            }
-                        }
-                    };
 
                     // Convert the ArrayList to a simple array
                     String[] taskNamesArray = taskNames.toArray(new String[0]);
@@ -242,7 +224,27 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                     builderL.show();
                 }
                 else{
+
                     // if don't have items to choose from
+                    noTaskDialogListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                // on below line we are setting a click listener
+                                // for our positive button
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    // on below line we are displaying a toast message.
+                                    startActivity(new Intent(TaskTimerPage.this, TaskActivity.class));
+                                    break;
+                                // on below line we are setting click listener
+                                // for our negative button.
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    // on below line we are dismissing our dialog box.
+                                    dialog.dismiss();
+
+                            }
+                        }
+                    };
                     // on below line we are creating a builder variable for our alert dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(TaskTimerPage.this);
                     // on below line we are setting message for our dialog box.
