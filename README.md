@@ -13,6 +13,8 @@ Introducing '***Producti-vibe***', a powerful productivity app designed to help 
 
 So why settle for mediocrity when you achieve greatness with this powerful productivity app? 
 
+Link to app on google play store: https://play.google.com/store/apps/details?id=sg.edu.np.mad.productivibe_
+
 ##  Features!!! 🐔
 
 ### Stage 1

@@ -48,6 +48,7 @@
             android:id="@+id/taskDateTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Tap the icon"
             android:drawableLeft="@drawable/baseline_calendar_month_24"
             android:drawablePadding="7dp"
             android:singleLine="true"/>
@@ -62,6 +63,7 @@
             android:id="@+id/taskDueDateTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Tap the icon"
             android:drawableLeft="@drawable/baseline_calendar_month_24"
             android:drawablePadding="7dp"
             android:singleLine="true" />

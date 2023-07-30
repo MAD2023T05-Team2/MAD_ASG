@@ -1,6 +1,5 @@
 package sg.edu.np.mad.productivibe_;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
