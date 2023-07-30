@@ -164,45 +164,50 @@ public class TaskWidgetService extends RemoteViewsService {
 
             // Get username from firebase and put today's tasks into a list
             String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            fdb = FirebaseDatabase.getInstance();
-            taskDBR = fdb.getReference("tasks/" + userName);
+            if (userName == null){
+                // logged out
+                loadTaskList.clear();
+            }
+            else{
+                fdb = FirebaseDatabase.getInstance();
+                taskDBR = fdb.getReference("tasks/" + userName);
 
-            taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    // filter to current date
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                    SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
-                    //get current date
-                    Date currentDate = new Date();
-                    String strDate = format.format(currentDate);
-                    for (DataSnapshot sn: snapshot.getChildren()){
-                        Task t = sn.getValue(Task.class);
-                        Date comparedDate = null;
-                        try {
-                            comparedDate = firebase.parse(t.getTaskDueDateTime());
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
+                        // filter to current date
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        SimpleDateFormat firebase = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+                        //get current date
+                        Date currentDate = new Date();
+                        String strDate = format.format(currentDate);
+                        for (DataSnapshot sn: snapshot.getChildren()){
+                            Task t = sn.getValue(Task.class);
+                            Date comparedDate = null;
+                            try {
+                                comparedDate = firebase.parse(t.getTaskDueDateTime());
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                            String compareDate = format.format(comparedDate);
+                            if (compareDate.equals(strDate)){
+                                loadTaskList.add(t);
+                                Log.v("Firebase GetTask",t.getTaskName());
+                            }
                         }
-                        String compareDate = format.format(comparedDate);
-                        if (compareDate.equals(strDate)){
-                            loadTaskList.add(t);
-                            Log.v("Firebase GetTask",t.getTaskName());
-                        }
+
+                        Log.d("Firebase Service",String.valueOf(loadTaskList.size()));
+                        getTaskData.onDataLoaded(loadTaskList);
                     }
-
-                    Log.d("Firebase Service",String.valueOf(loadTaskList.size()));
-                    getTaskData.onDataLoaded(loadTaskList);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // if cannot connect or firebase returns an error
-                    //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-                    //Log.d(TITLE, error.getMessage());
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // if cannot connect or firebase returns an error
+                        //Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
+                        //Log.d(TITLE, error.getMessage());
+                    }
+                });
+            }
         }
-
     }
 }
