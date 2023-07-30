@@ -74,11 +74,14 @@ public class SignUpPage extends AppCompatActivity {
 
         // Initialize UI elements
         TextView toLogin = findViewById(R.id.toLogin);
+
         EditText signUpName = findViewById(R.id.signUpName);
         EditText signUpUsername = findViewById(R.id.signUpUsername);
         EditText signUpPassword = findViewById(R.id.signUpPassword);
         EditText cfmPassword = findViewById(R.id.confirmSignUpPassword);
         Button createAccountButton = findViewById(R.id.createAccountButton);
+
+        TextView toGuest = findViewById(R.id.toGuest);
 
         // Initialize the database
         fdb = FirebaseDatabase.getInstance();
@@ -169,6 +172,53 @@ public class SignUpPage extends AppCompatActivity {
                 startActivity(signupToLogin);
             }
         });
+
+        // Event handler for logging - in as a guest
+        toGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // sign-in anonymously
+                uAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            // sign in successful, take it as remember me ALWAYS
+                            FirebaseUser user = uAuth.getCurrentUser();
+                            // set name as Guest
+                            UserProfileChangeRequest toGuest = new UserProfileChangeRequest.Builder().setDisplayName("Guest").build();
+                            user.updateProfile(toGuest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Log.i(TITLE,"Became a guest!");
+                                    Log.i(TITLE,user.getUid());
+                                    // move into HomePage
+                                    // Successful Login and bring user to the homepage
+                                    Intent loginToHome = new Intent(SignUpPage.this, HomePage.class);
+                                    startActivity(loginToHome);
+
+                                    // Remember the name so that it will be displayed on the home page
+                                    SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                    // Remember whether the user chose the app to remember their login details
+                                    SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                    SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+                                    RUDeditor.putString("Remember", "True");
+                                    Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                                    Log.v("Remember", "True");
+                                    RUDeditor.apply();
+                                }
+                            });
+                        }
+                        else{
+                            // unsuccessful
+                            Log.w(TITLE, "signInAnonymously:failure", task.getException());
+                            Toast.makeText(SignUpPage.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
     }
 }
 

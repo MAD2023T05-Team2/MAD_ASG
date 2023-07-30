@@ -1,6 +1,8 @@
 package sg.edu.np.mad.productivibe_;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class EditProfilePage extends AppCompatActivity {
     final String TITLE = "EditProfile";
@@ -28,6 +33,8 @@ public class EditProfilePage extends AppCompatActivity {
     private EditText EditPassword;
     private EditText confirmEditPassword;
     private Button editAccountButton;
+    private Button deleteAccountButton;
+    private DialogInterface.OnClickListener deleteAccFR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,7 @@ public class EditProfilePage extends AppCompatActivity {
         EditPassword = findViewById(R.id.EditPassword);
         confirmEditPassword = findViewById(R.id.confirmEditPassword);
         editAccountButton = findViewById(R.id.editAccountButton);
+        deleteAccountButton = findViewById(R.id.deleteProfile);
 
         // Initialize Firebase
         uAuth = FirebaseAuth.getInstance();
@@ -174,8 +182,68 @@ public class EditProfilePage extends AppCompatActivity {
             }
         });
 
+        // listener on Delete Button
+        deleteAccFR = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // they do want to delete LLLL
+                        // save the uId for deletion in realtime storage
+                        String uId = currentUser.getUid();
+                        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+                        DatabaseReference forTasks = fdb.getReference("tasks/" + uId );
+                        forTasks.removeValue();
+                        DatabaseReference forMoods = fdb.getReference("moods/" + uId);
+                        forMoods.removeValue();
+                        currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // delete from firebase
+                                if (task.isSuccessful()){ // ensures Firebase Auth is dealt with
+                                    uAuth.signOut();
+                                    // To log out
+                                    SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Updates remember option to "False"
+                                    SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+                                    RUDeditor.putString("Remember", "False");
+                                    RUDeditor.apply();
+                                    // Mark that the app back to launching for the first time
+                                    SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences2.edit();
+                                    editor.putBoolean("IsFirstLaunch", true);
+                                    editor.apply();
 
+                                    startActivity(new Intent(EditProfilePage.this, LoginPage.class));
+                                }
+                                else{
+                                    Log.w(TITLE,"delete failed", task.getException());
+                                    Toast.makeText(EditProfilePage.this, "Deletion Failed!", Toast.LENGTH_LONG);
+                                }
 
+                            }
+                        });
+                        break;
+                    // for our negative button.
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // on below line we are dismissing our dialog box.
+                        dialog.dismiss();
+                        Toast.makeText(EditProfilePage.this,":D", Toast.LENGTH_LONG);
+                }
+
+            }
+        };
+        deleteAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // open up dialog to make sure!!
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditProfilePage.this);
+                builder.setTitle("Hold on!");
+                builder.setMessage("Are you sure you want to delete your profile? All your tasks, moods and data will be permanently deleted !!")
+                        .setPositiveButton("Yes I do!",deleteAccFR)
+                        .setNegativeButton("NO!",deleteAccFR)
+                        .show();
+            }
+        });
 
     }
 }

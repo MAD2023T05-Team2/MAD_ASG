@@ -16,6 +16,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -113,7 +114,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         // Display "Hello, [name]" after being authenticated
         String recvName = currentUser.getDisplayName();
         TextView myMessage = findViewById(R.id.textView);
-        myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
+        myMessage.setText("Hello " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
 
 
         // Recyclerview to show tasks on homepage
@@ -310,6 +311,20 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             SharedPreferences.Editor RUDeditor = rememberUserData.edit();
             RUDeditor.putString("Remember", "False");
             RUDeditor.apply();
+            if (currentUser.getDisplayName() == "Guest"){
+                // guest account delete from firebase auth
+                currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TITLE, "User account deleted.");
+                        }
+                        else{
+                            Log.d(TITLE, "Issue in deletion",task.getException());
+                        }
+                    }
+                });
+            }
             uAuth.signOut(); // Log out FirebaseAuth
 
             // Mark that the app back to launching for the first time
