@@ -97,7 +97,9 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 #### Edit Task
 * Enter details to update task
 * Edited task will be reflected on the task page, home page, calendar page and widget
-  
+
+![edit dialog](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/a3c12801-2770-4020-a4d9-5dae7a87c3b6)
+
 #### Delete Task
 * Prompt to user to make sure that they want to delete the task
 * Deleted task will be removed from the task page, home page, calendar page and widget
@@ -108,7 +110,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Click on a date to see tasks for that date
 * Can change the task from "Pending" to "Done" (will update in Home Page and Task Page)
 
-![calendar page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/28c63546-1457-4ee3-829e-6291a8313c56)
+![calendar](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/b5261fa9-fe43-4623-939c-09b7f149cc12)
 
 ### Timer
 * Start and Reset buttons disabled if no task is selected
@@ -123,8 +125,10 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 
 ### Destress Page
 * Select between Photos, Videos and Punching Bag for destressing
+
 ![destress page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/a71a2100-9166-4d31-a88f-7d096d9ba377)
 * Users have five minute to destress before being prompted to start work again
+
 ![destress prompt](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/611fffb0-e950-473b-91fa-f7ade9b1f4f7)
 
 ### Photos
@@ -141,6 +145,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 
 ### Punching Bag 
 * Tap on the screen to stimulate punching
+
 ![punching bag](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/312c6e46-818e-4c8f-b17d-53b23f05ae80)
 
 * Users can select their desired picture to 'punch'
@@ -169,12 +174,12 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 
 ![home page with settings](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/05453946-492a-43f1-91fd-1776d40608ea)
 
-### Edit Profile
+#### Edit Profile
 * User can change their profile details
 
 ![edit profile](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/0b9b0b8a-5922-49ab-8974-8dcaa2c7c5a8)
 
-### Delete Profile 
+#### Delete Profile 
 * Users can choose to delete their account
   
 ![delete profile](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/3b12612c-59ac-44b8-95a8-8fa3c1ea9ac9)
