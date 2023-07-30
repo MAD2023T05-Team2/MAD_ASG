@@ -109,9 +109,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
         currentUser = uAuth.getCurrentUser();
 
-        // Showing of "Hello, [name] on homepage
-
-        // Display "Hello, [name]" after being authenticated
+        // Display "Hello [name]" after being authenticated
         String recvName = currentUser.getDisplayName();
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
@@ -129,9 +127,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         homeTaskadapter.notifyDataSetChanged();
 
         // Initialize the database
-        // Get UserId from shared preferences and put today's tasks into a list
-        //sharedPreferences = this.getSharedPreferences("MyPrefs", 0);
-        //String userName = sharedPreferences.getString("Username", null);
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // create list of today task based on the user
@@ -198,57 +193,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         angryIcon.setOnClickListener(v -> saveMood("angry"));
         partyIcon.setOnClickListener(v -> saveMood("party"));
 
-        //FOR TESTING WILL DELETE AFTER
-//        // Create a reference to the "moods" node for the current user
-//        DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
-//
-//        // Delete all moods for the current user
-//        moodDBR.removeValue()
-//                .addOnSuccessListener(aVoid -> {
-//                    // Success callback
-//                    Log.d(TITLE, "All moods deleted successfully");
-//                    // Add your further actions or message here, if needed.
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Failure callback
-//                    Log.e(TITLE, "Failed to delete moods: " + e.getMessage());
-//                    // Handle the failure or display an error message here, if needed.
-//                });
-
-//        // Create a reference to the "moods" node for the current user
-//        DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
-//
-//        // Manually add mood objects and save them to the database
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-//
-//        try {
-//            Mood mood1 = new Mood(userName, "happy", dateFormat.parse("2023-07-15 10:30:00").getTime());
-//            Mood mood2 = new Mood(userName, "neutral", dateFormat.parse("2023-07-18 15:45:00").getTime());
-//            Mood mood3 = new Mood(userName, "sad", dateFormat.parse("2023-07-19 09:00:00").getTime());
-//            Mood mood4 = new Mood(userName, "party", dateFormat.parse("2023-07-20 19:20:00").getTime());
-//            Mood mood5 = new Mood(userName, "angry", dateFormat.parse("2023-07-20 12:10:00").getTime());
-//            Mood mood6 = new Mood(userName, "party", dateFormat.parse("2023-07-21 12:10:00").getTime());
-//            Mood mood7 = new Mood(userName, "angry", dateFormat.parse("2023-07-26 12:10:00").getTime());
-//            Mood mood8 = new Mood(userName, "neutral", dateFormat.parse("2023-07-28 12:10:00").getTime());
-//            Mood mood9 = new Mood(userName, "happy", dateFormat.parse("2023-07-08 12:10:00").getTime());
-//
-//            // Save the mood objects to the database
-//            moodDBR.child(String.valueOf(mood1.getTimestamp())).setValue(mood1.getMood());
-//            moodDBR.child(String.valueOf(mood2.getTimestamp())).setValue(mood2.getMood());
-//            moodDBR.child(String.valueOf(mood3.getTimestamp())).setValue(mood3.getMood());
-//            moodDBR.child(String.valueOf(mood4.getTimestamp())).setValue(mood4.getMood());
-//            moodDBR.child(String.valueOf(mood5.getTimestamp())).setValue(mood5.getMood());
-//            moodDBR.child(String.valueOf(mood6.getTimestamp())).setValue(mood6.getMood());
-//            moodDBR.child(String.valueOf(mood7.getTimestamp())).setValue(mood7.getMood());
-//            moodDBR.child(String.valueOf(mood8.getTimestamp())).setValue(mood8.getMood());
-//            moodDBR.child(String.valueOf(mood9.getTimestamp())).setValue(mood9.getMood());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
-
-
-
     }
 
     @Override
@@ -262,20 +206,13 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     private void saveMood(String moodValue) {
         // Initialize the database;
-        //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userName = sharedPreferences.getString("Username", null);
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // = FirebaseDatabase.getInstance();
         DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
 
 
         // Convert the timestamp to a string
         Date timestamp = new Date();
         long currentTime = timestamp.getTime();
-
-        // Create a new Mood object
-        //Mood mood = new Mood(userName, moodValue, currentTime);
-        // unnecessary at this point
 
         // Add the mood to the database
         moodDBR.child(String.valueOf(currentTime)).setValue(moodValue);

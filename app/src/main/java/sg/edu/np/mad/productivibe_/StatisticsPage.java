@@ -138,9 +138,6 @@ public class StatisticsPage extends AppCompatActivity {
                         moodsList.add(mV);
                     }
                 }
-                Log.d("Firebase MOOD", String.valueOf(moodsList.size()));
-                Log.d("Firebase dates", String.valueOf(dates.size()));
-
                 // sort the dates in ascending order in dates
                 Collections.sort(dates, (date1, date2) -> {
                     SimpleDateFormat format = new SimpleDateFormat("dd MMM", Locale.getDefault());

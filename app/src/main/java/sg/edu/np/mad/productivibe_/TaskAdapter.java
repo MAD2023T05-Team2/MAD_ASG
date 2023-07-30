@@ -76,10 +76,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             // Updates the status button colour and message after clicking
             @Override
             public void onClick(View v) {
-                Database taskDatabase = Database.getInstance(v.getContext());
                 // get database
-                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                //String userName = sharedPreferences.getString("Username", null);
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 // create list of today task based on the user
                 FirebaseDatabase fdb = FirebaseDatabase.getInstance();
@@ -90,7 +87,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     holder.taskStatusButton.setText("Done");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FF62D2FD"));
                     task.setStatus("Done");
-                    taskDatabase.updateTask(task); //updates the status in database
                     taskDBR.child(String.valueOf(task.getId())).child("status").setValue("Done");
 
                 }
@@ -98,7 +94,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     holder.taskStatusButton.setText("Pending");
                     holder.taskStatusButton.setBackgroundColor(Color.parseColor("#FFF67777"));
                     task.setStatus("Pending");
-                    taskDatabase.updateTask(task);
                     taskDBR.child(String.valueOf(task.getId())).child("status").setValue("Pending");
                 }
                 updateList(taskList);

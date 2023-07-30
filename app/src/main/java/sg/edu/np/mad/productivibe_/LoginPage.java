@@ -117,8 +117,7 @@ public class LoginPage extends AppCompatActivity {
                                 SharedPreferences.Editor RNeditor = rememberName.edit();
 
                                 String displayName = user.getEmail().replace("@vibe.com","");
-                                RNeditor.putString("Name", displayName);
-                                //RNeditor.putString("Username", user.getUid());
+                                RNeditor.putString("Name", displayName);// just in case
                                 RNeditor.apply();
 
                                 // Remember whether the user chose the app to remember their login details

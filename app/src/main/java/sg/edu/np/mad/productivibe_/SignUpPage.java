@@ -202,7 +202,7 @@ public class SignUpPage extends AppCompatActivity {
                                     SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                                     SharedPreferences.Editor RUDeditor = rememberUserData.edit();
                                     RUDeditor.putString("Remember", "True");
-                                    Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Login Successful! You're a guest.", Toast.LENGTH_SHORT).show();
                                     Log.v("Remember", "True");
                                     RUDeditor.apply();
                                 }

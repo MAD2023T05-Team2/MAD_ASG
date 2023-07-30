@@ -117,8 +117,6 @@ public class TaskActivity extends AppCompatActivity{
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Initialize the database;
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userName = sharedPreferences.getString("Username", null);
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
@@ -147,8 +145,6 @@ public class TaskActivity extends AppCompatActivity{
                 Log.d(TITLE, errorMsg);
             }
         });
-
-        //adapter.notifyDataSetChanged();
 
         // Implementation of swipe gesture for editing/deletion of tasks
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeCallback);
@@ -516,18 +512,13 @@ public class TaskActivity extends AppCompatActivity{
         taskList.remove(position); // Remove the task from the list
         adapter.notifyItemRemoved(position); // Notify the adapter of item removal
 
-        Database taskDatabase = Database.getInstance(this); // Get the TaskDatabase instance
-
         // delete from database
         DatabaseReference toRemove = taskDBR.child(String.valueOf(task.getId()));
         toRemove.removeValue();
 
-        //taskDatabase.deleteTask(task.getId()); // Delete the task from the database
-
         if (pendingIntent != null && alarmManager != null) {
             alarmManager.cancel(pendingIntent); // Halt the notifications for the deleted task
         }
-        //adapter.notifyDataSetChanged(); // Update the RecyclerView
 
         // Undoing the task deletion
         Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
@@ -584,9 +575,6 @@ public class TaskActivity extends AppCompatActivity{
         adapter.setTasks(filteredTasks); // Update the adapter with filtered tasks
         // notify adapter
         reorderTasks(filteredTasks);
-        //adapter.clearList();
-        //adapter.notifyItemRangeInserted(0,filteredTasks.size());
-        //adapter.notifyDataSetChanged();
     }
 
         public void sendPushNotification(Task task) {

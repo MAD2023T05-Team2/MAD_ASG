@@ -145,10 +145,6 @@ public class CalendarPage extends AppCompatActivity {
                         Log.d(TITLE,errorMsg);
                     }
                 });
-
-                //filteredTaskList = filterListDate(taskDatabase.getAllTasksFromUser(userId),strDate);
-                //List<Task> filteredTasksList = taskDatabase.getFilteredTasks("due_date","date",strDate);
-
             }
         });
 
