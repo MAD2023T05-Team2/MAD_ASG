@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -117,7 +118,8 @@ public class TaskActivity extends AppCompatActivity{
 
         // Initialize the database;
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("Username", null);
+        //String userName = sharedPreferences.getString("Username", null);
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
 
@@ -296,8 +298,9 @@ public class TaskActivity extends AppCompatActivity{
                             // Create a new Task object
                             SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("UserId", null);
-                            String userName = sharedPreferences.getString("Username", null);
-                            Integer uId = Integer.parseInt(userId);
+                            //String userName = sharedPreferences.getString("Username", null);
+                            String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            Integer uId = 0;
 
                             lastTaskId += 1;
 

@@ -20,6 +20,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +40,7 @@ public class LoginPage extends AppCompatActivity {
     private FirebaseDatabase fdb;
     String TITLE = "Login Page";
 
-    private Database db; //to be deleted after testing of widget
+    private FirebaseAuth uAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,9 @@ public class LoginPage extends AppCompatActivity {
         spannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 21, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.BLUE), 23, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         memberYN.setText(spannable);
+
+        // for Firebase Auth
+        uAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -55,11 +65,16 @@ public class LoginPage extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", 0);
         String remember = sharedPreferences.getString("Remember", "");
 
-        if (remember.equals("True")) { // If the value is "True", redirect the user to the home page by creating an intent and starting the activity
+        // Check if user is signed-in under Firebase
+        FirebaseUser currentUser = uAuth.getCurrentUser();
+        if (currentUser != null && remember.equals("True")){ // If the value is "True", redirect the user to the home page by creating an intent and starting the activity
             Intent intent = new Intent(LoginPage.this, HomePage.class);
             startActivity(intent);
+            Log.v(TITLE, remember);
         }
-        Log.v(TITLE, remember);
+        else if (currentUser != null && remember.equals("False")){
+            uAuth.signOut(); // Log out FirebaseAuth
+        }
 
         // Initialize UI elements
         TextView signup = findViewById(R.id.signup);
@@ -67,10 +82,6 @@ public class LoginPage extends AppCompatActivity {
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
         CheckBox rememberMe = findViewById(R.id.rememberMe);
-
-        // Initialize the database
-        fdb = FirebaseDatabase.getInstance();
-        dbr = fdb.getReference("users");
 
 
         // Event handler for the login button
@@ -84,116 +95,73 @@ public class LoginPage extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please enter all fields", Toast.LENGTH_SHORT).show();
                     Log.v(TITLE, "Not all fields are entered");
                 }
-                else{
-                    // check if user name already exists in database
-                    dbr.orderByChild("userName").equalTo(userName).addListenerForSingleValueEvent(new ValueEventListener() {
+                else {
+                    // use Firebase Auth
+                    String Email = userName + "@vibe.com";
+                    Log.d(TITLE, Email);
+                    uAuth.signInWithEmailAndPassword(Email, pass).addOnCompleteListener(LoginPage.this, new OnCompleteListener<AuthResult>() {
+                        // auto-checks for us the password too
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()){
-                                // username exists
-                                // takes the first data snapshot in the returned iterable
-                                // as each username is unique ; 1 username regardless
-                                DataSnapshot sn= snapshot.getChildren().iterator().next();
-                                // check password
-                                if (sn.child("passWord").getValue().equals(pass)){
-                                    // if password matches
-                                    // Successful Login and bring user to the homepage
-                                    Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
-                                    startActivity(loginToHome);
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TITLE, "signInWithEmail:success");
+                                FirebaseUser user = uAuth.getCurrentUser();
+                                // move into HomePage
+                                // Successful Login and bring user to the homepage
+                                Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
+                                startActivity(loginToHome);
 
-                                    // Remember the name so that it will be displayed on the home page
-                                    SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                                    SharedPreferences.Editor RNeditor = rememberName.edit();
-                                    RNeditor.putString("Name", sn.child("name").getValue().toString());
-                                    RNeditor.putString("Username", sn.child("userName").getValue().toString());
-                                    RNeditor.putString("UserId", sn.child("userId").getValue().toString());
-                                    RNeditor.apply();
+                                // Remember the name so that it will be displayed on the home page
+                                SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                SharedPreferences.Editor RNeditor = rememberName.edit();
 
-                                    // Remember whether the user chose the app to remember their login details
-                                    boolean isChecked = rememberMe.isChecked();
-                                    Log.v("isChecked", Boolean.toString(isChecked));
-                                    SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                                    SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+                                String displayName = user.getEmail().replace("@vibe.com","");
+                                RNeditor.putString("Name", displayName);
+                                //RNeditor.putString("Username", user.getUid());
+                                RNeditor.apply();
 
-                                    if (isChecked == true) {
-                                        RUDeditor.putString("Remember", "True");
-                                        Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
-                                        Log.v("Remember", "True");
-                                    } else {
-                                        RUDeditor.putString("Remember", "False");
-                                        Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
-                                        Log.v("Remember", "False");
-                                    }
-                                    RUDeditor.apply();
+                                // Remember whether the user chose the app to remember their login details
+                                boolean isChecked = rememberMe.isChecked();
+                                Log.v("isChecked", Boolean.toString(isChecked));
+                                SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                SharedPreferences.Editor RUDeditor = rememberUserData.edit();
 
+                                if (isChecked == true) {
+                                    RUDeditor.putString("Remember", "True");
+                                    Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
+                                    //signInFirebase(sn.child("userName").getValue().toString(),pass);
+                                    Log.v("Remember", "True");
+                                } else {
+                                    RUDeditor.putString("Remember", "False");
+                                    Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                                    Log.v("Remember", "False");
                                 }
-                                else{
+                                RUDeditor.apply();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                if (task.getException() instanceof FirebaseAuthInvalidUserException){
+                                    // user does not exist
+                                    Toast.makeText(LoginPage.this, "No such username found. Please try again.", Toast.LENGTH_SHORT).show();
+                                    Log.v(TITLE, "No such username");
+                                }
+                                else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException){
                                     // wrong password
-                                    Toast.makeText(getApplicationContext(), "Password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginPage.this, "Password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
                                     Log.v(TITLE, "Wrong password");
                                 }
-                            }
-                            else{
-                                // username does not exist
-                                // prompt them to create an account
-                                Toast.makeText(getApplicationContext(), "No such username found. Please try again.", Toast.LENGTH_SHORT).show();
-                                Log.v(TITLE, "No such username");
-                            }
-                        }
+                                else{
+                                    Log.w(TITLE, "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(LoginPage.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            // error in calling firebase database
-                            Toast.makeText(getApplicationContext(), "You're offline :( Cannot reach the database", Toast.LENGTH_SHORT).show();
-                            Log.d(TITLE, error.getMessage());
+                                }
+                            }
                         }
                     });
                 }
-/*
-                else if (userData != null){ // Username exists in database
-                    if (userData.getPassWord().equals(pass)){ // Check if the password entered is the same as the one in the database
-                        // Successful Login and bring user to the homepage
-                        Intent loginToHome = new Intent(LoginPage.this, HomePage.class);
-                        startActivity(loginToHome);
-
-                        // Remember the name so that it will be displayed on the home page
-                        SharedPreferences rememberName = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor RNeditor = rememberName.edit();
-                        RNeditor.putString("Name", userData.getName());
-                        RNeditor.putString("Username", userData.getUserName());
-                        RNeditor.putString("UserId", userData.getUserId());
-                        RNeditor.apply();
-
-                        // Remember whether the user chose the app to remember their login details
-                        boolean isChecked = rememberMe.isChecked();
-                        SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor RUDeditor = rememberUserData.edit();
-
-                        if (isChecked) {
-                            RUDeditor.putString("Remember", "True");
-                            Toast.makeText(getApplicationContext(), "Login Successful! Login Credentials Remembered.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            RUDeditor.putString("Remember", "False");
-                            Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        RUDeditor.apply();
-                        Log.v(TITLE, "Successful login");
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(), "Password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
-                        Log.v(TITLE, "Wrong password");
-                    }
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "No such username found. Please try again.", Toast.LENGTH_SHORT).show();
-                    Log.v(TITLE, "No such username");
-                }
-                */
             }
         });
-
-
 
         // Event handler for the signup text view
         signup.setOnClickListener(new View.OnClickListener(){

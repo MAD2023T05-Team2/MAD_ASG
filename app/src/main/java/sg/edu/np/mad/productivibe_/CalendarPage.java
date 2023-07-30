@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 //import sg.edu.np.mad.productivibe_.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,9 +82,10 @@ public class CalendarPage extends AppCompatActivity {
         filteredRecyclerView.setItemAnimator(null);
 
         // Initialize the database
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("Username", null);
+        //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        //String userName = sharedPreferences.getString("Username", null);
         fdb = FirebaseDatabase.getInstance();
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         taskDBR = fdb.getReference("tasks/"+ userName);
         // Load tasks from the database
         loadTasks(new GetTaskData() {

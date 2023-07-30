@@ -13,6 +13,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +38,8 @@ public class TaskWidget extends AppWidgetProvider {
 
         // Get UserId from shared preferences and put today's tasks into a list
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-        String userName = sharedPreferences.getString("Username", null);
+        //String userName = sharedPreferences.getString("Username", null);
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Create list of today task based on the user
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();

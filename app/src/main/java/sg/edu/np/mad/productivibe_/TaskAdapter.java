@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -78,7 +79,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 Database taskDatabase = Database.getInstance(v.getContext());
                 // get database
                 SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                String userName = sharedPreferences.getString("Username", null);
+                //String userName = sharedPreferences.getString("Username", null);
+                String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 // create list of today task based on the user
                 FirebaseDatabase fdb = FirebaseDatabase.getInstance();
                 DatabaseReference taskDBR = fdb.getReference("tasks/" + userName);

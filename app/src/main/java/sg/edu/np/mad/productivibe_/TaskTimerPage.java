@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -161,7 +162,8 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
     private void showTaskSelectionDialog() {
         // Initialize the database;
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("Username", null);
+        //String userName = sharedPreferences.getString("Username", null);
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
         taskList = new ArrayList<>();

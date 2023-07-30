@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,13 +38,13 @@ import java.util.Locale;
 public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private RecyclerView homeTaskRecyclerView;
-    private Database db;
     private TaskAdapter homeTaskadapter;
     private boolean isMuted;
     private ValueEventListener retrieveData;
 
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
+    private FirebaseAuth uAuth;
     final String TITLE = "HomePage";
 
     @Override
@@ -50,9 +52,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Log.v(TITLE, "Navigation Buttons");
-
-        // Initialize the database
-        db = Database.getInstance(this);
 
         // Setting the navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -96,15 +95,29 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             editor.putBoolean("IsFirstLaunch", false);
             editor.apply();
         }
+
+        // Using Firebase Auth
+
+        fdb = FirebaseDatabase.getInstance(); // for realtime storage
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        uAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = uAuth.getCurrentUser();
+
+
         // Showing of "Hello, [name] on homepage
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Retrieve the SharedPreferences object named "MyPrefs" with private access mode
-        String recvName = sharedPreferences.getString("Name", null); // Get the value associated with the key "Name" from the SharedPreferences, defaulting to null if not found
+        //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Retrieve the SharedPreferences object named "MyPrefs" with private access mode
+        //String recvName = sharedPreferences.getString("Name", null); // Get the value associated with the key "Name" from the SharedPreferences, defaulting to null if not found
+
+        // Display "Hello, [name]" after being authenticated
+        //DatabaseReference forNameDBR = fdb.getReference("users/" + currentUser.getUid());
+        String recvName = currentUser.getDisplayName();
+
         Log.d(TITLE, "Received name from SharedPreferences: " + recvName);
 
         TextView myMessage = findViewById(R.id.textView);
@@ -124,10 +137,11 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
         // Initialize the database
         // Get UserId from shared preferences and put today's tasks into a list
-        sharedPreferences = this.getSharedPreferences("MyPrefs", 0);
-        String userName = sharedPreferences.getString("Username", null);
+        //sharedPreferences = this.getSharedPreferences("MyPrefs", 0);
+        //String userName = sharedPreferences.getString("Username", null);
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         // create list of today task based on the user
-        fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
         retrieveData = new ValueEventListener() {
             @Override
@@ -294,6 +308,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             SharedPreferences.Editor RUDeditor = rememberUserData.edit();
             RUDeditor.putString("Remember", "False");
             RUDeditor.apply();
+            uAuth.signOut(); // Log out FirebaseAuth
 
             // Mark that the app back to launching for the first time
             SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);

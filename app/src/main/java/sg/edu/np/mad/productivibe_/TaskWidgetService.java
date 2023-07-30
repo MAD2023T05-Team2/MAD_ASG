@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -162,7 +163,8 @@ public class TaskWidgetService extends RemoteViewsService {
             List<Task> loadTaskList = new ArrayList<>();
 
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", 0);
-            String userName = sharedPreferences.getString("Username", null);
+            //String userName = sharedPreferences.getString("Username", null);
+            String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
             fdb = FirebaseDatabase.getInstance();
             taskDBR = fdb.getReference("tasks/" + userName);
 
