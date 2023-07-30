@@ -328,8 +328,8 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected  void onStop(){
+        super.onStop();
         // Release mediaPlayer when the app is shutdown
         // Mark that the app back to launching for the first time
         SharedPreferences sharedPreferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -337,11 +337,16 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         editor.putBoolean("IsFirstLaunch", true);
         editor.apply();
 
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         // for the firebase listener
         if (taskDBR != null && retrieveData != null) {
             taskDBR.removeEventListener(retrieveData);
         }
-
         onDestroy();
     }
 }
