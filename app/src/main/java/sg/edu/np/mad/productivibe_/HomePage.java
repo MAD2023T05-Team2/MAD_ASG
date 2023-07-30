@@ -260,8 +260,9 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     private void saveMood(String moodValue) {
         // Initialize the database;
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("Username", null);
+        //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        //String userName = sharedPreferences.getString("Username", null);
+        String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         // = FirebaseDatabase.getInstance();
         DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
 
