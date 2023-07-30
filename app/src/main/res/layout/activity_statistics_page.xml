@@ -45,11 +45,13 @@
             android:id="@+id/timerTrackerStatsHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="116dp"
+            android:gravity="center"
             android:text="Total Study Duration!!!"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/productivityCard"
