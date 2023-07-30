@@ -38,15 +38,12 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 | Splash Screen | Opening Page of the App | Alethea |
 | Random Quote | Shows a random quote on the splash screen to motivate users | Gwyneth |
 | Background Music | Can opt in or out of such music | Alethea |
-| Statistics | Displays charts (mood/study hours) | Xin Le/Sheryl |
+| Mood Statistics | Displays charts based on the mood selected | Xin Le |
+| Total Productivity Time | Displays total study hours | Sherylyn |
 | Firebase | Stores and sync data between users using cloud-hosted NoSQL database | Kiara |
 | Widget | Lets users see the tasks they have due on that day and the timing it is due at | Gwyneth | 
 | Punching Bag | Upgrade to the Destress Page; Lets user relieve stress by tapping on the picture they selected or the default punching bag, stimulating punching | Gwyneth | 
-| Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | Sheryl |
-| Task Sorting | Sort them into user-defined categories | - |
-| Prompt to destress page | After each timer/stopwatch session, if the user has been productive for at least 1 hour, they will be prompted to visit the destress page to relax and unwind | - |
-| Exit Prompt | When trying to exit the app while the timer/stopwatch is running | - |
-
+| Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | Sherylyn |
 
 
 ### Splash Page
@@ -108,9 +105,10 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 ![ss4](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/b2f00a5a-9f8a-4c9e-880c-72e7d5ea83da)
 
 ### Timer
-*
-*
-*
+* Start and Reset buttons disabled if no task is selected
+* Select task and timer duration is the task duration, circle fills up as time passes
+* Start button becomes Pause when timer is running, and when Paused, Timer pauses and button changes to Resume
+* Timer displays duration, then counts up instead of counting down so it is not as stressful
 
 ### Destress Page
 * Select between Photos, Videos and Punching Bag for destressing
@@ -140,7 +138,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Widget updates when there is a creation, edition or deletion of tasks
 * Upon pressing the widget, it will prompt the user into the home page of the app
 
-### Statistics 
-* Shows the amount of time spent on being productive
+### Statistics (Mood and Total Study Time)
+* Shows the amount of time spent on being productive, takes the total duration of all tasks that are completed
 * Shows the mood of user throughout the week to be more aware of their emotional patterns, which can be integrated into goal-setting exercises
 
