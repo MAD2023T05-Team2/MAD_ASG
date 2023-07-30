@@ -44,6 +44,8 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 | Widget | Lets users see the tasks they have due on that day and the timing it is due at | Gwyneth | 
 | Punching Bag | Upgrade to the Destress Page; Lets user relieve stress by tapping on the picture they selected or the default punching bag, stimulating punching | Gwyneth | 
 | Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | Sherylyn |
+| Edit/Delete User Profile | User can choose to edit the details in their profile and/or delete their account | Kiara |
+| Guest Account | User can choose to use the app under a guest user | Kiara |
 
 
 ### Splash Page
@@ -156,3 +158,9 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * User can change their profile details
 
 ![ep](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/08cac9f8-d330-4c92-b4ea-cd562ca9a249)
+
+### Delete Profile 
+* Users can choose to delete their account
+
+### Guest Account 
+* Users can use the app features using a guest account 
