@@ -109,6 +109,17 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
         currentUser = uAuth.getCurrentUser();
 
+        if (currentUser == null){
+            // not logged in :(
+            startActivity(new Intent(HomePage.this, LoginPage.class));
+            // To reset the sharedPreferences
+            SharedPreferences rememberUserData = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Updates remember option to "False"
+            SharedPreferences.Editor RUDeditor = rememberUserData.edit();
+            RUDeditor.putString("Remember", "False");
+            RUDeditor.putBoolean("IsFirstLaunch", true);
+            RUDeditor.apply();
+        }
+
         // Display "Hello [name]" after being authenticated
         String recvName = currentUser.getDisplayName();
         TextView myMessage = findViewById(R.id.textView);
