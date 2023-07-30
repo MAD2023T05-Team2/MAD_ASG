@@ -64,15 +64,15 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 
 ![login page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/74e0836b-dacc-457d-9806-e7d57427cee0)
 
-#### Guest Account 
-* Users can use the app features using a guest account 
-
 ### Sign Up Page
 * Username that user enters cannot exist in the database, must be unique
 * Input of Password and Confirm Password must be the same
 * Username and Password is case sensitive
 
 ![signup page 2](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/04f654c5-f349-4300-af79-6eb48b7d343d)
+
+#### Guest Account 
+* Users can use the app features using a guest account 
 
 ### Home Page
 * Users can choose how they are feeling 
