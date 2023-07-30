@@ -15,10 +15,6 @@ import java.util.Locale;
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "task_database";
     private static final int DATABASE_VERSION = 1;
-    public static final String SHARED_PREFS = "sharedPrefs";
-
-    // for tasks
-    //private static final String TABLE_NAME = "tasks";
 
     // Columns names used in the database tables
     private static final String COLUMN_ID = "id";
@@ -138,7 +134,6 @@ public class Database extends SQLiteOpenHelper {
         String selection = COLUMN_ID + " = ?"; //update applied to row with matchingID
         String[] selectionArgs = {String.valueOf(task.getId())}; //values to be substituted into selection criteria
 
-        int rowsAffected = db.update("tasks", values, selection, selectionArgs);
         db.close();
     }
 
@@ -281,14 +276,6 @@ public class Database extends SQLiteOpenHelper {
         return moodList;
     }
 
-    // function only for testing purposes
-    public void deleteAllMoods(String userId) {
-        SQLiteDatabase db = sInstance.getWritableDatabase();
-        String selection = COLUMN_MOOD_USER_ID + " = ?";
-        String[] selectionArgs = {userId};
-        db.delete("moods", selection, selectionArgs); // Performs the delete operation
-        db.close();
-    }
 
 
 
