@@ -1,42 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".DestressPage">
 
     <TextView
         android:id="@+id/destressMessage"
-        android:layout_width="245dp"
-        android:layout_height="170dp"
-        android:layout_marginStart="67dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="40sp"
         android:text="Time to Destress!"
-        android:textStyle="bold"/>
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/right_destress_msg"
+        app:layout_constraintStart_toStartOf="@id/left_destress_msg"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/destressDesc"
-        android:layout_width="271dp"
-        android:layout_height="65dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="-85dp"
-        android:layout_marginEnd="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
+        android:text="Destress and Elevate Your Mood by Punching or Indulging in some photos and videos!"
         android:textSize="17sp"
-        android:text="Destress and Elevate Your Mood by Punching or Indulging in some photos and videos!" />
+        app:layout_constraintEnd_toEndOf="@id/right_destress_msg"
+        app:layout_constraintStart_toStartOf="@id/left_destress_msg"
+        app:layout_constraintTop_toBottomOf="@+id/destressMessage" />
 
     <ImageView
         android:id="@+id/frog_gif"
-        android:layout_width="257dp"
-        android:layout_height="185dp"
-        android:layout_marginStart="79dp"
-        android:layout_marginTop="230dp"
-        android:src="@drawable/frog" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/frog"
+        app:layout_constraintEnd_toEndOf="@id/right_destress_msg"
+        app:layout_constraintStart_toStartOf="@id/left_destress_msg"
+        app:layout_constraintTop_toBottomOf="@+id/destressDesc" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_destress_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.06" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_destress_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.94" />
 
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

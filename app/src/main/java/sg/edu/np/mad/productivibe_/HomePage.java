@@ -45,6 +45,7 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
     private DatabaseReference taskDBR;
     private FirebaseDatabase fdb;
     private FirebaseAuth uAuth;
+    private FirebaseUser currentUser;
     final String TITLE = "HomePage";
 
     @Override
@@ -97,29 +98,20 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         }
 
         // Using Firebase Auth
-
         fdb = FirebaseDatabase.getInstance(); // for realtime storage
-
+        uAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        uAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = uAuth.getCurrentUser();
-
+        currentUser = uAuth.getCurrentUser();
 
         // Showing of "Hello, [name] on homepage
-        //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE); // Retrieve the SharedPreferences object named "MyPrefs" with private access mode
-        //String recvName = sharedPreferences.getString("Name", null); // Get the value associated with the key "Name" from the SharedPreferences, defaulting to null if not found
 
         // Display "Hello, [name]" after being authenticated
-        //DatabaseReference forNameDBR = fdb.getReference("users/" + currentUser.getUid());
         String recvName = currentUser.getDisplayName();
-
-        Log.d(TITLE, "Received name from SharedPreferences: " + recvName);
-
         TextView myMessage = findViewById(R.id.textView);
         myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
 
@@ -258,6 +250,15 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        String recvName = currentUser.getDisplayName();
+        TextView myMessage = findViewById(R.id.textView);
+        myMessage.setText("Hello, " + recvName); // Set the text of the TextView to "Hello, " concatenated with the received name
+    }
+
     private void saveMood(String moodValue) {
         // Initialize the database;
         //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -336,7 +337,6 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
         SharedPreferences.Editor editor = sharedPreferences2.edit();
         editor.putBoolean("IsFirstLaunch", true);
         editor.apply();
-
     }
 
 

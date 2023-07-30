@@ -114,8 +114,6 @@ public class StatisticsPage extends AppCompatActivity {
         long lastMonthTimeStamp = calendar.getTime().getTime(); // take all posts after this timing
         // Start up Firebase reference
         // Retrieve mood data from the database
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userName = sharedPreferences.getString("Username", null);
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
         DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
@@ -323,8 +321,6 @@ public class StatisticsPage extends AppCompatActivity {
     // Method to calculate total focus time from tasks with 'done' status (in minutes)
     private void calculateTotalFocusTime() {
         // Initialize the database;
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userName = sharedPreferences.getString("Username", null);
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);

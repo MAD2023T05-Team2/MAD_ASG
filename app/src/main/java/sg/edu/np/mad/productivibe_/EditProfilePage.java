@@ -1,15 +1,181 @@
 package sg.edu.np.mad.productivibe_;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class EditProfilePage extends AppCompatActivity {
     final String TITLE = "EditProfile";
+    private FirebaseAuth uAuth;
+    private TextView accDetails ;
+    private EditText EditName ;
+    private EditText EditUserName;
+    private EditText EditPassword;
+    private EditText confirmEditPassword;
+    private Button editAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        // for bottom navigation page
+        Log.v(TITLE, "Navigation Buttons");
+
+        // Setting the navigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.bottom_home) {
+                return true;
+            } else if (itemId == R.id.bottom_tasks) {
+                startActivity(new Intent(EditProfilePage.this, TaskActivity.class));
+                return true;
+            } else if (itemId == R.id.bottom_timer) {
+                startActivity(new Intent(EditProfilePage.this, TaskTimerPage.class));
+                return true;
+            } else if (itemId == R.id.bottom_destress) {
+                startActivity(new Intent(EditProfilePage.this, DestressPage.class));
+                return true;
+            } else if (itemId == R.id.bottom_statistics) {
+                startActivity(new Intent(EditProfilePage.this, StatisticsPage.class));
+                return true;
+            }
+            return false;
+        });
+
+        // Initialize UI elements
+        accDetails = findViewById(R.id.accDetails);
+        EditName = findViewById(R.id.EditName);
+        EditUserName = findViewById(R.id.EditUserName);
+        EditPassword = findViewById(R.id.EditPassword);
+        confirmEditPassword = findViewById(R.id.confirmEditPassword);
+        editAccountButton = findViewById(R.id.editAccountButton);
+
+        // Initialize Firebase
+        uAuth = FirebaseAuth.getInstance();
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        // retrieve Firebase Auth details and display
+        FirebaseUser currentUser = uAuth.getCurrentUser();
+        if (currentUser == null){
+            // logged-out
+            uAuth.signOut();
+            startActivity(new Intent(EditProfilePage.this, LoginPage.class));
+        }
+
+        String currentName = currentUser.getDisplayName();
+        String currentUserName = currentUser.getEmail();
+        String displayUserName = currentUserName.replace("@vibe.com","");
+        String toDisplay = "Current Name: " + currentName + "\n" + "Current UserName: " + displayUserName;
+        accDetails.setText(toDisplay);
+
+        // listener on Edit Button
+        // only fields that are filled up will be affected
+        editAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // take input values
+                String changedName = EditName.getText().toString().trim();
+                String changedUser = EditUserName.getText().toString().trim();
+                String changedPass = EditPassword.getText().toString().trim();
+                String confrmdPass = confirmEditPassword.getText().toString().trim();
+
+                // change counter
+                int counter = 0;
+                // give chance boolean
+                boolean giveChance = false;
+
+                // update changedName if got
+                if (!changedName.equals("")){
+                    counter ++;
+                    UserProfileChangeRequest nameUpdate = new UserProfileChangeRequest.Builder().setDisplayName(changedName).build();
+                    currentUser.updateProfile(nameUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // completed update
+                            Toast.makeText(getApplicationContext(),"Name Updated!",Toast.LENGTH_SHORT);
+                            Log.i(TITLE,"Completed Name Update");
+                            Log.i(TITLE,changedName);
+                        }
+                    });
+                }
+
+                if (!changedUser.equals("")){
+                    // make into an email
+                    counter ++;
+                    String Email = changedUser + "@vibe.com";
+                    currentUser.updateEmail(Email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // completed update to email
+                            Toast.makeText(getApplicationContext(),"Username Updated!",Toast.LENGTH_SHORT).show();
+                            Log.i(TITLE, "Completed Email Update");
+                            Log.i(TITLE,Email);
+                        }
+                    });
+                }
+
+                if (!changedPass.equals("") && !confrmdPass.equals("")){
+                    counter ++;
+                    if (changedPass == confrmdPass){
+                        // change password
+                        currentUser.updatePassword(changedPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getApplicationContext(),"Password Updated!",Toast.LENGTH_SHORT).show();
+                                Log.i(TITLE, "Completed Password Update");
+                            }
+                        });
+                    }
+                    else{
+                        // passwords dont match
+                        Toast.makeText(getApplicationContext(),"Passwords don't match :(",Toast.LENGTH_SHORT).show();
+                        giveChance = true;
+
+                    }
+                } else if (!changedPass.equals("") || !changedPass.equals("")) {
+                    // is not filled in
+                    Toast.makeText(getApplicationContext(),"Fill in the other password box too >:(",Toast.LENGTH_SHORT).show();
+                    giveChance = true;
+
+                }
+
+                // exit this page and go to HomePage
+                if (!giveChance){
+                    Intent toHome = new Intent(EditProfilePage.this,HomePage.class);
+                    if (counter == 0){
+                        Toast.makeText(getApplicationContext(),"Nothing changed!?", Toast.LENGTH_LONG).show();
+                    }
+                    startActivity(toHome);
+                }
+            }
+        });
+
+
+
+
     }
 }

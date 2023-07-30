@@ -1,54 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PunchFragment">
 
     <ImageView
         android:id="@+id/punching"
-        android:layout_width="319dp"
-        android:layout_height="385dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="114dp"
-        android:layout_marginEnd="85dp"
-        android:src="@drawable/punch" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/punch"
+        app:layout_constraintBottom_toTopOf="@+id/count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.462"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/photo"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="225dp"
-        android:layout_marginTop="84dp"
-        app:icon = "@drawable/baseline_photo_camera_back_24"
-        android:text="Select Photo"/>
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="128dp"
+        android:text="Select Photo"
+        app:icon="@drawable/baseline_photo_camera_back_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/punchMessage" />
 
     <TextView
         android:id="@+id/count"
-        android:layout_width="97dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="420dp"
+        android:layout_marginBottom="128dp"
+        android:fontFamily="@font/eb_garamond"
+        android:gravity="center"
         android:text="0"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="80sp"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/punching"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/punchMessage"
-        android:layout_width="361dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="Tap on the punching bag, or your own selected image, to release stress, tension and frustration!"
-        android:textSize="18sp" />
-</FrameLayout>
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

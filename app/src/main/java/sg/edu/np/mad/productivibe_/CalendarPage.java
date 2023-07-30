@@ -82,9 +82,8 @@ public class CalendarPage extends AppCompatActivity {
         filteredRecyclerView.setItemAnimator(null);
 
         // Initialize the database
-        //SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userName = sharedPreferences.getString("Username", null);
         fdb = FirebaseDatabase.getInstance();
+
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
         taskDBR = fdb.getReference("tasks/"+ userName);
         // Load tasks from the database

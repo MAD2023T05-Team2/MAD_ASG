@@ -161,13 +161,11 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
     // Method to show the task selection dialog
     private void showTaskSelectionDialog() {
         // Initialize the database;
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userName = sharedPreferences.getString("Username", null);
         String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
         taskList = new ArrayList<>();
-        Query pendingTask = taskDBR.child("status").orderByKey().equalTo("Pending");
         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -191,7 +189,7 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                 }
 
 
-                if (taskNames.size() == 0) {
+                if (pendingTasks.size() > 0) {
                     // jump to tasklist
                     Context c = TaskTimerPage.this;
                     noTaskDialogListener = new DialogInterface.OnClickListener() {
@@ -213,21 +211,6 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                             }
                         }
                     };
-                    // on below line we are creating a builder variable for our alert dialog
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TaskTimerPage.this);
-                    // on below line we are setting message for our dialog box.
-                    builder.setMessage("You have no task, do you want to create task?")
-                            // on below line we are setting positive button
-                            // and setting text to it.
-                            .setPositiveButton("Yes", noTaskDialogListener)
-                            // on below line we are setting negative button
-                            // and setting text to it.
-                            .setNegativeButton("No", noTaskDialogListener)
-                            // on below line we are calling
-                            // show to display our dialog.
-                            .show();
-                }
 
                     // Convert the ArrayList to a simple array
                     String[] taskNamesArray = taskNames.toArray(new String[0]);
@@ -258,6 +241,23 @@ public class TaskTimerPage extends AppCompatActivity implements TaskTimerListene
                     // Show the dialog
                     builderL.show();
                 }
+                else{
+                    // if don't have items to choose from
+                    // on below line we are creating a builder variable for our alert dialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TaskTimerPage.this);
+                    // on below line we are setting message for our dialog box.
+                    builder.setMessage("You have no task, do you want to create task?")
+                            // on below line we are setting positive button
+                            // and setting text to it.
+                            .setPositiveButton("Yes", noTaskDialogListener)
+                            // on below line we are setting negative button
+                            // and setting text to it.
+                            .setNegativeButton("No", noTaskDialogListener)
+                            // on below line we are calling
+                            // show to display our dialog.
+                            .show();
+                }
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                     // if cannot connect or firebase returns an error
