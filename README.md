@@ -62,7 +62,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Select "Sign Up" if they want to create a new account
 * "LOGIN" button brings the user to the home page if the account is valid
 
-![login page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/74e0836b-dacc-457d-9806-e7d57427cee0)
+![login page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/7b2278de-ffdf-44df-960c-be0efb6bbb04)
 
 ### Sign Up & Guest Account Page
 * Username that user enters cannot exist in the database, must be unique
@@ -77,8 +77,8 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Users can choose how they are feeling 
 * Shows tasks that are due today
 * Can change the task from "Pending" to "Done" (will be updated in Task Page and Calendar)
- 
-![home page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/035281de-4293-45a8-b72d-2f488fe40416)
+
+![home page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/6b8989c9-a2dd-473a-bf09-d6278c7b4ed1)
 
 ### Task
 * Allows user to view all task
@@ -86,7 +86,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Swipe right to edit, left to delete
 * Can change the task from "Pending" to "Done" (will be updated in Home Page and Calendar)
 
-![task page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/99aeba56-9641-4ad2-a268-a91eed91f491)
+![task page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/f7fddedb-8e20-40f3-ac25-00cc86585655)
 
 #### Create Task
 * Enter details of the new task
@@ -116,47 +116,58 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Start button becomes Pause when timer is running, and when Paused, Timer pauses and button changes to Resume
 * Timer displays duration, then counts up instead of counting down so it is not as stressful
 
-![timer page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/2a57d804-04da-4f60-9375-7ca22257c5ed)
+![timer page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/bdedb947-7de3-4db9-a4e6-e98f589600ca)
+![select task timer page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/359c8b14-715d-4bac-a153-58a754f84ab2)
+![task complete timer page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/fe3f9d8b-7b73-4a02-b22f-3362d22fa7e1)
+
 
 ### Destress Page
 * Select between Photos, Videos and Punching Bag for destressing
-* Users have one minute to destress before being prompted to start work again
-   
-![destress](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/4b742b75-d34e-4150-bcce-059da306dc04)
+![destress page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/a71a2100-9166-4d31-a88f-7d096d9ba377)
+* Users have five minute to destress before being prompted to start work again
+![destress prompt](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/611fffb0-e950-473b-91fa-f7ade9b1f4f7)
 
 ### Photos
 * Funny photos will be displayed for the user to look at
 * Scrollable
   
-![photos page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/3be05b05-e5c1-4162-9509-85fd7a206b66)
+![photos](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/eee2ac14-489f-4e55-b97c-3a09944d624e)
 
 ### Videos
 * Different relaxing videos will play
 * Can choose video to watch
 
-![videos page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/e093bf33-c803-46ce-8cfd-cdcf7950973b)
+![video](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/d4733e2e-4b59-4c42-8d28-a36dbeb5663e)
 
 ### Punching Bag 
 * Tap on the screen to stimulate punching
-  ![punching bag1](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/8ce76e1b-ebc7-4a59-b219-31312a369338)
+![punching bag](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/312c6e46-818e-4c8f-b17d-53b23f05ae80)
+
 * Users can select their desired picture to 'punch'
 
 ![punching bag2](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/25356c51-1788-45f8-9e1f-de5b32370f28)
 
 * 'Hope you are doing well' prompt will appear after users tap on the screen for more than 50 times
 
+![punching bag prompt](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/87481fb5-9f8c-48be-b278-86e4a8ebfcb0)
+
 ### Widget
 * Users can view the number of tasks, the tasks name and due timing of the tasks due today
 * Widget updates when there is a creation, edition or deletion of tasks
 * Upon pressing the widget, it will prompt the user into the home page of the app
 
-![widget](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/a125a4aa-4ac1-4620-b2cd-f401eec1d47a)
+![widget](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/f7a754bc-46e9-42e6-b454-ccd57416efbd)
 
 ### Statistics (Mood and Total Study Time)
 * Shows the amount of time spent on being productive, takes the total duration of all tasks that are completed
 * Shows the mood of user throughout the week to be more aware of their emotional patterns, which can be integrated into goal-setting exercises
 
-![stats page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/1660b6e1-7334-48ae-8b31-4ca73673ff0b)
+![stats page](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/a5d18ca8-732f-44de-8df8-7baf903fa414)
+
+### Settings
+* User can choose to edit profile, play/pause backgound music or log out of app
+
+![home page with settings](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/05453946-492a-43f1-91fd-1776d40608ea)
 
 ### Edit Profile
 * User can change their profile details
