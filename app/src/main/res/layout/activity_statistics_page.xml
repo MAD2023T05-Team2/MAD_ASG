@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/selected_item_background"
     tools:context=".StatisticsPage">
-
     <TextView
         android:id="@+id/pageHeader"
         android:layout_width="0dp"
@@ -54,7 +53,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/productivityCard"
             android:layout_width="match_parent"
-            android:layout_height="320dp"
+            android:layout_height="250dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="@color/homepage_card"
             app:cardCornerRadius="25dp"
@@ -67,11 +66,11 @@
             <TextView
                 android:id="@+id/totalFocusTimeTextView"
                 android:layout_width="258dp"
-                android:layout_height="260dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
-                android:paddingTop="40dp"
+                android:paddingTop="10dp"
                 android:textAlignment="center"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/imageview"
@@ -95,59 +94,58 @@
     <TextView
         android:id="@+id/moodTrackerStatsHeader"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Mood stats below!!!! Pls edit this text"
+        android:gravity="center_vertical"
+        android:text="Mood Pattern !!"
         android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@id/moodCard"
+        app:layout_constraintEnd_toStartOf="@+id/right_stats"
         app:layout_constraintStart_toStartOf="@id/left_stats"
         app:layout_constraintTop_toBottomOf="@id/timer_stats" />
 
+
+
     <androidx.cardview.widget.CardView
-        android:id="@+id/moodCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/homepage_card"
-        app:cardCornerRadius="25dp"
-        app:cardElevation="0dp"
-        app:flow_verticalAlign="center"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="@id/right_stats"
-        app:layout_constraintStart_toStartOf="@id/left_stats"
-        app:layout_constraintTop_toBottomOf="@+id/moodTrackerStatsHeader">
+    android:id="@+id/moodCard"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="16dp"
+    android:backgroundTint="@color/homepage_card"
+    app:cardCornerRadius="25dp"
+    app:cardElevation="0dp"
+    app:flow_verticalAlign="center"
+    app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+    app:layout_constraintEnd_toEndOf="@id/right_stats"
+    app:layout_constraintStart_toStartOf="@id/left_stats"
+    app:layout_constraintTop_toBottomOf="@+id/moodTrackerStatsHeader">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/moodChart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/moodChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     </androidx.cardview.widget.CardView>
-
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/left_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.04" />
-
+    android:id="@+id/left_stats"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_percent="0.04" />
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/right_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.96" />
-
+    android:id="@+id/right_stats"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_percent="0.96" />
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/top_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.02" />
-
-
+    android:id="@+id/top_stats"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.02" />
 </androidx.constraintlayout.widget.ConstraintLayout>

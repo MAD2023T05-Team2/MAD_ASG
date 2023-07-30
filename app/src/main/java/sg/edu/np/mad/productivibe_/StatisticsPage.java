@@ -249,14 +249,6 @@ public class StatisticsPage extends AppCompatActivity {
         moodChart.notifyDataSetChanged();
         Log.i(TITLE,"Customize the appearance of the line chart");
 
-        // Adjust the top margin to shift the LineChart up
-        LineChart lineChart = findViewById(R.id.moodChart);
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) lineChart.getLayoutParams();
-        int marginTop = -50; // Set the desired margin value for the top
-        layoutParams.setMargins(layoutParams.leftMargin, marginTop, layoutParams.rightMargin, layoutParams.bottomMargin);
-        lineChart.setLayoutParams(layoutParams);
-        Log.i(TITLE,"Adjust the top margin to shift the LineChart up");
-
 
         // Customize the X-axis
         XAxis xAxis = moodChart.getXAxis();
@@ -310,8 +302,7 @@ public class StatisticsPage extends AppCompatActivity {
 
 
         // Set the minimum and maximum values for the Y-axis
-        yAxis.setAxisMinimum(-0.5f);
-        yAxis.setAxisMaximum(moodLabels.length - 0.5f);
+        yAxis.setAxisMaximum(moodLabels.length - 0.4f);
 
         // Enable grid lines for all rows on the Y-axis
         moodChart.getAxisLeft().setDrawGridLines(true);
