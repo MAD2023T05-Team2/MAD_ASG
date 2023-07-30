@@ -37,19 +37,23 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 | :------ | :---------- | :-------- | 
 | Splash Screen | Opening Page of the App | Alethea |
 | Random Quote | Shows a random quote on the splash screen to motivate users | Gwyneth |
-| Background Music | Can opt in or out of such music | Alethea |
-| Mood Statistics | Displays charts based on the mood selected | Xin Le |
+| Background Music | Music to set the mood; Users can choose to opt in/out whenever | Alethea |
+| Mood Statistics | Displays charts based on the mood selected in homepage | Xin Le |
 | Total Productivity Time | Displays total study hours | Sherylyn |
 | Firebase | Stores and sync data between users using cloud-hosted NoSQL database | Kiara |
 | Widget | Lets users see the tasks they have due on that day and the timing it is due at | Gwyneth | 
 | Punching Bag | Upgrade to the Destress Page; Lets user relieve stress by tapping on the picture they selected or the default punching bag, stimulating punching | Gwyneth | 
 | Timer / Stopwatch | Allow user to set the duration of productiveness / Track how long the user has been productive  | Sherylyn |
+| Edit/Delete User Profile | User can choose to edit the details in their profile and/or delete their account | Kiara |
+| Guest Account | User can choose to use the app under a guest user | Kiara |
 
 
 ### Splash Page
 * The opening page of the app
 * Progress bar to show how long it takes for the app to load
 * Shows a random quote to motivate users
+
+![sp](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/ebbcde98-7020-4ae9-ad5c-86b50ae182ed)
 
 ### Log In Page
 * User keys in their account details and log into the app
@@ -110,6 +114,8 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Start button becomes Pause when timer is running, and when Paused, Timer pauses and button changes to Resume
 * Timer displays duration, then counts up instead of counting down so it is not as stressful
 
+![timer](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/b52f7ece-1b3a-47b0-9416-8589463783b1)
+
 ### Destress Page
 * Select between Photos, Videos and Punching Bag for destressing
 * Users have one minute to destress before being prompted to start work again
@@ -133,12 +139,28 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Users can select their desired picture to 'punch'
 * 'Hope you are doing well' prompt will appear after users tap on the screen for more than 50 times
 
+![pb](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/ba749985-3cd7-49f9-b9db-ea1f5e045eeb)
+
 ### Widget
 * Users can view the number of tasks, the tasks name and due timing of the tasks due today
 * Widget updates when there is a creation, edition or deletion of tasks
 * Upon pressing the widget, it will prompt the user into the home page of the app
 
+![wid](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/6ddf908b-68a8-4152-a360-a6283ad09007)
+
 ### Statistics (Mood and Total Study Time)
 * Shows the amount of time spent on being productive, takes the total duration of all tasks that are completed
 * Shows the mood of user throughout the week to be more aware of their emotional patterns, which can be integrated into goal-setting exercises
 
+![stats](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/6e2537e8-967d-42c8-99ef-f76e46befd07)
+
+### Edit Profile
+* User can change their profile details
+
+![ep](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/08cac9f8-d330-4c92-b4ea-cd562ca9a249)
+
+### Delete Profile 
+* Users can choose to delete their account
+
+### Guest Account 
+* Users can use the app features using a guest account 
