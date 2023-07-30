@@ -35,7 +35,7 @@
         android:layout_marginEnd="50dp"
         android:fontFamily="@font/eb_garamond"
         android:gravity="center"
-        android:padding="8dp"
+        android:padding="6dp"
         android:text=""
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
