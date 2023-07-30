@@ -34,8 +34,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/timer_stats"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@id/middle_stats"
         app:layout_constraintEnd_toStartOf="@id/right_stats"
         app:layout_constraintStart_toEndOf="@id/left_stats"
         app:layout_constraintTop_toBottomOf="@+id/pageHeader">
@@ -53,12 +54,13 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/productivityCard"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="@color/homepage_card"
             app:cardCornerRadius="25dp"
             app:cardElevation="0dp"
             app:flow_verticalAlign="center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timerTrackerStatsHeader">
@@ -81,7 +83,7 @@
             <ImageView
                 android:id="@+id/frogWaveImageView"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="bottom"
                 android:paddingTop="125dp"
                 android:scaleType="centerCrop"
@@ -148,4 +150,11 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent="0.02" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/middle_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>
