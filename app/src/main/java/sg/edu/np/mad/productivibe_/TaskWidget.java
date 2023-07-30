@@ -89,7 +89,7 @@ public class TaskWidget extends AppWidgetProvider {
 
                 // Create an Intent to launch HomePage when widget is clicked
                 Intent intent = new Intent(context, HomePage.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
                 widgetViews.setOnClickPendingIntent(R.id.todayTask, pendingIntent);
                 widgetViews.setOnClickPendingIntent(R.id.widgetTaskView, pendingIntent);
                 widgetViews.setOnClickPendingIntent(R.id.widgetTaskTime, pendingIntent);
