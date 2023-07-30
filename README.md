@@ -38,7 +38,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 | Splash Screen | Opening Page of the App | Alethea |
 | Random Quote | Shows a random quote on the splash screen to motivate users | Gwyneth |
 | Background Music | Can opt in or out of such music | Alethea |
-| Mood Statistics | Displays charts based on the mood selected | Xin Le |
+| Mood Statistics | Displays charts based on the mood selected in homepage | Xin Le |
 | Total Productivity Time | Displays total study hours | Sherylyn |
 | Firebase | Stores and sync data between users using cloud-hosted NoSQL database | Kiara |
 | Widget | Lets users see the tasks they have due on that day and the timing it is due at | Gwyneth | 
