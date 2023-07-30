@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class StatisticsPage extends AppCompatActivity {
-    String TITLE = "Statistics Page";
+    final String TITLE = "Statistics Page";
 
     private LineChart moodChart;
     ImageView imageView;
@@ -83,6 +83,8 @@ public class StatisticsPage extends AppCompatActivity {
             }
             return false;
         });
+
+        // For the Timer statistics
         imageView = findViewById(R.id.imageview);
         totalFocusTimeTextView = findViewById(R.id.totalFocusTimeTextView);
         frogWaveImageView = findViewById(R.id.frogWaveImageView);
@@ -91,15 +93,16 @@ public class StatisticsPage extends AppCompatActivity {
         Glide.with(this).load(R.drawable.confetti).into(imageView);
         Glide.with(this).load(R.drawable.kermit_wave).into(frogWaveImageView);
 
-        // Call the method to calculate and update the total focus time
-        calculateTotalFocusTime();
-
+        // For the mood statistics
         moodChart = findViewById(R.id.moodChart);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Call the method to calculate and update the total focus time
+        calculateTotalFocusTime();
 
         // drawing the Line Chart
         List<String> dates = new ArrayList<>();
@@ -113,15 +116,12 @@ public class StatisticsPage extends AppCompatActivity {
         // Start up Firebase reference
         // Retrieve mood data from the database
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        //String userId = sharedPreferences.getString("UserId", null);
         String userName = sharedPreferences.getString("Username", null);
         FirebaseDatabase fdb = FirebaseDatabase.getInstance();
         DatabaseReference moodDBR = fdb.getReference("moods/" + userName);
-        //Query fromLastMonth = moodDBR.orderByKey().startAfter(String.valueOf(lastMonthTimeStamp));
         moodDBR.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //List<Mood> moods = new ArrayList<>();
                 // Create lists to store the x-axis values (dates) and y-axis values (moods)
                 entries.clear();
                 List<String> moodsList = new ArrayList<>();
@@ -132,11 +132,7 @@ public class StatisticsPage extends AppCompatActivity {
                 // retrieval
                 for (DataSnapshot sn: snapshot.getChildren()){
                     if (Long.parseLong(sn.getKey()) > lastMonthTimeStamp){
-                        //long timestamp = Long.parseLong(sn.getKey());
                         String mV = sn.getValue(String.class);
-                        //Mood m = new Mood(userName,mV,timestamp);
-                        //Log.d("FIREBASE MOOD",mV + " "+ userName + String.valueOf(timestamp));
-                        //moods.add(m);
                         // save as date format NOT long
                         Date ts = new Date(Long.parseLong(sn.getKey()));
                         String TimeStamp = dateFormat.format(ts);
@@ -149,9 +145,6 @@ public class StatisticsPage extends AppCompatActivity {
 
                 // sort the dates in ascending order in dates
                 Collections.sort(dates, (date1, date2) -> {
-                    //Long ts1 = Long.parseLong(date1);
-                    //Long ts2 = Long.parseLong(date2);
-                    //return ts1.compareTo(ts2);
                     SimpleDateFormat format = new SimpleDateFormat("dd MMM", Locale.getDefault());
                     try {
                         Date d1 = format.parse(date1);
@@ -190,7 +183,6 @@ public class StatisticsPage extends AppCompatActivity {
                 Log.d(TITLE, error.getMessage());
             }
         });
-        //List<Mood> moods = Database.getInstance(this).getMoodsForLastMonth(userId);
 
     }
 
@@ -335,33 +327,23 @@ public class StatisticsPage extends AppCompatActivity {
         String userName = sharedPreferences.getString("Username", null);
         fdb = FirebaseDatabase.getInstance();
         taskDBR = fdb.getReference("tasks/" + userName);
-        ArrayList<Task> taskList = new ArrayList<>();
+        doneTasks = new ArrayList<>();
         taskDBR.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot sn : snapshot.getChildren()) {
-                    Task t = sn.getValue(Task.class);
-                    taskList.add(t);
-                }
-                Log.d("FIREBASE", String.valueOf(taskList.size()));
-                // collects all the tasks saved in the firebase
-                // Create a list of task names to display in the dialog
-                doneTasks = new ArrayList<>();
                 ArrayList<String> taskNames = new ArrayList<>();
-                Log.d("FIREBASE", String.valueOf(taskList.size()));
-
-                for (Task task : taskList) {
-                    Log.d("FIREBASE", String.valueOf(task.getStatus()));
-                    if (task.getStatus().equalsIgnoreCase("done")) {
-                        taskNames.add(task.getTaskName());
-                        doneTasks.add(task);
-                    }
-                }
-
                 // Calculation of total focus time should be done here
                 int totalDurationInMinutes = 0;
-                for (Task task : doneTasks) {
-                    totalDurationInMinutes += task.getTaskDuration();
+
+                for (DataSnapshot sn : snapshot.getChildren()) {
+                    Task t = sn.getValue(Task.class);
+                    // Create a list of task names to display in the dialog
+                    if (t.getStatus().equalsIgnoreCase("done")) {
+                        taskNames.add(t.getTaskName());
+                        doneTasks.add(t);
+                        // Collecting total duration
+                        totalDurationInMinutes += t.getTaskDuration();
+                    }
                 }
 
                 // Convert the total duration to hours and minutes
@@ -377,10 +359,13 @@ public class StatisticsPage extends AppCompatActivity {
                     totalFocusTimeTextView.setText(defaultText);
                 } else {
                     totalFocusTimeTextView.setText("Total Focus Time\n" + hours + " hours and " + minutes + " minutes\n" + "You have done something, yay!");
-                }}
+                }
+
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TITLE,error.getMessage());
 
             }
         });
