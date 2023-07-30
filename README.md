@@ -93,7 +93,7 @@ Link to app on google play store: https://play.google.com/store/apps/details?id=
 * Enter details of the new task
 * Task will be added to the task page, home page, calendar page and widget
 
-![ss9](https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116244909/15f9e982-e6f0-4a7e-ae55-a2f34c88ac26)
+<img width="195" alt="Screenshot 2023-07-31 014015" src="https://github.com/MAD2023T05-Team2/MAD_ASG/assets/116245094/a89759a6-a507-449e-a173-64f17fd62420">
 
 #### Edit Task
 * Enter details to update task
