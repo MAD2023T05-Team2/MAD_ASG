@@ -313,15 +313,24 @@ public class HomePage extends AppCompatActivity implements PopupMenu.OnMenuItemC
             RUDeditor.apply();
             if (currentUser.getDisplayName() == "Guest"){
                 // guest account delete from firebase auth
+                // save the uId for deletion in realtime storage
+                String uId = currentUser.getUid();
+                FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+                DatabaseReference forTasks = fdb.getReference("tasks/" + uId );
+                forTasks.removeValue();
+                DatabaseReference forMoods = fdb.getReference("moods/" + uId);
+                forMoods.removeValue();
                 currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Log.d(TITLE, "User account deleted.");
+                        // delete from firebase
+                        if (task.isSuccessful()){ // ensures Firebase Auth is dealt with
+                            uAuth.signOut();
                         }
                         else{
-                            Log.d(TITLE, "Issue in deletion",task.getException());
+                            Log.w(TITLE,"delete failed", task.getException());
                         }
+
                     }
                 });
             }
